@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'apps.notifications',
     'apps.moderation',
     'apps.common',
+    'apps.admin_api',
 ]
 
 MIDDLEWARE = [
