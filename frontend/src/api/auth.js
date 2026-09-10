@@ -6,3 +6,6 @@ export const login = (email, password) =>
 export const register = (payload) => client.post("/auth/register/", payload);
 
 export const fetchMe = () => client.get("/auth/me/");
+
+export const googleAuth = (credential, role = "student") =>
+  client.post("/auth/google/", { credential, role });

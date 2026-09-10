@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { login as loginRequest } from "../api/auth";
+import { login as loginRequest, googleAuth as googleAuthRequest } from "../api/auth";
 
 const AuthContext = createContext(null);
 
@@ -15,6 +15,15 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const { data } = await loginRequest(email, password);
+    localStorage.setItem("access_token", data.access);
+    localStorage.setItem("refresh_token", data.refresh);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    setUser(data.user);
+    return data.user;
+  };
+
+  const googleLogin = async (credential, role = "student") => {
+    const { data } = await googleAuthRequest(credential, role);
     localStorage.setItem("access_token", data.access);
     localStorage.setItem("refresh_token", data.refresh);
     localStorage.setItem("user", JSON.stringify(data.user));
@@ -43,7 +52,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, login, googleLogin, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

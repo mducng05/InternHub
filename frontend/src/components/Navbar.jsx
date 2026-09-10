@@ -16,20 +16,20 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom py-2 sticky-top">
       <div className="container-fluid px-4">
-        
+
         {/* Logo */}
         <Link className="navbar-brand d-flex align-items-center gap-2 fw-bold text-success" to="/">
-          <img 
-            src={logo} 
-            alt="Logo" 
-            height="35" 
-            style={{ transform: "scale(1.4)", transformOrigin: "left center" }} 
+          <img
+            src={logo}
+            alt="Logo"
+            height="35"
+            style={{ transform: "scale(1.4)", transformOrigin: "left center" }}
           />
         </Link>
-        
+
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav me-auto ms-4 gap-2">
-            
+
             {/* Viec lam */}
             <li className="nav-item dropdown position-static nav-hover-dropdown">
               <div className="d-flex align-items-center">
@@ -44,7 +44,7 @@ export default function Navbar() {
               <div className="dropdown-menu navbar-mega-menu border-0 shadow-lg mt-0 p-4 rounded-bottom-4">
                 <div className="container-fluid">
                   <div className="row g-4">
-                    
+
                     {/* CỘT 1 */}
                     <div className="col-md-3 border-end pe-4">
                       <div className="text-uppercase text-secondary fw-bold small mb-3">VIỆC LÀM</div>
@@ -121,7 +121,7 @@ export default function Navbar() {
               <div className="dropdown-menu navbar-mega-menu border-0 shadow-lg mt-0 p-4 rounded-bottom-4">
                 <div className="container-fluid">
                   <div className="row g-4">
-                    
+
                     {/* CỘT 1 */}
                     <div className="col-md-3 border-end pe-4">
                       <div className="text-uppercase text-secondary fw-bold small mb-3">CÁC MẪU CV THEO STYLE</div>
@@ -253,9 +253,6 @@ export default function Navbar() {
                 </Link>
                 <Link to="/login" className="btn btn-success rounded-pill px-3">
                   Đăng nhập
-                </Link>
-                <Link to="/post-job" className="btn btn-light border rounded-pill px-3 text-dark fw-medium">
-                  Đăng tin tuyển dụng
                 </Link>
               </>
             )}
