@@ -4,11 +4,64 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from apps.accounts.models import User
+from apps.catalog.models import Industry, JobCategory, Location, Skill, StudentSkill
 from apps.applications.models import Application
-from apps.jobs.models import Job
+from apps.jobs.models import Job, JobSkill
 from apps.moderation.models import Report
+from apps.profiles.models import EmployerProfile, StudentProfile
 from .permissions import IsQLPMAdmin
-from .serializers import AdminApplicationSerializer, AdminJobSerializer, AdminReportSerializer, AdminUserSerializer
+from .serializers import AdminApplicationSerializer, AdminEmployerProfileSerializer, AdminIndustrySerializer, AdminJobCategorySerializer, AdminStudentSkillSerializer, AdminLocationSerializer, AdminSkillSerializer, AdminJobSkillSerializer, AdminJobSerializer, AdminReportSerializer, AdminStudentProfileSerializer, AdminUserSerializer
+
+
+class AdminJobCategoryViewSet(viewsets.ModelViewSet):
+    queryset = JobCategory.objects.all().order_by("name")
+    serializer_class = AdminJobCategorySerializer
+    permission_classes = [IsQLPMAdmin]
+    search_fields = ("name", "slug")
+
+
+class AdminStudentSkillViewSet(viewsets.ModelViewSet):
+    queryset = StudentSkill.objects.select_related("student_profile__user", "skill").all().order_by("student_profile__full_name", "skill__name")
+    serializer_class = AdminStudentSkillSerializer
+    permission_classes = [IsQLPMAdmin]
+    search_fields = ("student_profile__full_name", "student_profile__user__email", "skill__name")
+    filterset_fields = ("student_profile", "skill", "level")
+
+
+class AdminIndustryViewSet(viewsets.ModelViewSet):
+    queryset = Industry.objects.all().order_by("name")
+    serializer_class = AdminIndustrySerializer
+    permission_classes = [IsQLPMAdmin]
+    search_fields = ("name", "slug")
+
+
+class AdminLocationViewSet(viewsets.ModelViewSet):
+    queryset = Location.objects.all().order_by("name")
+    serializer_class = AdminLocationSerializer
+    permission_classes = [IsQLPMAdmin]
+    search_fields = ("name", "slug")
+
+
+class AdminSkillViewSet(viewsets.ModelViewSet):
+    queryset = Skill.objects.all().order_by("name")
+    serializer_class = AdminSkillSerializer
+    permission_classes = [IsQLPMAdmin]
+    search_fields = ("name", "slug")
+
+
+class AdminEmployerProfileViewSet(viewsets.ModelViewSet):
+    queryset = EmployerProfile.objects.select_related("user", "industry").all().order_by("-created_at")
+    serializer_class = AdminEmployerProfileSerializer
+    permission_classes = [IsQLPMAdmin]
+    search_fields = ("company_name", "tax_code", "user__email")
+    filterset_fields = ("company_size", "is_verified", "industry")
+
+
+class AdminStudentProfileViewSet(viewsets.ModelViewSet):
+    queryset = StudentProfile.objects.select_related("user").all().order_by("-created_at")
+    serializer_class = AdminStudentProfileSerializer
+    permission_classes = [IsQLPMAdmin]
+    search_fields = ("full_name", "university", "major", "user__email")
 
 
 class AdminUserViewSet(viewsets.ModelViewSet):
@@ -16,6 +69,14 @@ class AdminUserViewSet(viewsets.ModelViewSet):
     serializer_class = AdminUserSerializer
     permission_classes = [IsQLPMAdmin]
     search_fields = ("email", "username", "first_name", "last_name")
+
+
+class AdminJobSkillViewSet(viewsets.ModelViewSet):
+    queryset = JobSkill.objects.select_related("job", "skill").all().order_by("job__title", "skill__name")
+    serializer_class = AdminJobSkillSerializer
+    permission_classes = [IsQLPMAdmin]
+    search_fields = ("job__title", "skill__name")
+    filterset_fields = ("job", "skill")
 
 
 class AdminJobViewSet(viewsets.ModelViewSet):

@@ -5,8 +5,16 @@ import "./admin.css";
 
 const links = [
   ["Tổng quan", "/admin/dashboard", "bi-grid-1x2"],
+  ["Danh mục công việc", "/admin/job-categories", "bi-folder2-open"],
+  ["Kỹ năng sinh viên", "/admin/student-skills", "bi-person-check"],
+  ["Ngành nghề", "/admin/industries", "bi-diagram-3"],
+  ["Kỹ năng", "/admin/skills", "bi-tools"],
+  ["Địa điểm", "/admin/locations", "bi-geo-alt"],
+  ["Hồ sơ sinh viên", "/admin/student-profiles", "bi-person-badge"],
+  ["Hồ sơ doanh nghiệp", "/admin/employer-profiles", "bi-building"],
   ["Người dùng", "/admin/users", "bi-people"],
   ["Tin tuyển dụng", "/admin/jobs", "bi-briefcase"],
+  ["Kỹ năng công việc", "/admin/job-skills", "bi-link-45deg"],
   ["Đơn ứng tuyển", "/admin/applications", "bi-file-earmark-text"],
   ["Báo cáo", "/admin/reports", "bi-flag"],
 ];
