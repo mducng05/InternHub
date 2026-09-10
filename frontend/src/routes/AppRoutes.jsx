@@ -44,8 +44,16 @@ export default function AppRoutes() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="job-categories" element={<AdminResource type="job-categories" />} />
+            <Route path="student-skills" element={<AdminResource type="student-skills" />} />
+            <Route path="industries" element={<AdminResource type="industries" />} />
+            <Route path="skills" element={<AdminResource type="skills" />} />
+            <Route path="locations" element={<AdminResource type="locations" />} />
+            <Route path="student-profiles" element={<AdminResource type="student-profiles" />} />
+            <Route path="employer-profiles" element={<AdminResource type="employer-profiles" />} />
             <Route path="users" element={<AdminResource type="users" />} />
             <Route path="jobs" element={<AdminResource type="jobs" />} />
+            <Route path="job-skills" element={<AdminResource type="job-skills" />} />
             <Route path="applications" element={<AdminResource type="applications" />} />
             <Route path="reports" element={<AdminResource type="reports" />} />
           </Route>
