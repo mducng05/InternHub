@@ -100,21 +100,113 @@
   right: 14px;
 }
 
+/* ==========================================================================
+   Unified Navbar Dropdowns & Submenus
+   ========================================================================== */
 .nav-hover-dropdown .dropdown-menu {
-  width: max-content;
-  min-width: 540px;
-  max-width: min(980px, calc(100vw - 120px));
+  border: 1px solid #f2d1d9 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 16px 40px rgba(128, 15, 47, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03) !important;
   left: 0;
+  margin-top: 0;
+  max-width: calc(100vw - 32px);
+  padding: 1.25rem 1.35rem !important;
   right: auto;
+  width: max-content;
 }
 
-.nav-hover-dropdown .nav-simple-menu {
-  min-width: 260px;
-  padding: 8px;
+.nav-hover-dropdown .nav-mega-menu {
+  min-width: 740px;
 }
 
 .nav-hover-dropdown .nav-tools-menu {
-  min-width: 560px;
+  min-width: 520px;
+}
+
+.nav-hover-dropdown .nav-simple-menu {
+  min-width: 310px;
+}
+
+.nav-dropdown-cols {
+  align-items: stretch;
+  display: flex;
+}
+
+.nav-dropdown-col {
+  display: flex;
+  flex-direction: column;
+  min-width: max-content;
+}
+
+.nav-dropdown-col.border-end {
+  border-right: 1px solid #f2d1d9 !important;
+}
+
+.nav-submenu-header {
+  align-items: center;
+  color: #8d7a81;
+  display: flex;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.65rem;
+  padding: 0 0.65rem;
+  text-transform: uppercase;
+  user-select: none;
+  white-space: nowrap !important;
+}
+
+.nav-submenu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-submenu-grid-2col {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.nav-submenu-link {
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #382d32 !important;
+  display: flex;
+  font-size: 0.88rem;
+  font-weight: 500;
+  gap: 0.65rem;
+  padding: 0.42rem 0.65rem;
+  text-decoration: none !important;
+  transition: all 0.18s ease;
+  white-space: nowrap !important;
+}
+
+.nav-submenu-link:hover,
+.nav-submenu-link:focus-visible {
+  background: #fff0f3 !important;
+  color: #a4133c !important;
+  transform: translateX(3px);
+}
+
+.nav-submenu-icon {
+  align-items: center;
+  color: #c9184a;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  justify-content: center;
+  transition: transform 0.18s ease, color 0.18s ease;
+  width: 18px;
+}
+
+.nav-submenu-link:hover .nav-submenu-icon {
+  color: #800f2f;
+  transform: scale(1.1);
 }
 
 .job-detail-page {
@@ -488,11 +580,18 @@
   width: 44px;
 }
 
+.nav-menu-chevron,
 .user-menu-chevron {
-  font-size: 0.7rem;
+  display: inline-block;
+  font-size: 0.75rem;
   transition: transform 0.2s ease;
 }
 
+.user-menu-chevron {
+  font-size: 0.7rem;
+}
+
+.nav-hover-dropdown:hover .nav-menu-chevron,
 .user-menu:hover .user-menu-chevron {
   transform: rotate(180deg);
 }
@@ -500,6 +599,7 @@
 .user-menu.nav-hover-dropdown > .user-dropdown-menu {
   left: auto;
   min-width: 290px;
+  padding: 0.5rem !important;
   right: 0;
   top: 100%;
   width: 290px;
@@ -572,7 +672,10 @@
 
 .user-submenu.nav-hover-dropdown > .user-submenu-menu {
   background: transparent;
+  border: none !important;
+  border-radius: 0 !important;
   box-shadow: none !important;
+  outline: none !important;
   left: 0;
   display: block !important;
   min-width: 0;
@@ -589,6 +692,9 @@
 }
 
 .user-submenu.nav-hover-dropdown > .user-submenu-menu.is-open {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
   max-height: 120px;
   opacity: 1;
   position: static !important;
