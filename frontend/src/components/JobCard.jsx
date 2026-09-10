@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import defaultLogo from "../assets/logo01.png";
 
 export default function JobCard({ job, onSave, isSaved }) {
+  const navigate = useNavigate();
   if (!job) return null;
 
   // 1. Logo Doanh nghiệp
@@ -60,15 +61,38 @@ export default function JobCard({ job, onSave, isSaved }) {
   // 6. Định dạng Mức lương
   const formatSalary = () => {
     if (job?.salary) return job.salary;
-    if (job?.min_salary !== undefined && job?.max_salary !== undefined) {
-      if (job.min_salary === 0 && job.max_salary === 0) return "Thỏa thuận";
-      return `${job.min_salary} - ${job.max_salary} triệu`;
+    const min = job?.salary_min ?? job?.min_salary;
+    const max = job?.salary_max ?? job?.max_salary;
+
+    if (min !== undefined && min !== null && max !== undefined && max !== null) {
+      if (min === 0 && max === 0) return "Thỏa thuận";
+      const minText = min >= 1000000 ? `${min / 1000000} triệu` : `${min.toLocaleString("vi-VN")} đ`;
+      const maxText = max >= 1000000 ? `${max / 1000000} triệu` : `${max.toLocaleString("vi-VN")} đ`;
+      return `${minText} - ${maxText}`;
+    }
+    if (min !== undefined && min !== null && min > 0) {
+      return `Từ ${min >= 1000000 ? `${min / 1000000} triệu` : `${min.toLocaleString("vi-VN")} đ`}`;
+    }
+    if (max !== undefined && max !== null && max > 0) {
+      return `Đến ${max >= 1000000 ? `${max / 1000000} triệu` : `${max.toLocaleString("vi-VN")} đ`}`;
     }
     return "Thỏa thuận";
   };
 
+  const handleCardClick = (e) => {
+    // Không chuyển trang nếu bấm vào nút Lưu/Yêu thích
+    if (e.target.closest("button") || e.target.closest(".job-save-button") || e.target.closest("a")) {
+      return;
+    }
+    navigate(`/jobs/${job?.id}`);
+  };
+
   return (
-    <div className="card h-100 border-0 shadow-sm rounded-3 p-3 bg-white d-flex flex-column justify-content-between job-card-item">
+    <div
+      onClick={handleCardClick}
+      className="card h-100 border-0 shadow-sm rounded-3 p-3 bg-white d-flex flex-column justify-content-between job-card-item cursor-pointer"
+      style={{ cursor: "pointer" }}
+    >
       <div>
         {/* Phần 1: Header (Logo + Thông tin chính) */}
         <div className="d-flex align-items-center gap-3 mb-2 job-card-header">
@@ -95,13 +119,12 @@ export default function JobCard({ job, onSave, isSaved }) {
               </span>
             )}
             <h6 className="card-title mb-1 fw-bold text-truncate job-title-row">
-              <Link
-                to={`/jobs/${job?.id}`}
-                className="text-decoration-none text-dark"
+              <span
+                className="text-dark"
                 title={job?.title}
               >
                 {job?.title || "Tin tuyển dụng"}
-              </Link>
+              </span>
             </h6>
             <p className="text-secondary small mb-0 text-truncate company-name-row">
               {companyName}
@@ -130,7 +153,7 @@ export default function JobCard({ job, onSave, isSaved }) {
         </div>
       </div>
 
-      {/* Phần 3: Chân thẻ (Nút bấm) */}
+        {/* Phần 3: Chân thẻ (Nút bấm) */}
       <div className="d-flex justify-content-end align-items-center gap-2 mt-2 job-card-footer">
         <button
           type="button"
@@ -142,12 +165,9 @@ export default function JobCard({ job, onSave, isSaved }) {
           <i className={`bi ${isSaved ? "bi-heart-fill" : "bi-heart"}`}></i>
         </button>
 
-        <Link
-          to={`/jobs/${job?.id}`}
-          className="btn job-apply-button"
-        >
+        <span className="btn job-apply-button">
           Ứng tuyển
-        </Link>
+        </span>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register as registerRequest } from "../api/auth";
+import GoogleAuthButton from "../components/GoogleAuthButton";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -54,62 +55,144 @@ export default function Register() {
         </div>
       </section>
 
-      <section className="auth-card">
-        <div className="mb-4">
+      <section className="auth-card register-card">
+        <div className="auth-card-header mb-4">
           <h2>Tạo tài khoản</h2>
-          <p className="text-muted mb-0">Tham gia thị trường lao động chỉ với vài bước đơn giản.</p>
+          <p className="auth-card-subtitle">Tham gia thị trường lao động chỉ với vài bước đơn giản</p>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label" htmlFor="full_name">Họ và tên</label>
-            <input id="full_name" name="full_name" className="form-control" value={form.full_name} onChange={handleChange} required />
+            <label className="form-label" htmlFor="full_name">
+              <i className="bi bi-person text-pink"></i> Họ và tên
+            </label>
+            <input
+              id="full_name"
+              name="full_name"
+              className="form-control"
+              placeholder="Nhập họ và tên"
+              value={form.full_name}
+              onChange={handleChange}
+              required
+            />
           </div>
 
-          <div className="row g-3">
-            <div className="col-md-7">
-              <label className="form-label" htmlFor="email">Email</label>
-              <input id="email" name="email" type="email" className="form-control" value={form.email} onChange={handleChange} required />
+          <div className="row g-2 mb-3">
+            <div className="col-12 col-sm-7">
+              <label className="form-label" htmlFor="email">
+                <i className="bi bi-envelope text-pink"></i> Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                className="form-control"
+                placeholder="Nhập email"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
             </div>
-            <div className="col-md-5">
-              <label className="form-label" htmlFor="phone">Số điện thoại</label>
-              <input id="phone" name="phone" type="tel" className="form-control" value={form.phone} onChange={handleChange} />
+            <div className="col-12 col-sm-5">
+              <label className="form-label" htmlFor="phone">
+                <i className="bi bi-telephone text-pink"></i> Số điện thoại
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                className="form-control"
+                placeholder="Nhập số điện thoại"
+                value={form.phone}
+                onChange={handleChange}
+              />
             </div>
           </div>
 
-          <fieldset className="mt-3 mb-3">
-            <legend className="form-label mb-2">Bạn tham gia với vai trò</legend>
+          <fieldset className="mb-3">
+            <legend className="form-label mb-2">
+              <i className="bi bi-person-badge text-pink"></i> Bạn tham gia với vai trò
+            </legend>
             <div className="role-options">
               <label className={form.role === "student" ? "role-option active" : "role-option"}>
-                <input type="radio" name="role" value="student" checked={form.role === "student"} onChange={handleChange} />
-                <i className="bi bi-mortarboard"></i><span>Sinh viên</span>
+                <input
+                  type="radio"
+                  name="role"
+                  value="student"
+                  checked={form.role === "student"}
+                  onChange={handleChange}
+                />
+                <i className="bi bi-mortarboard"></i>
+                <span>Sinh viên</span>
               </label>
               <label className={form.role === "employer" ? "role-option active" : "role-option"}>
-                <input type="radio" name="role" value="employer" checked={form.role === "employer"} onChange={handleChange} />
-                <i className="bi bi-building"></i><span>Nhà tuyển dụng</span>
+                <input
+                  type="radio"
+                  name="role"
+                  value="employer"
+                  checked={form.role === "employer"}
+                  onChange={handleChange}
+                />
+                <i className="bi bi-building"></i>
+                <span>Nhà tuyển dụng</span>
               </label>
             </div>
           </fieldset>
 
-          <div className="row g-3">
-            <div className="col-md-6">
-              <label className="form-label" htmlFor="password">Mật khẩu</label>
-              <input id="password" name="password" type="password" minLength="8" className="form-control" value={form.password} onChange={handleChange} required />
+          <div className="row g-2 mb-3">
+            <div className="col-12 col-sm-6">
+              <label className="form-label" htmlFor="password">
+                <i className="bi bi-lock text-pink"></i> Mật khẩu
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                minLength="8"
+                className="form-control"
+                placeholder="Tối thiểu 8 ký tự"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
             </div>
-            <div className="col-md-6">
-              <label className="form-label" htmlFor="password_confirm">Xác nhận mật khẩu</label>
-              <input id="password_confirm" name="password_confirm" type="password" minLength="8" className="form-control" value={form.password_confirm} onChange={handleChange} required />
+            <div className="col-12 col-sm-6">
+              <label className="form-label" htmlFor="password_confirm">
+                <i className="bi bi-shield-lock text-pink"></i> Xác nhận
+              </label>
+              <input
+                id="password_confirm"
+                name="password_confirm"
+                type="password"
+                minLength="8"
+                className="form-control"
+                placeholder="Nhập lại mật khẩu"
+                value={form.password_confirm}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
-          {error && <div className="alert alert-danger mt-3 mb-0">{error}</div>}
+          {error && (
+            <div className="alert alert-danger d-flex align-items-center gap-2 py-2 px-3 small rounded-3 mb-3">
+              <i className="bi bi-exclamation-circle-fill"></i>
+              <span>{error}</span>
+            </div>
+          )}
 
-          <button className="btn btn-register w-100 mt-4" type="submit" disabled={loading}>
+          <button className="btn btn-register w-100 mt-2" type="submit" disabled={loading}>
             {loading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
           </button>
         </form>
 
-        <p className="text-center text-muted mt-4 mb-0">
+        <div className="auth-divider">
+          <span>Hoặc tiếp tục với</span>
+        </div>
+
+        <GoogleAuthButton text="Đăng ký bằng Google" role={form.role} onError={(msg) => setError(msg)} />
+
+        <p className="auth-footer-text">
           Đã có tài khoản? <Link to="/login" className="auth-link">Đăng nhập</Link>
         </p>
       </section>

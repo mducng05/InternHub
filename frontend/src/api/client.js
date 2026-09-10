@@ -6,7 +6,9 @@ const client = axios.create({
 
 client.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem("access_token");
-  if (accessToken) {
+  // Do not send obsolete Authorization header to auth endpoints (login, register, refresh)
+  const isAuthEndpoint = config.url?.includes("/auth/token") || config.url?.includes("/auth/register");
+  if (accessToken && !isAuthEndpoint) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
@@ -17,8 +19,9 @@ client.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem("refresh_token");
+    const isAuthEndpoint = originalRequest?.url?.includes("/auth/token");
 
-    if (error.response?.status === 401 && refreshToken && !originalRequest._retry) {
+    if (error.response?.status === 401 && refreshToken && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
       try {
         const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/token/refresh/`, {

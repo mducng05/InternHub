@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import defaultLogo from "../assets/logo01.png";
-import { fetchJobDetail } from "../api/jobs";
+import { fetchJobDetail, saveJob } from "../api/jobs";
+import { useAuth } from "../store/AuthContext";
 
 const internshipTypeLabels = {
   full_time: "Toàn thời gian",
@@ -39,18 +40,50 @@ const formatDate = (value) => (value ? new Date(value).toLocaleDateString("vi-VN
 
 export default function JobDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+  const [savingJob, setSavingJob] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     let active = true;
+    setLoading(true);
     fetchJobDetail(id)
-      .then((response) => active && setJob(response.data))
+      .then((response) => {
+        if (active && response.data) {
+          setJob(response.data);
+          setSaved(Boolean(response.data.is_saved));
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        }
+      })
       .catch(() => active && setJob(null))
-      .finally(() => active && setLoading(false));
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        }
+      });
     return () => { active = false; };
   }, [id]);
+
+  const handleToggleSave = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    setSavingJob(true);
+    try {
+      const res = await saveJob(job.id);
+      setSaved(Boolean(res.data.saved));
+    } catch (err) {
+      console.error("Lỗi khi lưu việc làm:", err);
+    } finally {
+      setSavingJob(false);
+    }
+  };
 
   if (loading) {
     return <main className="job-detail-page bg-light min-vh-100 py-5"><div className="text-center py-5"><div className="spinner-border text-pink" role="status"></div><p className="text-muted mt-2">Đang tải thông tin việc làm...</p></div></main>;
@@ -83,9 +116,19 @@ export default function JobDetail() {
   return (
     <main className="job-detail-page bg-light min-vh-100 py-4 py-md-5">
       <div className="container">
-        <Link to="/jobs" className="text-decoration-none text-secondary small d-inline-flex align-items-center gap-2 mb-3">
+        <button
+          type="button"
+          onClick={() => {
+            if (window.history.length > 1) {
+              navigate(-1);
+            } else {
+              navigate("/jobs");
+            }
+          }}
+          className="btn btn-link text-decoration-none text-secondary small p-0 d-inline-flex align-items-center gap-2 mb-3 border-0 bg-transparent shadow-none"
+        >
           <i className="bi bi-arrow-left"></i> Quay lại danh sách việc làm
-        </Link>
+        </button>
 
         <div className="row g-3 align-items-start mb-3">
           <section className="col-lg-8">
@@ -140,8 +183,14 @@ export default function JobDetail() {
 
             <div className="job-detail-actions bg-white border rounded-3 shadow-sm p-3 p-md-4 mt-3">
               <Link to={`/jobs/${job.id}/apply`} className="btn btn-pink text-white w-100 fw-semibold py-2">Ứng tuyển ngay</Link>
-              <button type="button" className={`btn w-100 mt-2 ${saved ? "btn-danger" : "btn-outline-secondary"}`} onClick={() => setSaved((value) => !value)}>
-                <i className={`bi ${saved ? "bi-bookmark-fill" : "bi-bookmark"} me-2`}></i>{saved ? "Đã lưu việc làm" : "Lưu việc làm"}
+              <button
+                type="button"
+                className={`btn w-100 mt-2 ${saved ? "btn-danger text-white" : "btn-outline-danger"}`}
+                onClick={handleToggleSave}
+                disabled={savingJob}
+              >
+                <i className={`bi ${saved ? "bi-bookmark-fill" : "bi-bookmark"} me-2`}></i>
+                {savingJob ? "Đang xử lý..." : (saved ? "Đã lưu việc làm" : "Lưu việc làm")}
               </button>
             </div>
           </aside>

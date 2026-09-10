@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 from django.urls import include, path
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from apps.accounts.views import CustomTokenObtainPairView
+from apps.accounts.views import CustomTokenObtainPairView, RegisterView
 from apps.common.views import health_check
 
 urlpatterns = [
@@ -26,6 +26,9 @@ urlpatterns = [
     path('api/v1/notifications/', include('apps.notifications.urls')),
     path('api/v1/moderation/', include('apps.moderation.urls')),
     path('api/v1/admin/', include('apps.admin_api.urls')),
+    path('api/v1/profiles/', include('apps.profiles.urls')),
+
+    path('register/', RegisterView.as_view(), name='register'),
 ]
 
 if settings.DEBUG:

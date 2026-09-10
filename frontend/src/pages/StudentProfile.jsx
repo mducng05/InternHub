@@ -1,28 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
+import { getStudentProfile, updateStudentProfile } from "../api/profile";
 
 const profileFields = [
 	{ key: "full_name", label: "Họ và tên", placeholder: "Nhập họ và tên", required: true },
-	{ key: "university", label: "Trường đại học", placeholder: "" },
-	{ key: "major", label: "Chuyên ngành", placeholder: "" },
-	{ key: "graduation_year", label: "Năm tốt nghiệp", placeholder: "", type: "number" },
+	{ key: "university", label: "Trường đại học", placeholder: "Trường đại học" },
+	{ key: "major", label: "Chuyên ngành", placeholder: "Chuyên ngành" },
+	{ key: "graduation_year", label: "Năm tốt nghiệp", placeholder: "Năm tốt nghiệp", type: "number" },
 	{ key: "address", label: "Địa chỉ", placeholder: "Thành phố bạn đang sinh sống" },
 ];
 
 function getInitials(name) {
-	return name
-		.split(" ")
-		.filter(Boolean)
-		.slice(-2)
-		.map((part) => part[0])
-		.join("")
-		.toUpperCase() || "U";
+	return (
+		name
+			.split(" ")
+			.filter(Boolean)
+			.slice(-2)
+			.map((part) => part[0])
+			.join("")
+			.toUpperCase() || "U"
+	);
 }
 
 export default function StudentProfile() {
-	const { user } = useAuth();
-	const savedProfile = JSON.parse(localStorage.getItem("student_profile") || "null");
+	const { user, updateUser } = useAuth();
+	const userProfileKey = user?.id ? `student_profile_${user.id}` : null;
+
 	const [profile, setProfile] = useState({
 		full_name: user?.full_name || "",
 		university: "",
@@ -30,23 +34,122 @@ export default function StudentProfile() {
 		graduation_year: "",
 		address: "",
 		bio: "",
-		...savedProfile,
 	});
+	const [loading, setLoading] = useState(false);
+	const [saving, setSaving] = useState(false);
 	const [saved, setSaved] = useState(false);
+	const [error, setError] = useState("");
+
+	// Tải thông tin hồ sơ theo đúng tài khoản đăng nhập
+	useEffect(() => {
+		// Xoá key cũ không phân biệt tài khoản để tránh rò rỉ dữ liệu
+		localStorage.removeItem("student_profile");
+
+		if (!user?.id) return;
+
+		// 1. Kiểm tra cache riêng của tài khoản hiện tại
+		const cached = userProfileKey ? JSON.parse(localStorage.getItem(userProfileKey) || "null") : null;
+		if (cached) {
+			setProfile({
+				full_name: cached.full_name || user.full_name || "",
+				university: cached.university || "",
+				major: cached.major || "",
+				graduation_year: cached.graduation_year || "",
+				address: cached.address || "",
+				bio: cached.bio || "",
+			});
+		} else {
+			setProfile({
+				full_name: user.full_name || "",
+				university: "",
+				major: "",
+				graduation_year: "",
+				address: "",
+				bio: "",
+			});
+		}
+
+		// 2. Gọi API lấy dữ liệu thực tế từ database của tài khoản này
+		let isCurrent = true;
+		setLoading(true);
+		getStudentProfile()
+			.then(({ data }) => {
+				if (isCurrent && data) {
+					const profileData = {
+						full_name: data.full_name || user.full_name || "",
+						university: data.university || "",
+						major: data.major || "",
+						graduation_year: data.graduation_year || "",
+						address: data.address || "",
+						bio: data.bio || "",
+					};
+					setProfile(profileData);
+					if (userProfileKey) {
+						localStorage.setItem(userProfileKey, JSON.stringify(data));
+					}
+				}
+			})
+			.catch((err) => {
+				console.warn("Không thể tải hồ sơ từ máy chủ:", err);
+			})
+			.finally(() => {
+				if (isCurrent) setLoading(false);
+			});
+
+		return () => {
+			isCurrent = false;
+		};
+	}, [user?.id, user?.full_name, userProfileKey]);
 
 	const completionFields = ["full_name", "university", "major", "graduation_year", "address", "bio"];
 	const completedFields = completionFields.filter((field) => profile[field]?.toString().trim()).length;
 	const completion = Math.round((completedFields / completionFields.length) * 100);
 
-	const updateProfile = (field, value) => {
+	const updateField = (field, value) => {
 		setSaved(false);
-		setProfile((currentProfile) => ({ ...currentProfile, [field]: value }));
+		setError("");
+		setProfile((current) => ({ ...current, [field]: value }));
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
-		localStorage.setItem("student_profile", JSON.stringify(profile));
-		setSaved(true);
+		setSaving(true);
+		setError("");
+
+		const payload = {
+			full_name: profile.full_name.trim(),
+			university: profile.university.trim(),
+			major: profile.major.trim(),
+			graduation_year: profile.graduation_year ? parseInt(profile.graduation_year, 10) : null,
+			address: profile.address.trim(),
+			bio: profile.bio.trim(),
+			is_profile_complete: completion >= 80,
+		};
+
+		try {
+			// Lưu vào cơ sở dữ liệu backend
+			const { data } = await updateStudentProfile(payload);
+			if (userProfileKey) {
+				localStorage.setItem(userProfileKey, JSON.stringify(data));
+			}
+
+			// Cập nhật lại họ tên user chung trong hệ thống
+			if (payload.full_name && updateUser) {
+				updateUser({ full_name: payload.full_name });
+			}
+
+			setSaved(true);
+			setTimeout(() => setSaved(false), 4000);
+		} catch (err) {
+			console.error("Lỗi khi cập nhật hồ sơ:", err);
+			// Nếu server có lỗi kết nối, vẫn lưu vào cache riêng của tài khoản này
+			if (userProfileKey) {
+				localStorage.setItem(userProfileKey, JSON.stringify(payload));
+			}
+			setError("Không thể đồng bộ với máy chủ, dữ liệu tạm lưu trên trình duyệt của bạn.");
+		} finally {
+			setSaving(false);
+		}
 	};
 
 	const displayName = profile.full_name || user?.email?.split("@")[0] || "Sinh viên";
@@ -91,7 +194,14 @@ export default function StudentProfile() {
 								</div>
 							</div>
 
-							<div className="row g-3">
+							{error && (
+								<div className="alert alert-warning py-2 px-3 small mt-3" role="alert">
+									<i className="bi bi-exclamation-triangle me-2" />
+									{error}
+								</div>
+							)}
+
+							<div className="row g-3 mt-1">
 								{profileFields.map((field) => (
 									<div className={field.key === "address" ? "col-12" : "col-md-6"} key={field.key}>
 										<label className="form-label" htmlFor={`profile-${field.key}`}>
@@ -102,9 +212,10 @@ export default function StudentProfile() {
 											className="form-control profile-input"
 											type={field.type || "text"}
 											placeholder={field.placeholder}
-											value={profile[field.key]}
-											onChange={(event) => updateProfile(field.key, event.target.value)}
+											value={profile[field.key] || ""}
+											onChange={(event) => updateField(field.key, event.target.value)}
 											required={field.required}
+											disabled={loading || saving}
 										/>
 									</div>
 								))}
@@ -115,16 +226,30 @@ export default function StudentProfile() {
 										className="form-control profile-input"
 										placeholder="Chia sẻ ngắn về mục tiêu, kỹ năng hoặc định hướng nghề nghiệp của bạn..."
 										rows="5"
-										value={profile.bio}
-										onChange={(event) => updateProfile("bio", event.target.value)}
+										value={profile.bio || ""}
+										onChange={(event) => updateField("bio", event.target.value)}
+										disabled={loading || saving}
 									/>
 								</div>
 							</div>
 
 							<div className="profile-form-footer">
-								{saved && <span className="profile-saved"><i className="bi bi-check-circle-fill"></i> Đã lưu thay đổi</span>}
-								<button className="btn profile-save-button" type="submit">
-									<i className="bi bi-check2 me-2"></i>Lưu hồ sơ
+								{saved && (
+									<span className="profile-saved text-pink">
+										<i className="bi bi-check-circle-fill me-1"></i> Đã lưu thay đổi vào hệ thống
+									</span>
+								)}
+								<button className="btn profile-save-button" type="submit" disabled={loading || saving}>
+									{saving ? (
+										<>
+											<span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+											Đang lưu...
+										</>
+									) : (
+										<>
+											<i className="bi bi-check2 me-2"></i>Lưu hồ sơ
+										</>
+									)}
 								</button>
 							</div>
 						</form>
