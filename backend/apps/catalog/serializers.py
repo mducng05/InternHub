@@ -6,16 +6,16 @@ from .models import Industry, JobCategory, Location
 class IndustrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Industry
-        fields = ("id", "name")
+        fields = ("id", "name", "slug")
 
 
 class JobCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = JobCategory
-        fields = ("id", "name")
+        fields = ("id", "name", "slug")
 
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ("id", "name")
+        fields = ("id", "name", "slug")

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import banner01 from "../assets/banner03.png";
 import banner02 from "../assets/banner04.png";
 
@@ -8,10 +8,16 @@ const availableLocations = ["Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng", "H
 
 export default function HomeSearchBanner() {
   const navigate = useNavigate();
-  const [keyword, setKeyword] = useState("");
-  const [locations, setLocations] = useState([]);
+  const [searchParams] = useSearchParams();
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
+  const [locations, setLocations] = useState(searchParams.getAll("location") || []);
   const [activeBanner, setActiveBanner] = useState(0);
   const [bannerTransition, setBannerTransition] = useState(null);
+
+  useEffect(() => {
+    setKeyword(searchParams.get("keyword") || "");
+    setLocations(searchParams.getAll("location") || []);
+  }, [searchParams]);
 
   useEffect(() => {
     const bannerTimer = window.setInterval(() => {
@@ -39,9 +45,15 @@ export default function HomeSearchBanner() {
 
   const handleSearch = (event) => {
     event.preventDefault();
-    const searchParams = new URLSearchParams({ keyword });
-    locations.forEach((location) => searchParams.append("location", location));
-    navigate(`/jobs?${searchParams.toString()}`);
+    const nextParams = new URLSearchParams(searchParams);
+    if (keyword.trim()) {
+      nextParams.set("keyword", keyword.trim());
+    } else {
+      nextParams.delete("keyword");
+    }
+    nextParams.delete("location");
+    locations.forEach((location) => nextParams.append("location", location));
+    navigate(`/jobs?${nextParams.toString()}`);
   };
 
   const toggleLocation = (selectedLocation) => {

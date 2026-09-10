@@ -19,8 +19,18 @@ export default function Login() {
     try {
       await login(email, password);
       navigate("/", { replace: true });
-    } catch {
-      setError("Email hoặc mật khẩu không chính xác.");
+    } catch (err) {
+      if (err.response?.data?.detail) {
+        setError(
+          err.response.data.detail === "No active account found with the given credentials"
+            ? "Email hoặc mật khẩu không chính xác."
+            : err.response.data.detail
+        );
+      } else if (err.message === "Network Error" || !err.response) {
+        setError("Không thể kết nối đến máy chủ. Vui lòng kiểm tra backend server.");
+      } else {
+        setError("Email hoặc mật khẩu không chính xác.");
+      }
     } finally {
       setLoading(false);
     }

@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import client from "../api/client";
+import { fetchSavedJobs, saveJob } from "../api/jobs";
+import { useAuth } from "../store/AuthContext";
 import JobCard from "../components/JobCard";
 import HomeSearchBanner from "../components/HomeSearchBanner";
 
 export default function Home() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [status, setStatus] = useState({ ok: false, msg: "Đang kiểm tra kết nối backend..." });
   const [jobs, setJobs] = useState([]);
+  const [savedJobIds, setSavedJobIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -37,6 +42,37 @@ export default function Home() {
         setLoading(false);
       });
   }, []);
+
+  // Tải danh sách việc làm đã lưu khi người dùng đăng nhập
+  useEffect(() => {
+    if (user?.id) {
+      fetchSavedJobs()
+        .then((res) => {
+          const ids = res.data?.saved_job_ids || [];
+          setSavedJobIds(ids);
+        })
+        .catch(() => {});
+    } else {
+      setSavedJobIds([]);
+    }
+  }, [user?.id]);
+
+  const handleSaveJob = async (jobId) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const res = await saveJob(jobId);
+      if (res.data?.saved) {
+        setSavedJobIds((prev) => [...prev, jobId]);
+      } else {
+        setSavedJobIds((prev) => prev.filter((id) => id !== jobId));
+      }
+    } catch (err) {
+      console.error("Lỗi khi lưu việc làm:", err);
+    }
+  };
 
   return (
     <div className="min-vh-100 pb-5" style={{ background: "#fff7f8" }}>
@@ -90,7 +126,11 @@ export default function Home() {
           <div className="row g-3">
             {jobs.map((job) => (
               <div key={job.id} className="col-12 col-md-6 col-lg-4">
-                <JobCard job={job} />
+                <JobCard
+                  job={job}
+                  onSave={handleSaveJob}
+                  isSaved={savedJobIds.includes(job.id)}
+                />
               </div>
             ))}
           </div>

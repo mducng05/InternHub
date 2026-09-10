@@ -103,7 +103,7 @@
 .nav-hover-dropdown .dropdown-menu {
   width: max-content;
   min-width: 540px;
- max-width: min(980px, calc(100vw - 120px));
+  max-width: min(980px, calc(100vw - 120px));
   left: 0;
   right: auto;
 }
@@ -615,7 +615,8 @@
   }
 }
 
-.nav-hover-dropdown:hover .dropdown-menu {
+.nav-hover-dropdown:hover > .dropdown-menu,
+.nav-hover-dropdown > .dropdown-menu:hover {
   display: block;
   opacity: 1;
   pointer-events: auto;
@@ -634,13 +635,25 @@
   visibility: hidden;
 }
 
+/* Invisible bridge between nav item and dropdown menu to prevent hover loss */
+.nav-hover-dropdown > .dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background: transparent;
+}
+
 /* Keep navigation submenus below their parent item. */
 .navbar .nav-hover-dropdown > .dropdown-menu {
   top: 100%;
   transform-origin: top center;
 }
 
-.navbar .nav-hover-dropdown:hover > .dropdown-menu {
+.navbar .nav-hover-dropdown:hover > .dropdown-menu,
+.navbar .nav-hover-dropdown > .dropdown-menu:hover {
   transform: translateY(0);
 }
 
@@ -878,8 +891,12 @@ textarea.profile-input {
 }
 
 .profile-saved {
-  color: #198754;
-  font-size: 0.82rem;
+  color: #c9184a !important;
+  font-size: 0.86rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .profile-save-button,
@@ -1924,3 +1941,265 @@ textarea.profile-input {
 .student-dashboard-tip strong { color: #5c1025; font-size: 0.85rem; }
 .student-dashboard-tip span { color: #775c65; font-size: 0.78rem; margin-top: 0.15rem; }
 .student-dashboard-tip a { color: #c9184a; margin-left: auto; }
+
+/* Color utilities */
+.text-pink {
+  color: #c9184a !important;
+}
+
+.bg-pink {
+  background-color: #c9184a !important;
+  color: #fff !important;
+}
+
+.bg-pink-subtle {
+  background-color: #fff0f3 !important;
+  color: #a9153f !important;
+}
+
+.btn-pink {
+  background-color: #c9184a !important;
+  border-color: #c9184a !important;
+  color: #fff !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-pink:hover,
+.btn-pink:focus-visible {
+  background-color: #a9153f !important;
+  border-color: #a9153f !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(201, 24, 74, 0.25);
+}
+
+.btn-outline-pink {
+  color: #c9184a !important;
+  border: 1px solid #c9184a !important;
+  background-color: transparent !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-pink:hover,
+.btn-outline-pink:focus-visible {
+  color: #fff !important;
+  background-color: #c9184a !important;
+  border-color: #c9184a !important;
+  box-shadow: 0 4px 12px rgba(201, 24, 74, 0.2);
+}
+
+/* Job Filter Card Styles */
+.job-filter-card {
+  border: 1px solid #f1c2cd !important;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(128, 15, 47, 0.06);
+}
+
+.job-filter-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #fff0f3;
+}
+
+.job-filter-select {
+  border-color: #f1c2cd;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.88rem;
+  color: #4a1525;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.job-filter-select:focus {
+  border-color: #c9184a;
+  box-shadow: 0 0 0 0.2rem rgba(201, 24, 74, 0.15);
+  outline: none;
+}
+
+/* Custom Job Filter Dropdown & Submenu */
+.job-filter-field {
+  position: relative;
+}
+
+.job-filter-trigger {
+  min-height: 44px;
+  border: 1.5px solid #f1c2cd !important;
+  border-radius: 10px !important;
+  color: #3e1b24;
+  font-size: 0.88rem;
+  background-color: #ffffff !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.job-filter-trigger:hover {
+  border-color: #c9184a !important;
+  background-color: #ffffff !important;
+}
+
+.job-filter-trigger:focus,
+.job-filter-trigger.is-open {
+  border-color: #c9184a !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 0.2rem rgba(201, 24, 74, 0.14) !important;
+  outline: none;
+}
+
+.job-filter-trigger.has-value {
+  border-color: #c9184a !important;
+  background-color: #ffffff !important;
+  font-weight: 500;
+}
+
+.job-filter-trigger .transition-transform {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.job-filter-trigger .rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* Submenu Popup */
+.job-filter-submenu {
+  position: absolute !important;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  z-index: 1050;
+  background: #ffffff;
+  border: 1.5px solid #f1c2cd !important;
+  border-top: 2.5px solid #c9184a !important;
+  border-radius: 12px !important;
+  box-shadow: 0 14px 36px rgba(128, 15, 47, 0.18) !important;
+  animation: filter-submenu-in 0.12s ease-out;
+  padding: 0.35rem !important;
+  overflow: hidden !important;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Invisible bridge between trigger and submenu to eliminate hover gap */
+.job-filter-submenu::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: transparent;
+}
+
+@keyframes filter-submenu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.job-filter-submenu-list {
+  max-height: 280px;
+  overflow-y: auto;
+  overflow-x: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: #f1c2cd transparent;
+  box-sizing: border-box;
+  padding: 1px;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+.job-filter-submenu-list::-webkit-scrollbar {
+  width: 5px;
+  height: 0px !important;
+}
+
+.job-filter-submenu-list::-webkit-scrollbar:horizontal {
+  display: none !important;
+  height: 0px !important;
+  width: 0px !important;
+}
+
+.job-filter-submenu-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.job-filter-submenu-list::-webkit-scrollbar-thumb {
+  background-color: #f1c2cd;
+  border-radius: 999px;
+}
+
+.job-filter-submenu-list::-webkit-scrollbar-thumb:hover {
+  background-color: #c9184a;
+}
+
+/* Submenu Item */
+.job-filter-submenu-item {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  color: #4a1525;
+  transition: background-color 0.15s ease, color 0.15s ease, padding-left 0.15s ease;
+  padding: 0.55rem 0.75rem !important;
+  box-sizing: border-box;
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.job-filter-submenu-item:hover {
+  background: #fff0f3 !important;
+  background-color: #fff0f3 !important;
+  color: #c9184a !important;
+  padding-left: 0.95rem !important;
+}
+
+.job-filter-submenu-item.is-active {
+  background: #fff0f3 !important;
+  background-color: #fff0f3 !important;
+  color: #c9184a !important;
+  font-weight: 600;
+}
+
+/* Active Filter Badges */
+.job-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: #fff0f3;
+  border: 1px solid #f1c2cd;
+  color: #a9153f;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+}
+
+.job-active-badge button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: #a9153f;
+  padding: 0;
+  margin-left: 2px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  line-height: 1;
+  opacity: 0.75;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.job-active-badge button:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
