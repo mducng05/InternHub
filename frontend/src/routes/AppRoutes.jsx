@@ -1,5 +1,6 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import ScrollToTop from "../components/ScrollToTop";
 import AdminLogin from "../pages/admin/AdminLogin";
 import AdminLayout from "../pages/admin/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -20,6 +21,7 @@ export default function AppRoutes() {
   const isAdmin = location.pathname.startsWith("/admin");
   return (
     <>
+      <ScrollToTop />
       {!isAdmin && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />

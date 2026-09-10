@@ -5,7 +5,6 @@ import { fetchJobs, fetchSavedJobs, saveJob } from "../api/jobs";
 import { fetchJobCategories, fetchLocations } from "../api/catalog";
 import { useAuth } from "../store/AuthContext";
 import JobCard from "../components/JobCard";
-import HomeSearchBanner from "../components/HomeSearchBanner";
 
 // Hàm bóc tách dữ liệu linh hoạt cho mọi cấu trúc API (Axios, Fetch, Paginated results)
 function responseItems(response) {
@@ -100,18 +99,16 @@ function FilterDropdown({
         type="button"
         id={id}
         onClick={onToggle}
-        className={`job-filter-trigger w-100 d-flex align-items-center justify-content-between px-3 py-2 text-start ${
-          isOpen ? "is-open" : ""
-        } ${isSelected ? "has-value" : ""}`}
+        className={`job-filter-trigger w-100 d-flex align-items-center justify-content-between px-3 py-2 text-start ${isOpen ? "is-open" : ""
+          } ${isSelected ? "has-value" : ""}`}
         aria-expanded={isOpen}
       >
         <span className={`text-truncate ${isSelected ? "fw-semibold text-dark" : "text-muted"}`}>
           {displayLabel}
         </span>
         <i
-          className={`bi bi-chevron-down ms-2 small transition-transform ${
-            isOpen ? "rotate-180 text-pink" : "text-muted"
-          }`}
+          className={`bi bi-chevron-down ms-2 small transition-transform ${isOpen ? "rotate-180 text-pink" : "text-muted"
+            }`}
         />
       </button>
 
@@ -132,9 +129,8 @@ function FilterDropdown({
                     onChange(opt.value);
                     onClose();
                   }}
-                  className={`job-filter-submenu-item d-flex align-items-center justify-content-between ${
-                    active ? "is-active" : ""
-                  }`}
+                  className={`job-filter-submenu-item d-flex align-items-center justify-content-between ${active ? "is-active" : ""
+                    }`}
                 >
                   <span className="text-truncate">{opt.label}</span>
                   {active && <i className="bi bi-check2 text-pink fw-bold ms-2 flex-shrink-0" />}
@@ -169,7 +165,7 @@ export default function JobList() {
           const ids = res.data?.saved_job_ids || [];
           setSavedJobIds(ids);
         })
-        .catch(() => {});
+        .catch(() => { });
     } else {
       setSavedJobIds([]);
     }
@@ -214,14 +210,14 @@ export default function JobList() {
         const items = responseItems(res);
         if (items.length > 0) setCategories(items);
       })
-      .catch(() => {});
+      .catch(() => { });
 
     fetchLocations()
       .then((res) => {
         const items = responseItems(res);
         if (items.length > 0) setLocations(items);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Đọc bộ lọc hiện tại từ URL query params
@@ -389,12 +385,10 @@ export default function JobList() {
   );
 
   return (
-    <div className="job-list-page min-vh-100">
-      <HomeSearchBanner />
-
+    <div className="job-list-page min-vh-100" style={{ background: "rgb(255, 247, 248)" }}>
       <div className="container job-list-container py-4">
         {/* Tiêu đề & Giới thiệu */}
-        <div className="job-list-heading mb-4">
+        {/* <div className="job-list-heading mb-4">
           <div>
             <h1 className="display-6 fw-bold mb-2">Tìm nơi bắt đầu sự nghiệp</h1>
             <p className="job-list-lead mb-0">
@@ -409,7 +403,7 @@ export default function JobList() {
           <div className="job-list-heading-mark d-none d-md-flex" aria-hidden="true">
             <i className="bi bi-briefcase-fill" />
           </div>
-        </div>
+        </div> */}
 
         {/* Khung Bộ Lọc Dropdown Submenu Cao Cấp */}
         <div className="job-filter-card bg-white rounded-4 p-4 shadow-sm border mb-4">

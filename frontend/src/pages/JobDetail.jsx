@@ -48,6 +48,7 @@ export default function JobDetail() {
   const [savingJob, setSavingJob] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     let active = true;
     setLoading(true);
     fetchJobDetail(id)
@@ -55,10 +56,16 @@ export default function JobDetail() {
         if (active && response.data) {
           setJob(response.data);
           setSaved(Boolean(response.data.is_saved));
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         }
       })
       .catch(() => active && setJob(null))
-      .finally(() => active && setLoading(false));
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        }
+      });
     return () => { active = false; };
   }, [id]);
 
@@ -109,9 +116,19 @@ export default function JobDetail() {
   return (
     <main className="job-detail-page bg-light min-vh-100 py-4 py-md-5">
       <div className="container">
-        <Link to="/jobs" className="text-decoration-none text-secondary small d-inline-flex align-items-center gap-2 mb-3">
+        <button
+          type="button"
+          onClick={() => {
+            if (window.history.length > 1) {
+              navigate(-1);
+            } else {
+              navigate("/jobs");
+            }
+          }}
+          className="btn btn-link text-decoration-none text-secondary small p-0 d-inline-flex align-items-center gap-2 mb-3 border-0 bg-transparent shadow-none"
+        >
           <i className="bi bi-arrow-left"></i> Quay lại danh sách việc làm
-        </Link>
+        </button>
 
         <div className="row g-3 align-items-start mb-3">
           <section className="col-lg-8">

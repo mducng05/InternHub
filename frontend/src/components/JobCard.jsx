@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import defaultLogo from "../assets/logo01.png";
 
 export default function JobCard({ job, onSave, isSaved }) {
@@ -81,7 +81,7 @@ export default function JobCard({ job, onSave, isSaved }) {
 
   const handleCardClick = (e) => {
     // Không chuyển trang nếu bấm vào nút Lưu/Yêu thích
-    if (e.target.closest("button") || e.target.closest(".job-save-button")) {
+    if (e.target.closest("button") || e.target.closest(".job-save-button") || e.target.closest("a")) {
       return;
     }
     navigate(`/jobs/${job?.id}`);
@@ -119,13 +119,12 @@ export default function JobCard({ job, onSave, isSaved }) {
               </span>
             )}
             <h6 className="card-title mb-1 fw-bold text-truncate job-title-row">
-              <Link
-                to={`/jobs/${job?.id}`}
-                className="text-decoration-none text-dark"
+              <span
+                className="text-dark"
                 title={job?.title}
               >
                 {job?.title || "Tin tuyển dụng"}
-              </Link>
+              </span>
             </h6>
             <p className="text-secondary small mb-0 text-truncate company-name-row">
               {companyName}
@@ -154,7 +153,7 @@ export default function JobCard({ job, onSave, isSaved }) {
         </div>
       </div>
 
-      {/* Phần 3: Chân thẻ (Nút bấm) */}
+        {/* Phần 3: Chân thẻ (Nút bấm) */}
       <div className="d-flex justify-content-end align-items-center gap-2 mt-2 job-card-footer">
         <button
           type="button"
@@ -166,12 +165,9 @@ export default function JobCard({ job, onSave, isSaved }) {
           <i className={`bi ${isSaved ? "bi-heart-fill" : "bi-heart"}`}></i>
         </button>
 
-        <Link
-          to={`/jobs/${job?.id}`}
-          className="btn job-apply-button"
-        >
+        <span className="btn job-apply-button">
           Ứng tuyển
-        </Link>
+        </span>
       </div>
     </div>
   );

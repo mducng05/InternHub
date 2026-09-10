@@ -1394,7 +1394,7 @@ textarea.profile-input {
   --job-coral: #c9184a;
   --job-coral-dark: #a9153f;
   --job-line: #f1c2cd;
-  background: transparent;
+  background: rgb(255, 247, 248);
   color: var(--job-ink);
   text-align: left;
 }
