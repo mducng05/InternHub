@@ -152,8 +152,10 @@ File `urls.py` của mỗi app đã tạo sẵn (comment sẵn tên route dự k
 
 ```powershell
 cd backend
+python -m venv venv               #tạo venv
 .\venv\Scripts\Activate.ps1
-copy .env.example .env        # chỉnh nếu MySQL của bạn khác cấu hình mặc định
+pip install -r requirements.txt   #cài đặt thư viện
+copy .env.example .env            # chỉnh nếu MySQL của bạn khác cấu hình mặc định
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
