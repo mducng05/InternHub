@@ -31,7 +31,7 @@ export default function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/admin/login" element={<AdminLogin />} />
 
-        <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["student", "admin"]} />}>
           <Route path="/student/dashboard" element={<StudentDashboard />} />
           <Route path="/student/profile" element={<StudentProfile />} />
         </Route>
