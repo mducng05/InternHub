@@ -1235,23 +1235,25 @@ textarea.profile-input {
 
 /* authentication pages */
 .auth-page {
-  align-items: start;
-  background: transparent;
+  flex: 1;
   display: grid;
-  gap: clamp(2.5rem, 5vw, 5rem);
-  grid-template-columns: minmax(320px, 1fr) 480px;
+  grid-template-columns: minmax(300px, 1.05fr) minmax(340px, 470px);
+  gap: clamp(1.5rem, 3.5vw, 4rem);
+  align-items: center;
+  align-content: center;
   justify-content: center;
   margin: 0 auto;
   max-width: 1140px;
-  min-height: calc(100vh - 73px);
-  padding: 3.5rem clamp(1.5rem, 4vw, 3.5rem);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem clamp(1.25rem, 3vw, 2.5rem);
   text-align: left;
 }
 
 .auth-intro {
-  align-self: start;
+  align-self: center;
   max-width: 480px;
-  padding-top: 1.25rem;
+  padding-top: 0;
 }
 
 .auth-eyebrow {
@@ -1265,27 +1267,28 @@ textarea.profile-input {
 
 .auth-intro h1 {
   color: #800f2f;
-  font-size: clamp(2rem, 3.2vw, 3.2rem);
+  font-size: clamp(1.85rem, 2.8vw, 2.7rem);
   letter-spacing: -0.03em;
-  line-height: 1.15;
-  margin: 0.5rem 0 1rem;
+  line-height: 1.22;
+  margin: 0.4rem 0 0.85rem;
 }
 
 .auth-intro p {
   color: #6f5962;
-  font-size: 1.02rem;
-  line-height: 1.65;
-  margin-bottom: 1.5rem;
+  font-size: 0.98rem;
+  line-height: 1.62;
+  margin-bottom: 1.15rem;
 }
 
 .auth-benefits {
   color: #5c4750;
   display: flex;
   flex-direction: column;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 500;
-  gap: 0.85rem;
-  margin-top: 1.5rem;
+  gap: 0.7rem;
+  margin-top: 1.15rem;
+  line-height: 1.45;
 }
 
 .auth-benefits span {
@@ -1296,44 +1299,47 @@ textarea.profile-input {
 
 .auth-benefits i {
   color: #c9184a;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
 }
 
 .auth-card {
-  align-self: start;
+  align-self: center;
   background: #ffffff;
   border: 1px solid #f2d1d9;
-  border-radius: 20px;
+  border-radius: 18px;
   box-sizing: border-box;
-  box-shadow: 0 16px 40px rgba(128, 15, 47, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 12px 32px rgba(128, 15, 47, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
   height: auto;
-  max-width: 480px;
+  max-width: 470px;
   width: 100%;
-  padding: 2.25rem 2.25rem;
+  padding: 1.75rem 2rem;
 }
 
 .auth-card-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.15rem;
 }
 
 .auth-card h2 {
   color: #800f2f;
-  font-size: 1.75rem;
+  font-size: 1.65rem;
   font-weight: 700;
   letter-spacing: -0.02em;
+  line-height: 1.25;
   margin-bottom: 0.35rem;
 }
 
 .auth-card-subtitle {
   color: #775c65;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
   margin-bottom: 0;
 }
 
 .auth-card .form-label {
   color: #44333a;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 600;
+  line-height: 1.4;
   margin-bottom: 0.35rem;
   display: flex;
   align-items: center;
@@ -1346,9 +1352,15 @@ textarea.profile-input {
   border-radius: 10px;
   color: #2b1f24;
   font-size: 0.92rem;
-  min-height: 44px;
-  padding: 0.6rem 0.85rem;
+  line-height: 1.5;
+  min-height: 42px;
+  padding: 0.5rem 0.85rem;
   transition: all 0.18s ease;
+}
+
+.auth-card .form-control:hover:not(:focus) {
+  border-color: #d96b89;
+  background-color: #fffbfe;
 }
 
 .auth-card .form-control:focus {
@@ -1359,13 +1371,39 @@ textarea.profile-input {
 }
 
 .auth-card .form-control::placeholder {
-  color: #a8949b;
-  font-size: 0.88rem;
+  color: #a18e95;
+  font-size: 0.9rem;
+}
+
+/* Input with icon styling for modern placeholder-only forms */
+.auth-input-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #c9184a;
+  font-size: 1.05rem;
+  pointer-events: none;
+  z-index: 2;
+  transition: color 0.18s ease;
+}
+
+.auth-card .form-control.auth-input-with-icon {
+  padding-left: 42px !important;
+}
+
+.auth-input-icon-wrap:focus-within .auth-input-icon {
+  color: #800f2f;
 }
 
 .role-options {
   display: grid;
-  gap: 0.65rem;
+  gap: 8px;
   grid-template-columns: repeat(2, 1fr);
 }
 
@@ -1379,9 +1417,10 @@ textarea.profile-input {
   display: flex;
   font-size: 0.9rem;
   font-weight: 500;
-  gap: 0.6rem;
-  min-height: 44px;
-  padding: 0.55rem 0.85rem;
+  line-height: 1.4;
+  gap: 0.65rem;
+  min-height: 42px;
+  padding: 0.5rem 0.85rem;
   transition: all 0.18s ease;
   user-select: none;
 }
@@ -1397,7 +1436,7 @@ textarea.profile-input {
   border-color: #c9184a;
   color: #a4133c;
   font-weight: 600;
-  box-shadow: 0 2px 6px rgba(201, 24, 74, 0.08);
+  box-shadow: 0 2px 8px rgba(201, 24, 74, 0.1);
 }
 
 .role-option.active i {
@@ -1426,12 +1465,13 @@ textarea.profile-input {
   color: #fff !important;
   cursor: pointer;
   display: flex;
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   font-weight: 600;
   justify-content: center;
   letter-spacing: 0.01em;
-  min-height: 46px;
-  padding: 0.65rem 1.5rem;
+  line-height: 1.4;
+  min-height: 44px;
+  padding: 0.55rem 1.25rem;
   transition: all 0.2s ease;
   width: 100%;
 }
@@ -1460,8 +1500,9 @@ textarea.profile-input {
   align-items: center;
   color: #8d7a81;
   display: flex;
-  font-size: 0.85rem;
-  margin: 1.25rem 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin: 0.85rem 0;
   text-align: center;
 }
 
@@ -1475,7 +1516,7 @@ textarea.profile-input {
 .auth-divider span {
   color: #836973;
   font-weight: 500;
-  padding: 0 0.85rem;
+  padding: 0 0.8rem;
 }
 
 .btn-google-auth {
@@ -1487,12 +1528,12 @@ textarea.profile-input {
   color: #3c4043;
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  gap: 12px;
-  height: 46px;
+  gap: 10px;
+  height: 42px;
   justify-content: center;
-  min-height: 46px;
+  min-height: 42px;
   padding: 0 16px;
   transition: all 0.2s ease-in-out;
   width: 100%;
@@ -1513,9 +1554,10 @@ textarea.profile-input {
 
 .auth-footer-text {
   color: #775c65;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
   margin-bottom: 0;
-  margin-top: 1.25rem;
+  margin-top: 0.85rem;
   text-align: center;
 }
 
@@ -1530,6 +1572,113 @@ textarea.profile-input {
 .auth-link:hover {
   color: #800f2f;
   text-decoration: underline;
+}
+
+/* Register card styling - harmonious with login-card */
+.register-card {
+  padding: 1.75rem 2rem;
+}
+
+.register-card .row {
+  --bs-gutter-x: 8px;
+}
+
+.register-card .auth-card-header {
+  margin-bottom: 1.15rem;
+}
+
+.register-card .auth-card-header h2 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 0;
+}
+
+.register-card .form-control {
+  min-height: 42px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.register-card .role-option {
+  min-height: 40px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.register-card .btn-register {
+  min-height: 44px;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.94rem;
+}
+
+.register-card .auth-divider {
+  margin: 0.8rem 0;
+}
+
+.register-card .btn-google-auth {
+  height: 42px;
+  min-height: 42px;
+  font-size: 0.92rem;
+}
+
+.register-card .auth-footer-text {
+  margin-top: 0.85rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+/* Change password page styles */
+.change-password-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff7f8;
+  padding: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.change-password-container {
+  max-width: 550px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.change-password-card {
+  background: #ffffff;
+  border: 1px solid #f2d1d9;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(128, 15, 47, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+  padding: 1.75rem 2.25rem;
+  text-align: left;
+}
+
+@media (max-width: 991px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+    padding: 1.5rem 1rem;
+  }
+  .auth-intro {
+    display: none;
+  }
+  .auth-card {
+    margin: 0 auto;
+  }
+}
+
+@media (max-height: 640px) {
+  .auth-page,
+  .change-password-page {
+    height: auto;
+    min-height: calc(100dvh - 65px);
+    overflow-y: auto;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
 }
 
 /* floating support controls */

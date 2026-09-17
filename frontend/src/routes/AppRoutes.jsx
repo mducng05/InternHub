@@ -14,6 +14,7 @@ import NotFound from "../pages/NotFound";
 import Register from "../pages/Register";
 import StudentDashboard from "../pages/StudentDashboard";
 import StudentProfile from "../pages/StudentProfile";
+import ChangePassword from "../pages/ChangePassword";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRoutes() {
@@ -34,6 +35,10 @@ export default function AppRoutes() {
         <Route element={<ProtectedRoute allowedRoles={["student", "admin"]} />}>
           <Route path="/student/dashboard" element={<StudentDashboard />} />
           <Route path="/student/profile" element={<StudentProfile />} />
+        </Route>
+
+        <Route element={<ProtectedRoute allowedRoles={["student", "employer", "admin"]} />}>
+          <Route path="/change-password" element={<ChangePassword />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={["employer"]} />}>

@@ -365,7 +365,7 @@ export default function Navbar() {
                         <Link to="/student/profile" className="user-dropdown-item">
                           <i className="bi bi-person me-2"></i>Cài đặt thông tin cá nhân
                         </Link>
-                        <Link to="/student/dashboard?tab=password" className="user-dropdown-item">
+                        <Link to="/change-password" className="user-dropdown-item">
                           <i className="bi bi-shield-lock me-2"></i>Đổi mật khẩu
                         </Link>
                       </div>

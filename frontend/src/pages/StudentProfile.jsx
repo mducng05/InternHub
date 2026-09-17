@@ -275,6 +275,13 @@ export default function StudentProfile() {
 								<Link to="/student/dashboard?tab=cv" className="btn cv-button">Đi đến quản lý CV <i className="bi bi-arrow-up-right ms-1"></i></Link>
 							</section>
 
+							<section className="profile-panel cv-panel mt-3">
+								<div className="side-panel-icon"><i className="bi bi-shield-lock"></i></div>
+								<h2>Bảo mật tài khoản</h2>
+								<p>Đổi mật khẩu định kỳ để giữ an toàn cho tài khoản của bạn.</p>
+								<Link to="/change-password" className="btn cv-button">Đổi mật khẩu <i className="bi bi-arrow-right ms-1"></i></Link>
+							</section>
+
 							<section className="profile-tip">
 								<i className="bi bi-lightbulb"></i>
 								<div><strong>Mẹo nhỏ</strong><p>Một phần giới thiệu rõ ràng và ngắn gọn sẽ giúp hồ sơ của bạn nổi bật hơn.</p></div>

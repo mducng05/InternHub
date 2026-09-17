@@ -57,7 +57,7 @@ export default function Login() {
       </section>
 
       <section className="auth-card login-card">
-        <div className="auth-card-header mb-4">
+        <div className="auth-card-header mb-3.5">
           <h2>Đăng nhập</h2>
           <p className="auth-card-subtitle">Chào mừng bạn quay trở lại với InternHub</p>
         </div>

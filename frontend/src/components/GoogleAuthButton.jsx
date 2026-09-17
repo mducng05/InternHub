@@ -11,6 +11,11 @@ export default function GoogleAuthButton({ role = "student", text = "Đăng nh�
   const [errorMessage, setErrorMessage] = useState("");
 
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const isConfigured = Boolean(
+    clientId &&
+      !clientId.includes("your-google-client-id") &&
+      clientId.endsWith(".apps.googleusercontent.com")
+  );
 
   const handleCredentialResponse = async (response) => {
     if (!response?.credential) {
@@ -44,7 +49,7 @@ export default function GoogleAuthButton({ role = "student", text = "Đăng nh�
   };
 
   useEffect(() => {
-    if (!clientId) {
+    if (!isConfigured) {
       setConfigMissing(true);
       return;
     }
@@ -106,9 +111,9 @@ export default function GoogleAuthButton({ role = "student", text = "Đăng nh�
   }, [clientId, text, role]);
 
   const handleFallbackClick = () => {
-    if (!clientId) {
+    if (!isConfigured) {
       alert(
-        "Bạn chưa cấu hình VITE_GOOGLE_CLIENT_ID trong file frontend/.env!\n\nVui lòng mở file frontend/.env và dán:\nVITE_GOOGLE_CLIENT_ID=your_client_id_here\n\nSau đó khởi động lại hoặc lưu file."
+        "Chưa cấu hình Google Client ID thật trong frontend/.env!\n\nHiện tại đang là giá trị mẫu: 'your-google-client-id...'.\n\nVui lòng tạo OAuth Client ID từ Google Cloud Console và dán vào frontend/.env:\nVITE_GOOGLE_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com"
       );
       return;
     }
@@ -119,15 +124,15 @@ export default function GoogleAuthButton({ role = "student", text = "Đăng nh�
   };
 
   return (
-    <div className="google-auth-container w-100 my-2">
+    <div className="google-auth-container w-100 my-1">
       {errorMessage && (
-        <div className="alert alert-danger py-2 small mb-2 text-start">
+        <div className="alert alert-danger py-1.5 small mb-2 text-start">
           <i className="bi bi-exclamation-triangle-fill me-1"></i> {errorMessage}
         </div>
       )}
 
       {loading && (
-        <div className="text-center py-2 text-muted small">
+        <div className="text-center py-1 text-muted small">
           <div className="spinner-border spinner-border-sm text-pink me-2" role="status"></div>
           Đang xác thực tài khoản Google...
         </div>
@@ -137,7 +142,7 @@ export default function GoogleAuthButton({ role = "student", text = "Đăng nh�
       <div
         ref={buttonContainerRef}
         className={`d-flex justify-content-center w-100 ${loading ? "d-none" : ""}`}
-        style={{ minHeight: "44px" }}
+        style={{ minHeight: "38px" }}
       >
         {/* Nút fallback hiển thị khi chưa render kịp hoặc khi chưa điền Client ID */}
         <button
@@ -167,13 +172,6 @@ export default function GoogleAuthButton({ role = "student", text = "Đăng nh�
           <span>{text}</span>
         </button>
       </div>
-
-      {configMissing && (
-        <p className="text-muted small mt-2 mb-0 text-center" style={{ fontSize: "0.8rem" }}>
-          <i className="bi bi-info-circle text-pink me-1"></i>
-          Dán mã Google Client ID vào file <code>frontend/.env</code> để kích hoạt đăng nhập 1-chạm.
-        </p>
-      )}
     </div>
   );
 }
