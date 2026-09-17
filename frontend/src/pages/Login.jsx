@@ -29,8 +29,12 @@ export default function Login() {
         );
       } else if (err.message === "Network Error" || !err.response) {
         setError("Không thể kết nối đến máy chủ. Vui lòng kiểm tra backend server.");
-      } else {
+      } else if (err.response?.status === 404) {
+        setError("Không tìm thấy API backend (mã 404). Vui lòng kiểm tra cấu hình VITE_API_URL.");
+      } else if (err.response?.status === 401) {
         setError("Email hoặc mật khẩu không chính xác.");
+      } else {
+        setError(err.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.");
       }
     } finally {
       setLoading(false);
