@@ -186,9 +186,9 @@ App chạy tại `http://localhost:5173`, tự động gọi API tới `VITE_API
 - Mở Pull Request để merge vào `main`; Đức Minh (Tester) review + chạy test case trước khi merge.
 - Không commit `venv/`, `node_modules/`, `.env`, `media/` — đã khai báo trong `.gitignore`.
   
-git add .
-git commit -m "nội dung thay đổi"
-git push origin <tên-nhánh>
+- git add .
+- git commit -m "nội dung thay đổi"
+- git push origin <tên-nhánh>
 
 ---
 
