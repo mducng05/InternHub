@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../store/AuthContext";
 import { applyJob } from "../api/applications";
+import './ApplyModal.css';
 
 export default function ApplyModal({ job, companyName, onClose, onSuccess }) {
   const { user } = useAuth();

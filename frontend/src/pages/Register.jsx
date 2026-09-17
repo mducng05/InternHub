@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register as registerRequest } from "../api/auth";
 import GoogleAuthButton from "../components/GoogleAuthButton";
+import './Register.css';
 
 export default function Register() {
   const navigate = useNavigate();

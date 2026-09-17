@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { changePassword } from "../api/auth";
 import { useAuth } from "../store/AuthContext";
+import './ChangePassword.css';
 
 export default function ChangePassword() {
   const { user } = useAuth();

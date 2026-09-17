@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
 import GoogleAuthButton from "../components/GoogleAuthButton";
+import './Login.css';
 
 export default function Login() {
   const [email, setEmail] = useState("");

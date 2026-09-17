@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import './FloatingWidget.css';
 
 const FloatingWidget = () => {
   const location = useLocation();

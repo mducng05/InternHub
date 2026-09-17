@@ -4,6 +4,7 @@ import defaultLogo from "../assets/logo01.png";
 import { fetchJobDetail, saveJob } from "../api/jobs";
 import { useAuth } from "../store/AuthContext";
 import ApplyModal from "../components/ApplyModal";
+import './JobDetail.css';
 
 const internshipTypeLabels = {
   full_time: "Toàn thời gian",

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
 import { getStudentProfile, updateStudentProfile } from "../api/profile";
+import './StudentProfile.css';
 
 const profileFields = [
 	{ key: "full_name", label: "Họ và tên", placeholder: "Nhập họ và tên", required: true },
