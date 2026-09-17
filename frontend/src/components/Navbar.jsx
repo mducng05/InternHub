@@ -19,7 +19,7 @@ export default function Navbar() {
       <div className="container-fluid px-4">
 
         {/* Logo */}
-        <Link className="navbar-brand d-flex align-items-center gap-2 fw-bold text-success" to="/">
+        <Link className="navbar-brand d-flex align-items-center gap-2 fw-bold text-pink" to="/">
           <img
             src={logo}
             alt="Logo"
@@ -292,10 +292,10 @@ export default function Navbar() {
           <div className="navbar-actions d-flex align-items-center gap-2">
             {!user && (
               <>
-                <Link to="/register" className="btn btn-outline-success rounded-pill px-3">
+                <Link to="/register" className="btn btn-outline-pink rounded-pill px-3">
                   Đăng ký
                 </Link>
-                <Link to="/login" className="btn btn-success rounded-pill px-3">
+                <Link to="/login" className="btn btn-pink rounded-pill px-3 text-white">
                   Đăng nhập
                 </Link>
               </>

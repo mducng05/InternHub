@@ -192,8 +192,8 @@ export default function ApplyModal({ job, companyName, onClose, onSuccess }) {
                 style={{
                   width: "72px",
                   height: "72px",
-                  backgroundColor: "#e8f5e9",
-                  color: "#2e7d32",
+                  backgroundColor: "#fff0f3",
+                  color: "#c9184a",
                   fontSize: "2.2rem",
                 }}
               >

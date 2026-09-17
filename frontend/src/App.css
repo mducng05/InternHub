@@ -47,3 +47,12 @@
   box-shadow: 0 4px 12px rgba(201, 24, 74, 0.2);
 }
 
+.border-pink {
+  border-color: #f1c2cd !important;
+}
+
+.alert-pink {
+  background-color: #fff0f3 !important;
+  border-color: #f1c2cd !important;
+  color: #a4133c !important;
+}

@@ -121,8 +121,8 @@
 }
 
 .nav-simple-menu .dropdown-item:hover {
-  background-color: #e9f7ef;
-  color: #198754;
+  background-color: #fff0f3;
+  color: #c9184a;
 }
 
 .navbar-actions .btn {
@@ -134,32 +134,32 @@
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.navbar-actions .btn-outline-success {
+.navbar-actions .btn-outline-pink {
   background: #fff;
   border-color: #e9a1b5;
   color: #a4133c;
 }
 
-.navbar-actions .btn-outline-success:hover,
-.navbar-actions .btn-outline-success:focus,
-.navbar-actions .btn-outline-success:active,
-.navbar-actions .btn-outline-success:focus-visible {
+.navbar-actions .btn-outline-pink:hover,
+.navbar-actions .btn-outline-pink:focus,
+.navbar-actions .btn-outline-pink:active,
+.navbar-actions .btn-outline-pink:focus-visible {
   background: #fff0f3 !important;
   border-color: #c9184a !important;
   color: #800f2f !important;
   box-shadow: none !important;
 }
 
-.navbar-actions .btn-success {
+.navbar-actions .btn-pink {
   background: #c9184a;
   border-color: #c9184a;
   color: #fff;
 }
 
-.navbar-actions .btn-success:hover,
-.navbar-actions .btn-success:focus,
-.navbar-actions .btn-success:active,
-.navbar-actions .btn-success:focus-visible {
+.navbar-actions .btn-pink:hover,
+.navbar-actions .btn-pink:focus,
+.navbar-actions .btn-pink:active,
+.navbar-actions .btn-pink:focus-visible {
   background: #a4133c !important;
   border-color: #a4133c !important;
   color: #fff !important;

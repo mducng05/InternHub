@@ -64,8 +64,8 @@ export default function Login() {
         </div>
 
         {location.state?.registered && (
-          <div className="alert alert-success d-flex align-items-center gap-2 py-2 px-3 small rounded-3 mb-3">
-            <i className="bi bi-check-circle-fill"></i>
+          <div className="alert alert-pink d-flex align-items-center gap-2 py-2 px-3 small rounded-3 mb-3">
+            <i className="bi bi-check-circle-fill text-pink"></i>
             <span>Đăng ký thành công! Hãy đăng nhập để tiếp tục.</span>
           </div>
         )}

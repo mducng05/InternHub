@@ -156,7 +156,7 @@ export default function StudentDashboard() {
         );
       case "accepted":
         return (
-          <span className="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill small fw-semibold">
+          <span className="badge bg-pink-subtle text-pink border border-pink px-3 py-2 rounded-pill small fw-semibold">
             <i className="bi bi-check-circle-fill me-1"></i>
             {statusDisplay || "Được nhận"}
           </span>

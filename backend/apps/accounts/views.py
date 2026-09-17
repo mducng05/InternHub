@@ -51,6 +51,7 @@ class MeView(generics.GenericAPIView):
             "email": user.email,
             "role": user.role,
             "full_name": user.get_full_name() or user.username,
+            "has_usable_password": user.has_usable_password(),
         })
 
 
@@ -121,6 +122,7 @@ class GoogleLoginView(generics.GenericAPIView):
                 "email": user.email,
                 "role": user.role,
                 "full_name": user.get_full_name() or user.username,
+                "has_usable_password": user.has_usable_password(),
             },
             "is_new_user": is_new_user,
         })
