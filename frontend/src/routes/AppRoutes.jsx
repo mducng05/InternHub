@@ -15,6 +15,7 @@ import Register from "../pages/Register";
 import StudentDashboard from "../pages/StudentDashboard";
 import StudentProfile from "../pages/StudentProfile";
 import ChangePassword from "../pages/ChangePassword";
+import InterviewQuestions from "../pages/InterviewQuestions";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRoutes() {
@@ -28,6 +29,8 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<JobList />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
+        <Route path="/interview-questions" element={<InterviewQuestions />} />
+        <Route path="/cau-hoi-phong-van" element={<InterviewQuestions />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin/login" element={<AdminLogin />} />

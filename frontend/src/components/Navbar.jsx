@@ -222,7 +222,7 @@ export default function Navbar() {
                         <i className="bi bi-person-vcard nav-submenu-icon"></i>
                         <span>Trắc nghiệm tính cách</span>
                       </Link>
-                      <Link to="" className="nav-submenu-link">
+                      <Link to="/interview-questions" className="nav-submenu-link">
                         <i className="bi bi-chat-square-text nav-submenu-icon"></i>
                         <span>Bộ câu hỏi phỏng vấn</span>
                       </Link>
