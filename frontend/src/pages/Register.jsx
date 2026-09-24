@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register as registerRequest } from "../api/auth";
 import GoogleAuthButton from "../components/GoogleAuthButton";
+import './Register.css';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -56,63 +57,103 @@ export default function Register() {
       </section>
 
       <section className="auth-card register-card">
-        <div className="auth-card-header mb-4">
-          <h2>Tạo tài khoản</h2>
-          <p className="auth-card-subtitle">Tham gia thị trường lao động chỉ với vài bước đơn giản</p>
+        <div className="auth-card-header mb-3.5">
+          <h2>Đăng ký</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
+          {/* Họ và tên */}
           <div className="mb-3">
-            <label className="form-label" htmlFor="full_name">
-              <i className="bi bi-person text-pink"></i> Họ và tên
-            </label>
-            <input
-              id="full_name"
-              name="full_name"
-              className="form-control"
-              placeholder="Nhập họ và tên"
-              value={form.full_name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="row g-2 mb-3">
-            <div className="col-12 col-sm-7">
-              <label className="form-label" htmlFor="email">
-                <i className="bi bi-envelope text-pink"></i> Email
-              </label>
+            <div className="auth-input-icon-wrap">
+              <i className="bi bi-person auth-input-icon"></i>
               <input
-                id="email"
-                name="email"
-                type="email"
-                className="form-control"
-                placeholder="Nhập email"
-                value={form.email}
+                id="full_name"
+                name="full_name"
+                aria-label="Họ và tên"
+                className="form-control auth-input-with-icon"
+                placeholder="Họ và tên"
+                value={form.full_name}
                 onChange={handleChange}
                 required
               />
             </div>
+          </div>
+
+          {/* Email & Số điện thoại */}
+          <div className="row g-2 mb-3">
+            <div className="col-12 col-sm-7">
+              <div className="auth-input-icon-wrap">
+                <i className="bi bi-envelope auth-input-icon"></i>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  aria-label="Email"
+                  className="form-control auth-input-with-icon"
+                  placeholder="Email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
             <div className="col-12 col-sm-5">
-              <label className="form-label" htmlFor="phone">
-                <i className="bi bi-telephone text-pink"></i> Số điện thoại
-              </label>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                className="form-control"
-                placeholder="Nhập số điện thoại"
-                value={form.phone}
-                onChange={handleChange}
-              />
+              <div className="auth-input-icon-wrap">
+                <i className="bi bi-telephone auth-input-icon"></i>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  aria-label="Số điện thoại"
+                  className="form-control auth-input-with-icon"
+                  placeholder="Số điện thoại"
+                  value={form.phone}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
           </div>
 
-          <fieldset className="mb-3">
-            <legend className="form-label mb-2">
-              <i className="bi bi-person-badge text-pink"></i> Bạn tham gia với vai trò
-            </legend>
+          {/* Mật khẩu & Xác nhận mật khẩu */}
+          <div className="row g-2 mb-3">
+            <div className="col-12 col-sm-6">
+              <div className="auth-input-icon-wrap">
+                <i className="bi bi-lock auth-input-icon"></i>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  minLength="8"
+                  aria-label="Mật khẩu"
+                  className="form-control auth-input-with-icon"
+                  placeholder="Mật khẩu (tối thiểu 8 ký tự)"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="col-12 col-sm-6">
+              <div className="auth-input-icon-wrap">
+                <i className="bi bi-shield-lock auth-input-icon"></i>
+                <input
+                  id="password_confirm"
+                  name="password_confirm"
+                  type="password"
+                  minLength="8"
+                  aria-label="Xác nhận mật khẩu"
+                  className="form-control auth-input-with-icon"
+                  placeholder="Xác nhận mật khẩu"
+                  value={form.password_confirm}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Vai trò tài khoản: Sinh viên / Nhà tuyển dụng (đặt dưới mật khẩu) */}
+          <div className="mb-3.5">
             <div className="role-options">
               <label className={form.role === "student" ? "role-option active" : "role-option"}>
                 <input
@@ -122,7 +163,7 @@ export default function Register() {
                   checked={form.role === "student"}
                   onChange={handleChange}
                 />
-                <i className="bi bi-mortarboard"></i>
+                <i className="bi bi-mortarboard-fill"></i>
                 <span>Sinh viên</span>
               </label>
               <label className={form.role === "employer" ? "role-option active" : "role-option"}>
@@ -133,56 +174,21 @@ export default function Register() {
                   checked={form.role === "employer"}
                   onChange={handleChange}
                 />
-                <i className="bi bi-building"></i>
+                <i className="bi bi-building-fill"></i>
                 <span>Nhà tuyển dụng</span>
               </label>
-            </div>
-          </fieldset>
-
-          <div className="row g-2 mb-3">
-            <div className="col-12 col-sm-6">
-              <label className="form-label" htmlFor="password">
-                <i className="bi bi-lock text-pink"></i> Mật khẩu
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                minLength="8"
-                className="form-control"
-                placeholder="Tối thiểu 8 ký tự"
-                value={form.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="col-12 col-sm-6">
-              <label className="form-label" htmlFor="password_confirm">
-                <i className="bi bi-shield-lock text-pink"></i> Xác nhận
-              </label>
-              <input
-                id="password_confirm"
-                name="password_confirm"
-                type="password"
-                minLength="8"
-                className="form-control"
-                placeholder="Nhập lại mật khẩu"
-                value={form.password_confirm}
-                onChange={handleChange}
-                required
-              />
             </div>
           </div>
 
           {error && (
-            <div className="alert alert-danger d-flex align-items-center gap-2 py-2 px-3 small rounded-3 mb-3">
+            <div className="alert alert-danger d-flex align-items-center gap-2 py-1.5 px-3 small rounded-3 mb-2.5">
               <i className="bi bi-exclamation-circle-fill"></i>
               <span>{error}</span>
             </div>
           )}
 
           <button className="btn btn-register w-100 mt-2" type="submit" disabled={loading}>
-            {loading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
+            {loading ? "Đang đăng ký..." : "Đăng ký"}
           </button>
         </form>
 

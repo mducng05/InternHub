@@ -42,5 +42,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             "email": self.user.email,
             "role": self.user.role,
             "full_name": self.user.get_full_name() or self.user.username,
+            "has_usable_password": self.user.has_usable_password(),
         }
         return data

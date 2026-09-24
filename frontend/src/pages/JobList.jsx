@@ -5,6 +5,7 @@ import { fetchJobs, fetchSavedJobs, saveJob } from "../api/jobs";
 import { fetchJobCategories, fetchLocations } from "../api/catalog";
 import { useAuth } from "../store/AuthContext";
 import JobCard from "../components/JobCard";
+import './JobList.css';
 
 // Hàm bóc tách dữ liệu linh hoạt cho mọi cấu trúc API (Axios, Fetch, Paginated results)
 function responseItems(response) {
@@ -434,23 +435,7 @@ export default function JobList() {
 
           {/* Hàng các Dropdown lọc với Submenu Popup cao cấp */}
           <div className="row g-3">
-            {/* 1. Lọc theo Vị trí tuyển dụng / Chuyên môn */}
-            <div className="col-12 col-md-6 col-lg-3">
-              <FilterDropdown
-                id="filter-position"
-                label="Vị trí tuyển dụng"
-                icon="bi-person-workspace"
-                value={currentCat}
-                placeholder="Tất cả vị trí"
-                options={categoryOptions}
-                onChange={(val) => updateFilter("cat", val)}
-                isOpen={openDropdown === "cat"}
-                onToggle={() => toggleDropdown("cat")}
-                onClose={() => setOpenDropdown(null)}
-              />
-            </div>
-
-            {/* 2. Lọc theo Mức lương */}
+            {/* 1. Lọc theo Mức lương */}
             <div className="col-12 col-md-6 col-lg-3">
               <FilterDropdown
                 id="filter-salary"
@@ -466,8 +451,8 @@ export default function JobList() {
               />
             </div>
 
-            {/* 3. Lọc theo Địa điểm */}
-            <div className="col-12 col-md-6 col-lg-2">
+            {/* 2. Lọc theo Địa điểm */}
+            <div className="col-12 col-md-6 col-lg-3">
               <FilterDropdown
                 id="filter-location"
                 label="Địa điểm"
@@ -482,8 +467,8 @@ export default function JobList() {
               />
             </div>
 
-            {/* 4. Lọc theo Hình thức làm việc */}
-            <div className="col-12 col-md-6 col-lg-2">
+            {/* 3. Lọc theo Hình thức làm việc */}
+            <div className="col-12 col-md-6 col-lg-3">
               <FilterDropdown
                 id="filter-type"
                 label="Hình thức"
@@ -498,8 +483,8 @@ export default function JobList() {
               />
             </div>
 
-            {/* 5. Sắp xếp kết quả */}
-            <div className="col-12 col-md-6 col-lg-2">
+            {/* 4. Sắp xếp kết quả */}
+            <div className="col-12 col-md-6 col-lg-3">
               <FilterDropdown
                 id="filter-sort"
                 label="Sắp xếp"

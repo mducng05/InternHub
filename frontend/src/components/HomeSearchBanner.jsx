@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import banner01 from "../assets/banner03.png";
 import banner02 from "../assets/banner04.png";
+import './HomeSearchBanner.css';
 
 const banners = [banner01, banner02];
 const availableLocations = ["Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng", "Hải Phòng", "Cần Thơ", "Bình Dương", "Đồng Nai", "Nước ngoài"];

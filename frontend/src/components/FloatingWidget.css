@@ -1,0 +1,106 @@
+/* floating support controls */
+.floating-widget-container {
+  align-items: flex-end;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: fixed;
+  right: 24px;
+  z-index: 1050;
+}
+
+.floating-widget-button,
+.floating-widget-action {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e9a1b5;
+  color: #800f2f;
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.floating-widget-favorites {
+  border-radius: 50%;
+  box-sizing: border-box;
+  box-shadow: 0 6px 18px rgba(128, 15, 47, 0.14);
+  font-size: 1.25rem;
+  height: 64px;
+  width: 64px;
+}
+
+.floating-widget-actions {
+  background: #fff;
+  border: 1px solid #e9a1b5;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(128, 15, 47, 0.14);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 64px;
+}
+
+.floating-widget-action {
+  border: 0;
+  border-radius: 0;
+  flex-direction: column;
+  font-size: 0.72rem;
+  gap: 3px;
+  height: 64px;
+  justify-content: center;
+  padding: 8px 4px;
+  width: 64px;
+}
+
+.floating-widget-action + .floating-widget-action {
+  border-left: 0;
+  border-top: 1px solid #f1c2cd;
+}
+
+.floating-widget-action i {
+  font-size: 1rem;
+}
+
+.floating-widget-button:hover,
+.floating-widget-button:focus-visible,
+.floating-widget-action:hover,
+.floating-widget-action:focus-visible {
+  background: #fff0f3;
+  border-color: #c9184a;
+  color: #c9184a;
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.floating-widget-action:hover + .floating-widget-action {
+  border-top-color: #e9a1b5;
+}
+
+
+@media (max-width: 575.98px) {
+  .floating-widget-container {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .floating-widget-favorites {
+    height: 56px;
+    width: 56px;
+  }
+
+  .floating-widget-actions,
+  .floating-widget-action {
+    width: 56px;
+  }
+
+  .floating-widget-action {
+    height: 56px;
+  }
+
+  .floating-widget-action {
+    padding: 8px;
+  }
+}
+

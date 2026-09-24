@@ -1,10 +1,11 @@
 import { useLocation } from "react-router-dom";
+import './FloatingWidget.css';
 
 const FloatingWidget = () => {
   const location = useLocation();
 
   // An widget khoi cac trang sau
-  const excludedPaths = ["/login", "/register"];
+  const excludedPaths = ["/login", "/register", "/change-password"];
   if (excludedPaths.includes(location.pathname) || location.pathname.startsWith("/admin/")) {
     return null;
   }

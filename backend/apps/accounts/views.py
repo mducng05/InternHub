@@ -51,6 +51,7 @@ class MeView(generics.GenericAPIView):
             "email": user.email,
             "role": user.role,
             "full_name": user.get_full_name() or user.username,
+            "has_usable_password": user.has_usable_password(),
         })
 
 
@@ -121,7 +122,67 @@ class GoogleLoginView(generics.GenericAPIView):
                 "email": user.email,
                 "role": user.role,
                 "full_name": user.get_full_name() or user.username,
+                "has_usable_password": user.has_usable_password(),
             },
             "is_new_user": is_new_user,
         })
+
+
+class ChangePasswordView(generics.GenericAPIView):
+    """API đổi mật khẩu cho người dùng đã đăng nhập"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        old_password = request.data.get("old_password", "")
+        new_password = request.data.get("new_password", "")
+        new_password_confirm = request.data.get("new_password_confirm", "")
+
+        # 1. Kiểm tra mật khẩu hiện tại (nếu tài khoản đã có mật khẩu)
+        if user.has_usable_password():
+            if not old_password:
+                return Response(
+                    {"detail": "Vui lòng nhập mật khẩu hiện tại."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if not user.check_password(old_password):
+                return Response(
+                    {"detail": "Mật khẩu hiện tại không chính xác."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        # 2. Kiểm tra mật khẩu mới
+        if not new_password:
+            return Response(
+                {"detail": "Vui lòng nhập mật khẩu mới."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if len(new_password) < 8:
+            return Response(
+                {"detail": "Mật khẩu mới phải có tối thiểu 8 ký tự."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if new_password != new_password_confirm:
+            return Response(
+                {"detail": "Mật khẩu xác nhận không khớp với mật khẩu mới."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if user.has_usable_password() and old_password == new_password:
+            return Response(
+                {"detail": "Mật khẩu mới không được trùng với mật khẩu hiện tại."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # 3. Lưu mật khẩu mới
+        user.set_password(new_password)
+        user.save()
+
+        return Response(
+            {"message": "Đổi mật khẩu thành công! Bạn có thể sử dụng mật khẩu mới từ bây giờ."},
+            status=status.HTTP_200_OK,
+        )
+
 

@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/v1";
+
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: API_URL,
 });
 
 client.interceptors.request.use((config) => {
@@ -24,7 +26,7 @@ client.interceptors.response.use(
     if (error.response?.status === 401 && refreshToken && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
       try {
-        const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/token/refresh/`, {
+        const { data } = await axios.post(`${API_URL}/auth/token/refresh/`, {
           refresh: refreshToken,
         });
         localStorage.setItem("access_token", data.access);

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
 import { getStudentProfile, updateStudentProfile } from "../api/profile";
+import './StudentProfile.css';
 
 const profileFields = [
 	{ key: "full_name", label: "Họ và tên", placeholder: "Nhập họ và tên", required: true },
@@ -273,6 +274,13 @@ export default function StudentProfile() {
 								<h2>Quản lý CV</h2>
 								<p>Tải CV lên để nhà tuyển dụng có thể xem kinh nghiệm và kỹ năng của bạn.</p>
 								<Link to="/student/dashboard?tab=cv" className="btn cv-button">Đi đến quản lý CV <i className="bi bi-arrow-up-right ms-1"></i></Link>
+							</section>
+
+							<section className="profile-panel cv-panel mt-3">
+								<div className="side-panel-icon"><i className="bi bi-shield-lock"></i></div>
+								<h2>Bảo mật tài khoản</h2>
+								<p>Đổi mật khẩu định kỳ để giữ an toàn cho tài khoản của bạn.</p>
+								<Link to="/change-password" className="btn cv-button">Đổi mật khẩu <i className="bi bi-arrow-right ms-1"></i></Link>
 							</section>
 
 							<section className="profile-tip">

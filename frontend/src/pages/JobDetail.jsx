@@ -3,6 +3,8 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import defaultLogo from "../assets/logo01.png";
 import { fetchJobDetail, saveJob } from "../api/jobs";
 import { useAuth } from "../store/AuthContext";
+import ApplyModal from "../components/ApplyModal";
+import './JobDetail.css';
 
 const internshipTypeLabels = {
   full_time: "Toàn thời gian",
@@ -46,6 +48,7 @@ export default function JobDetail() {
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [savingJob, setSavingJob] = useState(false);
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -94,14 +97,42 @@ export default function JobDetail() {
   }
 
   const logoUrl = job?.employer?.logo || job?.employer_profile?.logo || job?.company_logo || defaultLogo;
-  const companyName = job?.employer?.company_name || job?.employer_profile?.company_name || job?.company_name || "Doanh nghiệp tuyển dụng";
+  const companyName =
+    job?.employer?.company_name ||
+    job?.employer_profile?.company_name ||
+    (typeof job?.employer === "string" ? job.employer : null) ||
+    job?.company_name ||
+    "Doanh nghiệp tuyển dụng";
   const employer = job?.employer || job?.employer_profile || {};
   const companySize = employer?.company_size_display || employer?.company_size || "Chưa cập nhật";
   const industry = employer?.industry?.name || employer?.industry_name || "Chưa cập nhật";
   const companyAddress = employer?.address || "Chưa cập nhật";
-  const location = job?.location?.name || job?.location_name || job?.location || "Toàn quốc";
+  const location =
+    job?.location?.name ||
+    job?.location_name ||
+    (typeof job?.location === "string" ? job.location : null) ||
+    "Toàn quốc";
   const type = job?.internship_type_display || internshipTypeLabels[job?.internship_type] || job?.employment_type || "Không xác định";
-  const salary = job?.salary || (job?.salary_min !== undefined && job?.salary_max !== undefined ? `${job.salary_min.toLocaleString("vi-VN")} - ${job.salary_max.toLocaleString("vi-VN")} VNĐ` : "Thỏa thuận");
+
+  const formatSalary = () => {
+    if (job?.salary) return job.salary;
+    const min = job?.salary_min ?? job?.min_salary;
+    const max = job?.salary_max ?? job?.max_salary;
+
+    if (min != null && max != null) {
+      if (min === 0 && max === 0) return "Thỏa thuận";
+      return `${Number(min).toLocaleString("vi-VN")} - ${Number(max).toLocaleString("vi-VN")} VNĐ`;
+    }
+    if (min != null && min > 0) {
+      return `Từ ${Number(min).toLocaleString("vi-VN")} VNĐ`;
+    }
+    if (max != null && max > 0) {
+      return `Đến ${Number(max).toLocaleString("vi-VN")} VNĐ`;
+    }
+    return "Thỏa thuận";
+  };
+  const salary = formatSalary();
+
   const experienceValue = job?.experience_level_display || job?.experience_level || job?.experience;
   const experience = experienceLabels[experienceValue] || experienceValue || "Không yêu cầu kinh nghiệm";
   const educationValue = job?.min_academic_year_display || job?.min_academic_year || job?.academic_year;
@@ -182,7 +213,14 @@ export default function JobDetail() {
             </div>
 
             <div className="job-detail-actions bg-white border rounded-3 shadow-sm p-3 p-md-4 mt-3">
-              <Link to={`/jobs/${job.id}/apply`} className="btn btn-pink text-white w-100 fw-semibold py-2">Ứng tuyển ngay</Link>
+              <button
+                type="button"
+                className="btn btn-pink text-white w-100 fw-semibold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2"
+                onClick={() => setIsApplyModalOpen(true)}
+              >
+                <i className="bi bi-send-fill"></i>
+                Ứng tuyển ngay
+              </button>
               <button
                 type="button"
                 className={`btn w-100 mt-2 ${saved ? "btn-danger text-white" : "btn-outline-danger"}`}
@@ -205,17 +243,38 @@ export default function JobDetail() {
 
             <section className="job-detail-section bg-white border rounded-3 shadow-sm p-3 p-md-4">
               <h2 className="h5 fw-bold mb-3"><i className="bi bi-person-check text-pink me-2"></i>Yêu cầu ứng viên</h2>
-              <ul className="job-detail-list">{requirements.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul>
+              <ul className="job-detail-list">
+                {requirements.length > 0 ? (
+                  requirements.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)
+                ) : (
+                  <li className="text-muted list-unstyled">Thông tin yêu cầu ứng viên đang được cập nhật.</li>
+                )}
+              </ul>
             </section>
 
             <section className="job-detail-section bg-white border rounded-3 shadow-sm p-3 p-md-4">
               <h2 className="h5 fw-bold mb-3"><i className="bi bi-gift text-pink me-2"></i>Quyền lợi ứng viên</h2>
-              <ul className="job-detail-list">{benefits.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul>
+              <ul className="job-detail-list">
+                {benefits.length > 0 ? (
+                  benefits.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)
+                ) : (
+                  <li className="text-muted list-unstyled">Thông tin quyền lợi đang được cập nhật.</li>
+                )}
+              </ul>
             </section>
           </div>
 
         </div>
       </div>
+
+      {/* POPUP ỨNG TUYỂN */}
+      {isApplyModalOpen && (
+        <ApplyModal
+          job={job}
+          companyName={companyName}
+          onClose={() => setIsApplyModalOpen(false)}
+        />
+      )}
     </main>
   );
 }

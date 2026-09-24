@@ -3,7 +3,10 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
 import { getStudentProfile } from "../api/profile";
 import { fetchSavedJobs, saveJob } from "../api/jobs";
+import { fetchMyApplications } from "../api/applications";
 import JobCard from "../components/JobCard";
+import defaultLogo from "../assets/logo01.png";
+import './StudentDashboard.css';
 
 export default function StudentDashboard() {
   const { user } = useAuth();
@@ -21,7 +24,10 @@ export default function StudentDashboard() {
   const [savedJobIds, setSavedJobIds] = useState([]);
   const [loadingSaved, setLoadingSaved] = useState(false);
 
-  // Tải thông tin hồ sơ
+  const [appliedJobs, setAppliedJobs] = useState([]);
+  const [loadingApplied, setLoadingApplied] = useState(false);
+
+  // 1. Tải thông tin hồ sơ sinh viên
   useEffect(() => {
     localStorage.removeItem("student_profile"); // Xoá key cũ dùng chung
 
@@ -49,7 +55,7 @@ export default function StudentDashboard() {
     };
   }, [user?.id, userProfileKey]);
 
-  // Tải danh sách việc làm đã lưu từ Database
+  // 2. Tải danh sách việc làm đã lưu từ Database
   useEffect(() => {
     if (!user?.id) return;
 
@@ -69,6 +75,30 @@ export default function StudentDashboard() {
       })
       .finally(() => {
         if (isCurrent) setLoadingSaved(false);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [user?.id]);
+
+  // 3. Tải danh sách việc làm đã ứng tuyển từ Database
+  useEffect(() => {
+    if (!user?.id) return;
+
+    let isCurrent = true;
+    setLoadingApplied(true);
+    fetchMyApplications()
+      .then((res) => {
+        if (isCurrent && res.data) {
+          setAppliedJobs(res.data.results || []);
+        }
+      })
+      .catch((err) => {
+        console.error("Lỗi khi tải danh sách việc làm đã ứng tuyển:", err);
+      })
+      .finally(() => {
+        if (isCurrent) setLoadingApplied(false);
       });
 
     return () => {
@@ -97,9 +127,72 @@ export default function StudentDashboard() {
 
   const quickStats = [
     { label: "Tin đã lưu", value: savedJobs.length, icon: "bi-heart", tab: "saved" },
-    { label: "Đã ứng tuyển", value: 0, icon: "bi-send", tab: "applied" },
+    { label: "Đã ứng tuyển", value: appliedJobs.length, icon: "bi-send", tab: "applied" },
     { label: "Việc phù hợp", value: 0, icon: "bi-stars", tab: "recommended" },
   ];
+
+  const getStatusBadge = (status, statusDisplay) => {
+    switch (status) {
+      case "pending":
+        return (
+          <span className="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill small fw-semibold">
+            <i className="bi bi-clock me-1"></i>
+            {statusDisplay || "Chờ xử lý"}
+          </span>
+        );
+      case "shortlisted":
+        return (
+          <span className="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill small fw-semibold">
+            <i className="bi bi-person-check me-1"></i>
+            {statusDisplay || "Đã vào danh sách chọn"}
+          </span>
+        );
+      case "interview_invited":
+        return (
+          <span className="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-2 rounded-pill small fw-semibold">
+            <i className="bi bi-calendar-event me-1"></i>
+            {statusDisplay || "Mời phỏng vấn"}
+          </span>
+        );
+      case "accepted":
+        return (
+          <span className="badge bg-pink-subtle text-pink border border-pink px-3 py-2 rounded-pill small fw-semibold">
+            <i className="bi bi-check-circle-fill me-1"></i>
+            {statusDisplay || "Được nhận"}
+          </span>
+        );
+      case "rejected":
+        return (
+          <span className="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill small fw-semibold">
+            <i className="bi bi-x-circle me-1"></i>
+            {statusDisplay || "Bị từ chối"}
+          </span>
+        );
+      case "cancelled":
+        return (
+          <span className="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2 rounded-pill small fw-semibold">
+            <i className="bi bi-slash-circle me-1"></i>
+            {statusDisplay || "Đã hủy"}
+          </span>
+        );
+      default:
+        return (
+          <span className="badge bg-light text-dark border px-3 py-2 rounded-pill small fw-semibold">
+            {statusDisplay || status}
+          </span>
+        );
+    }
+  };
+
+  const formatSalaryText = (min, max) => {
+    if (min != null && max != null) {
+      if (min === 0 && max === 0) return "Thỏa thuận";
+      return `${(min / 1000000).toFixed(0)} - ${(max / 1000000).toFixed(0)} triệu`;
+    }
+    if (min != null && min > 0) return `Từ ${(min / 1000000).toFixed(0)} triệu`;
+    if (max != null && max > 0) return `Đến ${(max / 1000000).toFixed(0)} triệu`;
+    return "Thỏa thuận";
+  };
 
   return (
     <main className="student-dashboard-page">
@@ -134,12 +227,141 @@ export default function StudentDashboard() {
           ))}
         </section>
 
-        {/* TAB: VIỆC LÀM ĐÃ LƯU */}
-        {currentTab === "saved" ? (
+        {/* TAB 1: VIỆC LÀM ĐÃ ỨNG TUYỂN */}
+        {currentTab === "applied" ? (
           <section className="student-dashboard-panel mt-4 p-4 bg-white rounded-3 border shadow-sm">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div>
-                <h2 className="h4 fw-bold mb-1">
+                <h2 className="h4 fw-bold mb-1" style={{ color: "#800f2f" }}>
+                  <i className="bi bi-file-earmark-check-fill text-pink me-2" />
+                  Việc làm đã ứng tuyển ({appliedJobs.length})
+                </h2>
+                <p className="text-secondary small mb-0">
+                  Danh sách những vị trí bạn đã nộp hồ sơ. Trạng thái phản hồi từ nhà tuyển dụng sẽ được cập nhật liên tục tại đây.
+                </p>
+              </div>
+              <Link to="/student/dashboard" className="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                <i className="bi bi-grid me-1" /> Về tổng quan
+              </Link>
+            </div>
+
+            {loadingApplied ? (
+              <div className="text-center py-5">
+                <div className="spinner-border text-pink" role="status" />
+                <p className="text-muted mt-2">Đang tải danh sách việc làm đã ứng tuyển...</p>
+              </div>
+            ) : appliedJobs.length === 0 ? (
+              <div className="text-center py-5 bg-light rounded-4 border">
+                <i className="bi bi-inbox fs-1 text-muted" />
+                <p className="mt-2 text-secondary mb-3">Bạn chưa nộp hồ sơ ứng tuyển vào vị trí nào.</p>
+                <Link to="/jobs" className="btn btn-pink text-white rounded-pill px-4">
+                  <i className="bi bi-search me-1"></i> Khám phá việc làm ngay
+                </Link>
+              </div>
+            ) : (
+              <div className="d-flex flex-column gap-3">
+                {appliedJobs.map((app) => (
+                  <div
+                    key={app.id}
+                    className="applied-job-card border rounded-3 p-3 p-md-4 bg-white shadow-sm transition-all hover-shadow"
+                    style={{ borderLeft: "4px solid #ff4d6d" }}
+                  >
+                    <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                      <div className="d-flex align-items-start gap-3">
+                        <img
+                          src={app.job?.company_logo || defaultLogo}
+                          alt={app.job?.company_name}
+                          className="rounded-3 border p-1 object-fit-contain flex-shrink-0"
+                          width="56"
+                          height="56"
+                          onError={(e) => { e.currentTarget.src = defaultLogo; }}
+                        />
+                        <div>
+                          <h3 className="h5 fw-bold mb-1">
+                            <Link to={`/jobs/${app.job?.id}`} className="text-dark text-decoration-none hover-pink">
+                              {app.job?.title}
+                            </Link>
+                          </h3>
+                          <p className="text-secondary small mb-2">
+                            <i className="bi bi-building me-1"></i>
+                            {app.job?.company_name}
+                          </p>
+                          <div className="d-flex flex-wrap gap-3 small text-secondary">
+                            <span>
+                              <i className="bi bi-geo-alt me-1 text-pink"></i>
+                              {app.job?.location}
+                            </span>
+                            <span>
+                              <i className="bi bi-briefcase me-1 text-pink"></i>
+                              {app.job?.internship_type_display || app.job?.internship_type || "Thực tập"}
+                            </span>
+                            <span>
+                              <i className="bi bi-cash-coin me-1 text-pink"></i>
+                              {formatSalaryText(app.job?.salary_min, app.job?.salary_max)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="d-flex flex-column align-items-md-end gap-2">
+                        {getStatusBadge(app.status, app.status_display)}
+                        <span className="text-muted small" style={{ fontSize: "0.8rem" }}>
+                          <i className="bi bi-calendar-check me-1"></i>
+                          Nộp lúc: {new Date(app.applied_at).toLocaleDateString("vi-VN", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* DÒNG CHI TIẾT: FILE CV ĐÃ NỘP & LỜI NHẮN */}
+                    <div className="mt-3 pt-3 border-top d-flex flex-wrap align-items-center justify-content-between gap-2">
+                      <div className="d-flex align-items-center gap-2 small">
+                        {app.cv_url ? (
+                          <a
+                            href={app.cv_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn btn-sm btn-outline-secondary rounded-pill px-3 d-inline-flex align-items-center gap-1"
+                          >
+                            <i className="bi bi-file-earmark-pdf text-danger"></i>
+                            Xem CV đã nộp
+                          </a>
+                        ) : (
+                          <span className="text-muted">
+                            <i className="bi bi-file-earmark me-1"></i>Đã tải lên CV
+                          </span>
+                        )}
+
+                        {app.cover_letter && (
+                          <span className="text-muted fst-italic ms-2 text-truncate" style={{ maxWidth: "320px" }}>
+                            &quot;{app.cover_letter}&quot;
+                          </span>
+                        )}
+                      </div>
+
+                      <Link
+                        to={`/jobs/${app.job?.id}`}
+                        className="btn btn-sm btn-outline-pink rounded-pill px-3 fw-medium"
+                      >
+                        Chi tiết tin tuyển dụng <i className="bi bi-arrow-right ms-1"></i>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        ) : currentTab === "saved" ? (
+          /* TAB 2: VIỆC LÀM ĐÃ LƯU */
+          <section className="student-dashboard-panel mt-4 p-4 bg-white rounded-3 border shadow-sm">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h2 className="h4 fw-bold mb-1" style={{ color: "#800f2f" }}>
                   <i className="bi bi-heart-fill text-pink me-2" />
                   Việc làm đã lưu ({savedJobs.length})
                 </h2>
@@ -158,7 +380,7 @@ export default function StudentDashboard() {
                 <p className="text-muted mt-2">Đang tải danh sách việc làm đã lưu...</p>
               </div>
             ) : savedJobs.length === 0 ? (
-              <div className="text-center py-5 bg-light rounded-3 border">
+              <div className="text-center py-5 bg-light rounded-4 border">
                 <i className="bi bi-heart fs-1 text-muted" />
                 <p className="mt-2 text-secondary mb-3">Bạn chưa lưu việc làm nào.</p>
                 <Link to="/jobs" className="btn btn-pink text-white rounded-pill px-4">
@@ -180,7 +402,7 @@ export default function StudentDashboard() {
             )}
           </section>
         ) : (
-          /* TAB TỔNG QUAN */
+          /* TAB 3: TỔNG QUAN (OVERVIEW) */
           <div className="student-dashboard-layout">
             <section className="student-dashboard-panel student-activity-panel">
               <div className="student-panel-heading">
@@ -193,10 +415,44 @@ export default function StudentDashboard() {
                 </Link>
               </div>
               <div className="student-activity-list">
-                <div className="student-dashboard-empty">
-                  <i className="bi bi-inbox" />
-                  <span> Chưa có dữ liệu ứng tuyển.</span>
-                </div>
+                {loadingApplied ? (
+                  <div className="text-center py-4">
+                    <div className="spinner-border spinner-border-sm text-pink" role="status" />
+                  </div>
+                ) : appliedJobs.length === 0 ? (
+                  <div className="student-dashboard-empty">
+                    <i className="bi bi-inbox" />
+                    <span> Chưa có dữ liệu ứng tuyển.</span>
+                  </div>
+                ) : (
+                  <div className="d-flex flex-column gap-2 mt-2">
+                    {appliedJobs.slice(0, 3).map((app) => (
+                      <div
+                        key={app.id}
+                        className="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-light"
+                      >
+                        <div className="d-flex align-items-center gap-3 overflow-hidden">
+                          <img
+                            src={app.job?.company_logo || defaultLogo}
+                            alt=""
+                            className="rounded-2 border p-1 bg-white object-fit-contain"
+                            width="40"
+                            height="40"
+                          />
+                          <div className="overflow-hidden">
+                            <h4 className="h6 fw-bold mb-0 text-truncate">
+                              <Link to={`/jobs/${app.job?.id}`} className="text-dark text-decoration-none">
+                                {app.job?.title}
+                              </Link>
+                            </h4>
+                            <small className="text-secondary">{app.job?.company_name}</small>
+                          </div>
+                        </div>
+                        <div>{getStatusBadge(app.status, app.status_display)}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </section>
 

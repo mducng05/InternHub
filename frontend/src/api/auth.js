@@ -9,3 +9,7 @@ export const fetchMe = () => client.get("/auth/me/");
 
 export const googleAuth = (credential, role = "student") =>
   client.post("/auth/google/", { credential, role });
+
+export const changePassword = (payload) =>
+  client.post("/auth/change-password/", payload);
+
