@@ -1,61 +1,77 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import client from "../api/client";
-import { fetchSavedJobs, saveJob } from "../api/jobs";
+import { fetchJobs, fetchSavedJobs, saveJob } from "../api/jobs";
+import { fetchMarketInsights } from "../api/guides";
 import { useAuth } from "../store/AuthContext";
 import JobCard from "../components/JobCard";
 import HomeSearchBanner from "../components/HomeSearchBanner";
+import "./Home.css";
+
+const QUICK_GUIDES = [
+  { icon: "bi-compass", title: "Chọn hướng nghề nghiệp", text: "Tìm lộ trình phù hợp với sở thích và kỹ năng.", to: "/guides?guide=career" },
+  { icon: "bi-lightbulb", title: "Chuẩn bị hồ sơ", text: "Checklist từng bước trước khi ứng tuyển.", to: "/guides?guide=job-search" },
+  { icon: "bi-chat-square-text", title: "Luyện phỏng vấn", text: "Xem câu hỏi và cách chuẩn bị câu trả lời.", to: "/interview-questions" },
+];
+
+function responseItems(data) {
+  if (Array.isArray(data)) return data;
+  return data?.results || [];
+}
+
+function JobCardSkeleton() {
+  return (
+    <div className="home-job-skeleton" aria-hidden="true">
+      <div className="home-skeleton-head"><span /><div><i /><i /></div></div>
+      <i className="home-skeleton-line" />
+      <i className="home-skeleton-line is-short" />
+      <div className="home-skeleton-foot"><i /><i /></div>
+    </div>
+  );
+}
 
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [status, setStatus] = useState({ ok: false, msg: "Đang kiểm tra kết nối backend..." });
   const [jobs, setJobs] = useState([]);
   const [savedJobIds, setSavedJobIds] = useState([]);
+  const [market, setMarket] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+
+  const loadHomeData = async () => {
+    setLoading(true);
+    setError("");
+    const [jobsResult, marketResult] = await Promise.allSettled([fetchJobs(), fetchMarketInsights()]);
+    if (jobsResult.status === "fulfilled") {
+      setJobs(responseItems(jobsResult.value.data));
+    } else {
+      setError("Chưa tải được danh sách việc làm. Kiểm tra kết nối rồi thử lại.");
+    }
+    if (marketResult.status === "fulfilled") setMarket(marketResult.value.data);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    // 1. Kiểm tra trạng thái Server
-    client
-      .get("/health/")
-      .then((res) => setStatus({ ok: true, msg: `Backend kết nối thành công (status: ${res.data.status})` }))
-      .catch(() => setStatus({ ok: false, msg: "Không kết nối được với Backend Django" }));
-
-    // 2. Lấy danh sách công việc thực tế từ Cơ sở dữ liệu (DB)
-    setLoading(true);
-    setError(null);
-
-    client
-      .get("/jobs/")
-      .then((res) => {
-        // Xử lý dữ liệu trả về từ DRF (nếu có phân trang results hoặc mảng trực tiếp)
-        const jobList = Array.isArray(res.data) ? res.data : (res.data.results || []);
-        setJobs(jobList);
-      })
-      .catch((err) => {
-        console.error("Lỗi khi tải danh sách công việc từ DB:", err);
-        setError("Không thể tải dữ liệu việc làm từ cơ sở dữ liệu.");
-        setJobs([]);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    loadHomeData();
   }, []);
 
-  // Tải danh sách việc làm đã lưu khi người dùng đăng nhập
   useEffect(() => {
-    if (user?.id) {
-      fetchSavedJobs()
-        .then((res) => {
-          const ids = res.data?.saved_job_ids || [];
-          setSavedJobIds(ids);
-        })
-        .catch(() => {});
-    } else {
+    if (!user?.id) {
       setSavedJobIds([]);
+      return;
     }
+    fetchSavedJobs()
+      .then((response) => setSavedJobIds(response.data?.saved_job_ids || []))
+      .catch(() => setSavedJobIds([]));
   }, [user?.id]);
+
+  const categories = useMemo(() => {
+    const seen = new Set();
+    return jobs
+      .map((job) => job.job_category)
+      .filter((category) => category?.id && !seen.has(category.id) && seen.add(category.id))
+      .slice(0, 6);
+  }, [jobs]);
 
   const handleSaveJob = async (jobId) => {
     if (!user) {
@@ -63,80 +79,116 @@ export default function Home() {
       return;
     }
     try {
-      const res = await saveJob(jobId);
-      if (res.data?.saved) {
-        setSavedJobIds((prev) => [...prev, jobId]);
-      } else {
-        setSavedJobIds((prev) => prev.filter((id) => id !== jobId));
-      }
-    } catch (err) {
-      console.error("Lỗi khi lưu việc làm:", err);
+      const { data } = await saveJob(jobId);
+      setSavedJobIds((current) => data.saved
+        ? [...new Set([...current, jobId])]
+        : current.filter((id) => id !== jobId));
+    } catch {
+      // The job card remains usable if saving is unavailable.
     }
   };
 
+  const visibleJobs = [...jobs]
+    .sort((left, right) => new Date(right.created_at) - new Date(left.created_at))
+    .slice(0, 6);
+
   return (
-    <div className="min-vh-100 pb-5" style={{ background: "#fff7f8" }}>
+    <div className="home-page">
       <HomeSearchBanner />
 
-      {/* THANH TRẠNG THÁI KẾT NỐI BACKEND */}
-      {/* <div className="container mt-3">
-        <div className={`alert ${status.ok ? "alert-pink" : "alert-warning"} d-flex align-items-center gap-2 py-2 px-3 rounded-3 small`}>
-          <i className={`bi ${status.ok ? "bi-check-circle-fill" : "bi-exclamation-triangle-fill"}`}></i>
-          <span><strong>Trạng thái kết nối API:</strong> {status.msg}</span>
-        </div>
-      </div> */}
-
-      {/* DANH SÁCH VIỆC LÀM TỪ DATABASE */}
-      <main className="container my-4">
-        <div className="d-flex justify-content-between align-items-center mb-4">
+      <main className="home-page__inner">
+        <section className="home-welcome">
           <div>
-            <h4 className="fw-bold mb-1" style={{ color: "#800f2f" }}>Việc làm thực tập mới nhất</h4>
+            <span className="home-eyebrow">INTERNHUB · DÀNH CHO SINH VIÊN</span>
+            <h1>Bước đầu sự nghiệp,<br /><em>bắt đầu từ đây.</em></h1>
+            <p>Khám phá cơ hội thực tập phù hợp, chuẩn bị hồ sơ và tự tin ứng tuyển.</p>
           </div>
-          <Link to="/jobs" className="btn btn-outline-pink btn-sm rounded-pill px-3 fw-medium">
-            Xem tất cả <i className="bi bi-arrow-right ms-1"></i>
-          </Link>
+          <div className="home-welcome__actions">
+            <Link className="home-primary-link" to="/jobs">Khám phá việc làm <i className="bi bi-arrow-right" aria-hidden="true" /></Link>
+            <Link className="home-secondary-link" to="/guides?guide=career">Tìm hướng nghề <i className="bi bi-compass" aria-hidden="true" /></Link>
+          </div>
+        </section>
+
+        <section className="home-market-strip" aria-label="Tổng quan cơ hội">
+          <div><i className="bi bi-briefcase" aria-hidden="true" /><span><strong>{market ? market.total_jobs.toLocaleString("vi-VN") : "—"}</strong> tin đang tuyển</span></div>
+          <div><i className="bi bi-person-workspace" aria-hidden="true" /><span><strong>{market ? market.total_openings.toLocaleString("vi-VN") : "—"}</strong> vị trí cần tuyển</span></div>
+          <div><i className="bi bi-stars" aria-hidden="true" /><span><strong>{market ? market.recent_jobs_30_days.toLocaleString("vi-VN") : "—"}</strong> tin mới trong 30 ngày</span></div>
+          <Link to="/guides?guide=market">Xem thị trường <i className="bi bi-arrow-up-right" aria-hidden="true" /></Link>
+        </section>
+
+        {categories.length > 0 && (
+          <section className="home-category-section" aria-labelledby="home-category-title">
+            <div className="home-section-heading home-section-heading--compact">
+              <div><span className="home-eyebrow">TÌM THEO LĨNH VỰC</span><h2 id="home-category-title">Bạn muốn bắt đầu ở đâu?</h2></div>
+            </div>
+            <div className="home-category-list">
+              {categories.map((category) => (
+                <Link key={category.id} to={`/jobs?cat=${encodeURIComponent(category.name)}`}>
+                  {category.name}<i className="bi bi-arrow-up-right" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <div className="home-content-grid">
+          <section className="home-jobs-section" aria-labelledby="home-jobs-title">
+            <div className="home-section-heading">
+              <div><span className="home-eyebrow">CƠ HỘI MỚI</span><h2 id="home-jobs-title">Việc làm thực tập mới nhất</h2><p>Tin đã được duyệt và đang nhận hồ sơ.</p></div>
+              <Link className="home-view-all" to="/jobs">Tất cả việc làm <i className="bi bi-arrow-right" aria-hidden="true" /></Link>
+            </div>
+
+            {loading && (
+              <div className="home-job-grid" aria-label="Đang tải danh sách việc làm">
+                {Array.from({ length: 4 }, (_, index) => <JobCardSkeleton key={index} />)}
+              </div>
+            )}
+
+            {!loading && error && (
+              <div className="home-state home-state--error" role="alert">
+                <i className="bi bi-cloud-slash" aria-hidden="true" /><p>{error}</p>
+                <button onClick={loadHomeData} type="button">Thử tải lại</button>
+              </div>
+            )}
+
+            {!loading && !error && jobs.length === 0 && (
+              <div className="home-state">
+                <i className="bi bi-inbox" aria-hidden="true" />
+                <h3>Chưa có tin tuyển dụng phù hợp</h3>
+                <p>Cơ hội mới sẽ xuất hiện ở đây khi doanh nghiệp đăng tuyển.</p>
+                <Link to="/guides?guide=job-search">Xem checklist chuẩn bị hồ sơ <i className="bi bi-arrow-right" aria-hidden="true" /></Link>
+              </div>
+            )}
+
+            {!loading && !error && jobs.length > 0 && (
+              <div className="home-job-grid">
+                {visibleJobs.map((job) => (
+                  <div key={job.id} className="home-job-cell">
+                    <JobCard job={job} onSave={handleSaveJob} isSaved={savedJobIds.includes(job.id)} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <aside className="home-guidance" aria-labelledby="home-guidance-title">
+            <span className="home-eyebrow">SẴN SÀNG ỨNG TUYỂN</span>
+            <h2 id="home-guidance-title">Mỗi bước nhỏ đều đưa bạn tiến lên.</h2>
+            <p>Chuẩn bị có định hướng giúp bạn tìm cơ hội phù hợp và kể câu chuyện của mình tốt hơn.</p>
+            <div className="home-guidance-links">
+              <Link to="/guides?guide=job-search"><i className="bi bi-list-check" aria-hidden="true" /><span><strong>Checklist tìm việc</strong><small>Theo dõi từng bước chuẩn bị</small></span><i className="bi bi-arrow-up-right" aria-hidden="true" /></Link>
+              <Link to="/interview-questions"><i className="bi bi-chat-square-text" aria-hidden="true" /><span><strong>Luyện phỏng vấn</strong><small>Câu hỏi và gợi ý trả lời</small></span><i className="bi bi-arrow-up-right" aria-hidden="true" /></Link>
+              <Link to="/tools?tool=personality"><i className="bi bi-compass" aria-hidden="true" /><span><strong>Khám phá thiên hướng</strong><small>Tìm nhóm nghề phù hợp</small></span><i className="bi bi-arrow-up-right" aria-hidden="true" /></Link>
+            </div>
+            <div className="home-guidance-foot"><i className="bi bi-heart-pulse" aria-hidden="true" /> Bắt đầu với một việc nhỏ hôm nay.</div>
+          </aside>
         </div>
 
-        {/* Trạng thái 1: Đang tải dữ liệu từ DB */}
-        {loading && (
-          <div className="text-center py-5">
-            <div className="spinner-border text-pink" role="status"></div>
-            <p className="mt-2 text-muted small">Đang tải dữ liệu từ cơ sở dữ liệu...</p>
-          </div>
-        )}
-
-        {/* Trạng thái 2: Lỗi API */}
-        {!loading && error && (
-          <div className="text-center py-5 text-danger">
-            <i className="bi bi-exclamation-circle fs-1"></i>
-            <p className="mt-2">{error}</p>
-          </div>
-        )}
-
-        {/* Trạng thái 3: DB trống (Chưa có tin tuyển dụng nào) */}
-        {!loading && !error && jobs.length === 0 && (
-          <div className="text-center py-5 bg-light rounded-4 border">
-            <i className="bi bi-inbox fs-1 text-muted"></i>
-            <p className="mt-2 text-secondary mb-0">Hiện chưa có tin tuyển dụng nào trong cơ sở dữ liệu.</p>
-          </div>
-        )}
-
-        {/* Trạng thái 4: Hiển thị dữ liệu DB thành công */}
-        {!loading && !error && jobs.length > 0 && (
-          <div className="row g-3">
-            {jobs.map((job) => (
-              <div key={job.id} className="col-12 col-md-6 col-lg-4">
-                <JobCard
-                  job={job}
-                  onSave={handleSaveJob}
-                  isSaved={savedJobIds.includes(job.id)}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <section className="home-bottom-cta">
+          <div><span className="home-eyebrow">CÔNG CỤ DÀNH CHO BẠN</span><h2>Hiểu mình hơn. Chuẩn bị tốt hơn.</h2><p>Trắc nghiệm nghề nghiệp, tính lương và kế hoạch tài chính trong một nơi.</p></div>
+          <Link className="home-primary-link" to="/tools">Khám phá công cụ <i className="bi bi-arrow-right" aria-hidden="true" /></Link>
+        </section>
       </main>
-
     </div>
   );
 }

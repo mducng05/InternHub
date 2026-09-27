@@ -129,6 +129,13 @@
   width: 66px;
 }
 
+.profile-avatar img {
+  border-radius: 50%;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
 .profile-avatar-row strong,
 .profile-avatar-row span {
   display: block;
@@ -334,4 +341,4 @@ textarea.profile-input {
     width: 100%;
   }
 }
-
+

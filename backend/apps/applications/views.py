@@ -26,6 +26,11 @@ class ApplyJobView(generics.CreateAPIView):
             )
 
         job = get_object_or_404(Job, pk=job_id)
+        if job.slug.startswith("demo-"):
+            return Response(
+                {"detail": "Tin tuyển dụng minh họa không nhận hồ sơ ứng tuyển."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         full_name = str(request.data.get("full_name", "")).strip()
         email = str(request.data.get("email", "")).strip().lower()

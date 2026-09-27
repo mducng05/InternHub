@@ -1,3 +1,27 @@
+.home-search-hero {
+  background: linear-gradient(180deg, #fff0f3 0%, #fff6f7 100%);
+  border-bottom: 1px solid #f3dfe4;
+  padding: 1.5rem 0 1.75rem;
+}
+
+.home-search-hero__inner {
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
+}
+
+.home-search-form {
+  border-color: #f0dfe4 !important;
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgb(87 31 50 / 8%) !important;
+  max-width: 1000px;
+}
+
+.home-search-submit {
+  border-radius: 6px;
+  color: #fff !important;
+  min-height: 42px;
+}
+
 .home-banner-slot {
   position: relative;
   overflow: hidden;
@@ -185,4 +209,4 @@
     right: 12px;
   }
 }
-
+

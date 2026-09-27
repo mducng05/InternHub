@@ -5,7 +5,9 @@ import AdminLogin from "../pages/admin/AdminLogin";
 import AdminLayout from "../pages/admin/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminResource from "../pages/admin/AdminResource";
+import AccountProfile from "../pages/AccountProfile";
 import EmployerDashboard from "../pages/EmployerDashboard";
+import EmployerProfile from "../pages/EmployerProfile";
 import Home from "../pages/Home";
 import JobDetail from "../pages/JobDetail";
 import JobList from "../pages/JobList";
@@ -16,6 +18,9 @@ import StudentDashboard from "../pages/StudentDashboard";
 import StudentProfile from "../pages/StudentProfile";
 import ChangePassword from "../pages/ChangePassword";
 import InterviewQuestions from "../pages/InterviewQuestions";
+import CompanyProfile from "../pages/CompanyProfile";
+import CareerTools from "../pages/CareerTools";
+import CareerGuides from "../pages/CareerGuides";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRoutes() {
@@ -29,6 +34,9 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<JobList />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
+        <Route path="/companies/:id" element={<CompanyProfile />} />
+        <Route path="/tools" element={<CareerTools />} />
+        <Route path="/guides" element={<CareerGuides />} />
         <Route path="/interview-questions" element={<InterviewQuestions />} />
         <Route path="/cau-hoi-phong-van" element={<InterviewQuestions />} />
         <Route path="/login" element={<Login />} />
@@ -44,8 +52,13 @@ export default function AppRoutes() {
           <Route path="/change-password" element={<ChangePassword />} />
         </Route>
 
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/account/profile" element={<AccountProfile />} />
+        </Route>
+
         <Route element={<ProtectedRoute allowedRoles={["employer"]} />}>
           <Route path="/employer/dashboard" element={<EmployerDashboard />} />
+          <Route path="/employer/profile" element={<EmployerProfile />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>

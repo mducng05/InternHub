@@ -7,7 +7,7 @@ import json
 import urllib.request
 
 from .models import User
-from .serializers import CustomTokenObtainPairSerializer, RegisterSerializer
+from .serializers import AccountMeSerializer, CustomTokenObtainPairSerializer, RegisterSerializer
 
 
 def verify_google_token(id_token: str):
@@ -41,18 +41,12 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 
-class MeView(generics.GenericAPIView):
+class MeView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = AccountMeSerializer
 
-    def get(self, request):
-        user = request.user
-        return Response({
-            "id": user.id,
-            "email": user.email,
-            "role": user.role,
-            "full_name": user.get_full_name() or user.username,
-            "has_usable_password": user.has_usable_password(),
-        })
+    def get_object(self):
+        return self.request.user
 
 
 class GoogleLoginView(generics.GenericAPIView):
@@ -114,6 +108,9 @@ class GoogleLoginView(generics.GenericAPIView):
 
         # Cấp JWT access & refresh token
         refresh = RefreshToken.for_user(user)
+        avatar = user.avatar.url if user.avatar else None
+        if avatar:
+            avatar = request.build_absolute_uri(avatar)
         return Response({
             "access": str(refresh.access_token),
             "refresh": str(refresh),
@@ -122,6 +119,8 @@ class GoogleLoginView(generics.GenericAPIView):
                 "email": user.email,
                 "role": user.role,
                 "full_name": user.get_full_name() or user.username,
+                "phone": user.phone,
+                "avatar": avatar,
                 "has_usable_password": user.has_usable_password(),
             },
             "is_new_user": is_new_user,

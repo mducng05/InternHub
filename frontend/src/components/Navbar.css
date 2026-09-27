@@ -259,6 +259,13 @@
   width: 44px;
 }
 
+.user-avatar img {
+  border-radius: 50%;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
 .nav-menu-chevron,
 .user-menu-chevron {
   display: inline-block;
@@ -491,4 +498,4 @@
 .nav-hover-dropdown:hover .bi-chevron-down {
   transform: rotate(180deg);
   transition: transform 0.2s ease-in-out;
-}
+}

@@ -7,3 +7,10 @@ export const updateStudentProfile = (payload) =>
 
 export const patchStudentProfile = (payload) =>
   client.patch("/profiles/student/me/", payload);
+
+export const getEmployerProfile = () => client.get("/profiles/employer/me/");
+
+export const patchEmployerProfile = (payload) =>
+  client.patch("/profiles/employer/me/", payload);
+
+export const fetchPublicCompany = (id) => client.get(`/profiles/companies/${id}/`);

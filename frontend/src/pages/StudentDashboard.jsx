@@ -5,6 +5,7 @@ import { getStudentProfile } from "../api/profile";
 import { fetchSavedJobs, saveJob } from "../api/jobs";
 import { fetchMyApplications } from "../api/applications";
 import JobCard from "../components/JobCard";
+import StudentCVStudio from "../components/StudentCVStudio";
 import defaultLogo from "../assets/logo01.png";
 import './StudentDashboard.css';
 
@@ -228,7 +229,17 @@ export default function StudentDashboard() {
         </section>
 
         {/* TAB 1: VIỆC LÀM ĐÃ ỨNG TUYỂN */}
-        {currentTab === "applied" ? (
+        {currentTab === "cv" || currentTab === "resume" ? (
+          <StudentCVStudio
+            initialMode={currentTab === "resume" ? "upload" : "builder"}
+            onProfileUpdate={(nextProfile) => {
+              setProfile(nextProfile);
+              if (userProfileKey) localStorage.setItem(userProfileKey, JSON.stringify(nextProfile));
+            }}
+            profile={profile}
+            user={user}
+          />
+        ) : currentTab === "applied" ? (
           <section className="student-dashboard-panel mt-4 p-4 bg-white rounded-3 border shadow-sm">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div>

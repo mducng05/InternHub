@@ -28,6 +28,13 @@
   -webkit-line-clamp: 2;
 }
 
+.home-demo-badge {
+  background: #fff2e8;
+  color: #92501f;
+  font-size: 0.62rem;
+  font-weight: 750;
+}
+
 .company-name-row {
   line-height: 1.25;
 }
@@ -106,4 +113,4 @@
   border-color: #a9153f;
   color: #fff;
 }
-
+

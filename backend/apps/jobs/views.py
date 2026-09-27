@@ -1,12 +1,202 @@
-from django.db.models import Q
+from datetime import timedelta
+
+from django.db.models import Count, F, Max, Min, Q, Sum
 from django.shortcuts import get_object_or_404
-from rest_framework import generics
+from django.utils import timezone
+from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
+from apps.applications.models import Application, ApplicationStatusLog
 from .models import Job, SavedJob
-from .serializers import JobListSerializer, JobDetailSerializer
-from apps.profiles.models import StudentProfile
+from .serializers import EmployerJobSerializer, JobListSerializer, JobDetailSerializer
+from apps.profiles.models import EmployerProfile, StudentProfile
+
+
+class IsEmployer(permissions.BasePermission):
+	def has_permission(self, request, view):
+		return bool(request.user and request.user.is_authenticated and request.user.role == "employer")
+
+
+def get_employer_profile(user):
+	company_name = user.get_full_name() or user.email.split("@")[0]
+	profile, _ = EmployerProfile.objects.get_or_create(
+		user=user,
+		defaults={"company_name": company_name or f"Doanh nghiệp {user.pk}"},
+	)
+	return profile
+
+
+class EmployerJobListCreateView(generics.ListCreateAPIView):
+	permission_classes = [permissions.IsAuthenticated, IsEmployer]
+	serializer_class = EmployerJobSerializer
+
+	def get_profile(self):
+		return get_employer_profile(self.request.user)
+
+	def get_queryset(self):
+		return (
+			Job.objects.filter(employer=self.get_profile())
+			.select_related("job_category", "location")
+			.annotate(
+				application_count=Count("applications"),
+				pending_application_count=Count(
+					"applications",
+					filter=Q(applications__status=Application.Status.PENDING),
+				),
+				shortlisted_application_count=Count(
+					"applications",
+					filter=Q(applications__status=Application.Status.SHORTLISTED),
+				),
+				interview_application_count=Count(
+					"applications",
+					filter=Q(applications__status=Application.Status.INTERVIEW_INVITED),
+				),
+				accepted_application_count=Count(
+					"applications",
+					filter=Q(applications__status=Application.Status.ACCEPTED),
+				),
+			)
+			.order_by("-created_at")
+		)
+
+	def list(self, request, *args, **kwargs):
+		jobs = self.get_queryset()
+		profile = self.get_profile()
+		return Response({
+			"profile": {
+				"company_name": profile.company_name,
+				"is_verified": profile.is_verified,
+			},
+			"count": jobs.count(),
+			"results": self.get_serializer(jobs, many=True).data,
+		})
+
+	def perform_create(self, serializer):
+		serializer.save(employer=self.get_profile(), status=Job.Status.PENDING)
+
+
+class EmployerJobDetailView(generics.RetrieveUpdateAPIView):
+	permission_classes = [permissions.IsAuthenticated, IsEmployer]
+	serializer_class = EmployerJobSerializer
+	lookup_url_kwarg = "pk"
+
+	def get_queryset(self):
+		return (
+			Job.objects.filter(employer=get_employer_profile(self.request.user))
+			.annotate(
+				application_count=Count("applications"),
+				pending_application_count=Count(
+					"applications",
+					filter=Q(applications__status=Application.Status.PENDING),
+				),
+				shortlisted_application_count=Count(
+					"applications",
+					filter=Q(applications__status=Application.Status.SHORTLISTED),
+				),
+				interview_application_count=Count(
+					"applications",
+					filter=Q(applications__status=Application.Status.INTERVIEW_INVITED),
+				),
+				accepted_application_count=Count(
+					"applications",
+					filter=Q(applications__status=Application.Status.ACCEPTED),
+				),
+			)
+		)
+
+	def perform_update(self, serializer):
+		previous_status = serializer.instance.status
+		if previous_status in (Job.Status.APPROVED, Job.Status.REJECTED):
+			serializer.save(status=Job.Status.PENDING)
+			return
+		serializer.save()
+
+
+class EmployerJobCloseView(generics.GenericAPIView):
+	permission_classes = [permissions.IsAuthenticated, IsEmployer]
+
+	def get_queryset(self):
+		return Job.objects.filter(employer=get_employer_profile(self.request.user))
+
+	def post(self, request, pk):
+		job = get_object_or_404(self.get_queryset(), pk=pk)
+		if job.status == Job.Status.CLOSED:
+			return Response({"detail": "Tin tuyển dụng đã được đóng."}, status=400)
+		job.status = Job.Status.CLOSED
+		job.save(update_fields=["status", "updated_at"])
+		return Response({"status": job.status, "status_display": job.get_status_display()})
+
+
+class EmployerJobApplicationsView(generics.GenericAPIView):
+	permission_classes = [permissions.IsAuthenticated, IsEmployer]
+
+	def get_queryset(self):
+		return Job.objects.filter(employer=get_employer_profile(self.request.user))
+
+	def get(self, request, pk):
+		job = get_object_or_404(self.get_queryset(), pk=pk)
+		applications = (
+			Application.objects.filter(job=job)
+			.select_related("student_profile", "student_profile__user")
+			.order_by("-applied_at")
+		)
+		results = []
+		for application in applications:
+			student = application.student_profile
+			cv_url = request.build_absolute_uri(application.cv_snapshot.url) if application.cv_snapshot else None
+			results.append({
+				"id": application.pk,
+				"full_name": student.full_name,
+				"email": student.user.email,
+				"phone": student.user.phone,
+				"university": student.university,
+				"major": student.major,
+				"graduation_year": student.graduation_year,
+				"cv_url": cv_url,
+				"cover_letter": application.cover_letter,
+				"status": application.status,
+				"status_display": application.get_status_display(),
+				"applied_at": application.applied_at,
+			})
+		return Response({
+			"job": {"id": job.pk, "title": job.title},
+			"count": len(results),
+			"results": results,
+		})
+
+	def patch(self, request, pk, application_id):
+		job = get_object_or_404(self.get_queryset(), pk=pk)
+		application = get_object_or_404(Application, pk=application_id, job=job)
+		new_status = request.data.get("status")
+		allowed_statuses = {
+			Application.Status.PENDING,
+			Application.Status.SHORTLISTED,
+			Application.Status.INTERVIEW_INVITED,
+			Application.Status.ACCEPTED,
+			Application.Status.REJECTED,
+		}
+		if new_status not in allowed_statuses:
+			return Response({"status": "Trạng thái hồ sơ không hợp lệ."}, status=400)
+		if application.status == Application.Status.CANCELLED:
+			return Response({"status": "Không thể cập nhật hồ sơ đã được ứng viên hủy."}, status=400)
+
+		previous_status = application.status
+		application.status = new_status
+		application.save(update_fields=["status", "updated_at"])
+		if previous_status != new_status:
+			ApplicationStatusLog.objects.create(
+				application=application,
+				status=new_status,
+				note=request.data.get("note", "")[:255],
+				changed_by=request.user,
+			)
+		return Response({
+			"id": application.pk,
+			"status": application.status,
+			"status_display": application.get_status_display(),
+		})
 
 
 class JobListView(generics.ListAPIView):
@@ -21,6 +211,12 @@ class JobListView(generics.ListAPIView):
 		)
 		params = self.request.query_params
 		keyword = params.get("keyword", "").strip()
+		employer_id = params.get("employer")
+		if employer_id:
+			try:
+				queryset = queryset.filter(employer_id=int(employer_id))
+			except (TypeError, ValueError):
+				return queryset.none()
 
 		# 1. Từ khóa (tiêu đề, mô tả, yêu cầu, tên công ty)
 		if keyword:
@@ -123,6 +319,92 @@ class JobListView(generics.ListAPIView):
 			queryset = queryset.order_by("deadline", "-created_at")
 
 		return queryset
+
+
+class JobSalaryInsightsView(APIView):
+	permission_classes = [AllowAny]
+
+	def get(self, request):
+		queryset = Job.objects.filter(status=Job.Status.APPROVED, is_salary_negotiable=False).exclude(slug__startswith="demo-").exclude(
+			Q(salary_min__isnull=True, salary_max__isnull=True)
+		)
+		params = request.query_params
+		for key, field in (("category", "job_category_id"), ("location", "location_id")):
+			value = params.get(key)
+			if value:
+				try:
+					queryset = queryset.filter(**{field: int(value)})
+				except (TypeError, ValueError):
+					return Response({"count": 0, "salary_min": None, "salary_median": None, "salary_max": None})
+		if params.get("internship_type"):
+			queryset = queryset.filter(internship_type=params["internship_type"])
+
+		rows = list(queryset.values("salary_min", "salary_max", "job_category__name", "location__name"))
+		if not rows:
+			return Response({"count": 0, "salary_min": None, "salary_median": None, "salary_max": None})
+
+		midpoints = []
+		lower_bounds = []
+		upper_bounds = []
+		for row in rows:
+			lower = row["salary_min"] if row["salary_min"] is not None else row["salary_max"]
+			upper = row["salary_max"] if row["salary_max"] is not None else row["salary_min"]
+			lower_bounds.append(lower)
+			upper_bounds.append(upper)
+			midpoints.append((lower + upper) / 2)
+
+		midpoints.sort()
+		middle = len(midpoints) // 2
+		median = midpoints[middle] if len(midpoints) % 2 else (midpoints[middle - 1] + midpoints[middle]) / 2
+		return Response({
+			"count": len(rows),
+			"salary_min": min(lower_bounds),
+			"salary_median": round(median),
+			"salary_max": max(upper_bounds),
+			"source": "approved_job_listings",
+		})
+
+
+class JobMarketInsightsView(APIView):
+	permission_classes = [AllowAny]
+
+	def get(self, request):
+		jobs = Job.objects.filter(status=Job.Status.APPROVED).exclude(slug__startswith="demo-")
+		thirty_days_ago = timezone.now() - timedelta(days=30)
+		recent_jobs = jobs.filter(created_at__gte=thirty_days_ago)
+
+		def top_values(field, limit=5):
+			return list(
+				jobs.exclude(**{f"{field}__isnull": True})
+				.values(name=F(f"{field}__name"))
+				.annotate(jobs_count=Count("id"), openings=Sum("num_positions"))
+				.order_by("-jobs_count", "name")[:limit]
+			)
+
+		type_breakdown = list(
+			jobs.values("internship_type")
+			.annotate(jobs_count=Count("id"), openings=Sum("num_positions"))
+			.order_by("-jobs_count")
+		)
+		for item in type_breakdown:
+			item["label"] = Job.InternshipType(item["internship_type"]).label
+
+		return Response({
+			"total_jobs": jobs.count(),
+			"total_openings": jobs.aggregate(total=Sum("num_positions"))["total"] or 0,
+			"recent_jobs_30_days": recent_jobs.count(),
+			"top_categories": top_values("job_category"),
+			"top_locations": top_values("location"),
+			"work_types": type_breakdown,
+			"salary": {
+				"count": jobs.filter(is_salary_negotiable=False).exclude(
+					Q(salary_min__isnull=True, salary_max__isnull=True)
+				).count(),
+				"salary_min": jobs.filter(is_salary_negotiable=False).aggregate(value=Min("salary_min"))["value"],
+				"salary_max": jobs.filter(is_salary_negotiable=False).aggregate(value=Max("salary_max"))["value"],
+			},
+			"updated_at": timezone.now(),
+		})
 
 
 class JobDetailView(generics.RetrieveAPIView):

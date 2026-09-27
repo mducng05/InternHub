@@ -165,6 +165,7 @@ export default function JobDetail() {
           <section className="col-lg-8">
             <div className="job-detail-hero job-detail-job-box bg-white border rounded-3 shadow-sm p-3 p-md-4 text-start">
               {job?.is_featured && <span className="badge bg-warning text-dark mb-2"><i className="bi bi-star-fill me-1"></i>Nổi bật</span>}
+              {job?.is_demo && <span className="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle mb-2 ms-2"><i className="bi bi-info-circle me-1"></i>Tin minh họa</span>}
               <h1 className="h3 fw-bold mb-2">{job.title}</h1>
               <p className="text-secondary mb-2"><i className="bi bi-building me-2"></i>{companyName}</p>
               <div className="d-flex flex-wrap gap-2 small text-secondary">
@@ -205,10 +206,15 @@ export default function JobDetail() {
                 <p><i className="bi bi-building-gear me-2"></i><span className="job-company-label">Lĩnh vực</span><strong>{industry}</strong></p>
                 <p><i className="bi bi-geo-alt me-2"></i><span className="job-company-label">Địa chỉ</span><strong>{companyAddress}</strong></p>
               </div>
-              {employer?.website ? (
-                <a href={employer.website} target="_blank" rel="noreferrer" className="btn btn-outline-pink w-100 mt-2">Xem trang công ty <i className="bi bi-arrow-up-right ms-1"></i></a>
-              ) : (
-                <Link to={`/companies/${employer?.id || companyName}`} className="btn btn-outline-pink w-100 mt-2">Xem trang công ty <i className="bi bi-arrow-right ms-1"></i></Link>
+              {employer?.id && (
+                <Link to={`/companies/${employer.id}`} className="btn btn-outline-pink w-100 mt-2">
+                  Xem trang công ty <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+              )}
+              {employer?.website && (
+                <a href={employer.website} target="_blank" rel="noreferrer" className="btn btn-link btn-sm w-100 mt-1 text-secondary">
+                  Website doanh nghiệp <i className="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
               )}
             </div>
 
@@ -216,11 +222,13 @@ export default function JobDetail() {
               <button
                 type="button"
                 className="btn btn-pink text-white w-100 fw-semibold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2"
-                onClick={() => setIsApplyModalOpen(true)}
+                disabled={Boolean(job.is_demo)}
+                onClick={() => !job.is_demo && setIsApplyModalOpen(true)}
               >
-                <i className="bi bi-send-fill"></i>
-                Ứng tuyển ngay
+                <i className={`bi ${job.is_demo ? "bi-info-circle" : "bi-send-fill"}`}></i>
+                {job.is_demo ? "Tin minh họa" : "Ứng tuyển ngay"}
               </button>
+              {job.is_demo && <p className="small text-secondary text-center mt-2 mb-0">Tin mẫu chỉ dùng để xem giao diện, không nhận hồ sơ ứng tuyển.</p>}
               <button
                 type="button"
                 className={`btn w-100 mt-2 ${saved ? "btn-danger text-white" : "btn-outline-danger"}`}

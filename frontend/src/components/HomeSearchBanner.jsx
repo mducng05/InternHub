@@ -75,9 +75,9 @@ export default function HomeSearchBanner() {
   };
 
   return (
-    <section className="py-5 shadow-sm text-dark" style={{ background: "#fff0f3" }}>
-      <div className="container py-4">
-        <form onSubmit={handleSearch} className="bg-white p-3 rounded-4 shadow-sm text-dark max-width-1000 mx-auto border">
+    <section className="home-search-hero shadow-sm text-dark">
+      <div className="container home-search-hero__inner">
+        <form onSubmit={handleSearch} className="home-search-form bg-white p-3 text-dark mx-auto border">
           <div className="row g-2 align-items-center">
             <div className="col-md-6">
               <div className="input-group">
@@ -125,14 +125,14 @@ export default function HomeSearchBanner() {
             </div>
 
             <div className="col-md-2">
-              <button type="submit" className="btn btn-pink w-100 py-2 rounded-3 fw-bold" style={{ color: "#800f2f" }}>
+              <button type="submit" className="btn btn-pink home-search-submit w-100 py-2 fw-bold">
                 Tìm kiếm
               </button>
             </div>
           </div>
         </form>
 
-        <div className="home-banner-slot mt-4">
+        <div className="home-banner-slot mt-3 mt-lg-4">
           <button type="button" className="home-banner-arrow home-banner-arrow-prev" onClick={() => showBanner("previous")} disabled={Boolean(bannerTransition)} aria-label="Banner trước">
             <i className="bi bi-chevron-left" aria-hidden="true" />
           </button>

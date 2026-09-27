@@ -7,6 +7,8 @@ export const register = (payload) => client.post("/auth/register/", payload);
 
 export const fetchMe = () => client.get("/auth/me/");
 
+export const patchMe = (payload) => client.patch("/auth/me/", payload);
+
 export const googleAuth = (credential, role = "student") =>
   client.post("/auth/google/", { credential, role });
 

@@ -119,6 +119,11 @@ export default function JobCard({ job, onSave, isSaved }) {
                 <i className="bi bi-star-fill me-1"></i> Nổi bật
               </span>
             )}
+            {job?.is_demo && (
+              <span className="badge home-demo-badge rounded-pill mb-1 d-inline-block">
+                <i className="bi bi-info-circle me-1" aria-hidden="true"></i> Tin minh họa
+              </span>
+            )}
             <h6 className="card-title mb-1 fw-bold text-truncate job-title-row">
               <span
                 className="text-dark"

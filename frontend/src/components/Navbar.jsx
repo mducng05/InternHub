@@ -141,15 +141,15 @@ export default function Navbar() {
                   <div className="nav-dropdown-col border-end pe-4">
                     <div className="nav-submenu-header">CÁC MẪU CV THEO STYLE</div>
                     <div className="nav-submenu-list">
-                      <Link to="/student/dashboard?tab=cv" className="nav-submenu-link">
+                      <Link to="/student/dashboard?tab=cv&style=classic" className="nav-submenu-link">
                         <i className="bi bi-file-earmark-text nav-submenu-icon"></i>
                         <span>Mẫu CV đơn giản</span>
                       </Link>
-                      <Link to="/student/dashboard?tab=cv" className="nav-submenu-link">
+                      <Link to="/student/dashboard?tab=cv&style=modern" className="nav-submenu-link">
                         <i className="bi bi-stars nav-submenu-icon"></i>
                         <span>Mẫu CV ấn tượng</span>
                       </Link>
-                      <Link to="/student/dashboard?tab=cv" className="nav-submenu-link">
+                      <Link to="/student/dashboard?tab=cv&style=professional" className="nav-submenu-link">
                         <i className="bi bi-award nav-submenu-icon"></i>
                         <span>Mẫu CV chuyên nghiệp</span>
                       </Link>
@@ -160,19 +160,19 @@ export default function Navbar() {
                   <div className="nav-dropdown-col border-end px-4">
                     <div className="nav-submenu-header">CÁC MẪU CV THEO VỊ TRÍ</div>
                     <div className="nav-submenu-list">
-                      <Link to="/jobs?cat=marketing" className="nav-submenu-link">
+                      <Link to="/student/dashboard?tab=cv&role=business" className="nav-submenu-link">
                         <i className="bi bi-briefcase nav-submenu-icon"></i>
                         <span>Nhân viên kinh doanh</span>
                       </Link>
-                      <Link to="/jobs?cat=backend" className="nav-submenu-link">
+                      <Link to="/student/dashboard?tab=cv&role=backend" className="nav-submenu-link">
                         <i className="bi bi-code-slash nav-submenu-icon"></i>
                         <span>Lập trình viên</span>
                       </Link>
-                      <Link to="/jobs?industry=finance" className="nav-submenu-link">
+                      <Link to="/student/dashboard?tab=cv&role=accounting" className="nav-submenu-link">
                         <i className="bi bi-calculator nav-submenu-icon"></i>
                         <span>Nhân viên kế toán</span>
                       </Link>
-                      <Link to="/jobs?cat=marketing" className="nav-submenu-link">
+                      <Link to="/student/dashboard?tab=cv&role=marketing" className="nav-submenu-link">
                         <i className="bi bi-megaphone nav-submenu-icon"></i>
                         <span>Chuyên viên marketing</span>
                       </Link>
@@ -183,7 +183,7 @@ export default function Navbar() {
                   <div className="nav-dropdown-col ps-4">
                     <div className="nav-submenu-header">TIỆN ÍCH HỖ TRỢ CV</div>
                     <div className="nav-submenu-list">
-                      <Link to="/student/dashboard?tab=profile" className="nav-submenu-link">
+                      <Link to="/student/dashboard?tab=cv&mode=manage" className="nav-submenu-link">
                         <i className="bi bi-folder2-open nav-submenu-icon"></i>
                         <span>Quản lí CV</span>
                       </Link>
@@ -191,7 +191,7 @@ export default function Navbar() {
                         <i className="bi bi-cloud-arrow-up nav-submenu-icon"></i>
                         <span>Tải CV lên</span>
                       </Link>
-                      <Link to="/jobs" className="nav-submenu-link">
+                      <Link to="/guides?guide=cv" className="nav-submenu-link">
                         <i className="bi bi-journal-bookmark nav-submenu-icon"></i>
                         <span>Hướng dẫn viết CV</span>
                       </Link>
@@ -204,7 +204,7 @@ export default function Navbar() {
             {/* Công cụ */}
             <li className="nav-item dropdown nav-hover-dropdown">
               <div className="d-flex align-items-center">
-                <Link className="nav-link fw-medium text-dark pe-1" to="">
+                <Link className="nav-link fw-medium text-dark pe-1" to="/tools">
                   Công cụ
                 </Link>
                 <span className="nav-link ps-0 pe-2 text-dark" style={{ cursor: "pointer" }}>
@@ -218,7 +218,7 @@ export default function Navbar() {
                   <div className="nav-dropdown-col border-end pe-4">
                     <div className="nav-submenu-header">KHÁM PHÁ BẢN THÂN</div>
                     <div className="nav-submenu-list">
-                      <Link to="" className="nav-submenu-link">
+                      <Link to="/tools?tool=personality" className="nav-submenu-link">
                         <i className="bi bi-person-vcard nav-submenu-icon"></i>
                         <span>Trắc nghiệm tính cách</span>
                       </Link>
@@ -233,19 +233,19 @@ export default function Navbar() {
                   <div className="nav-dropdown-col ps-4">
                     <div className="nav-submenu-header">CÔNG CỤ TÍNH TOÁN</div>
                     <div className="nav-submenu-list">
-                      <Link to="" className="nav-submenu-link">
+                      <Link to="/tools?tool=tax" className="nav-submenu-link">
                         <i className="bi bi-receipt nav-submenu-icon"></i>
                         <span>Tính thuế thu nhập cá nhân</span>
                       </Link>
-                      <Link to="" className="nav-submenu-link">
+                      <Link to="/tools?tool=salary" className="nav-submenu-link">
                         <i className="bi bi-search nav-submenu-icon"></i>
                         <span>Tra cứu mức lương</span>
                       </Link>
-                      <Link to="" className="nav-submenu-link">
+                      <Link to="/tools?tool=compound" className="nav-submenu-link">
                         <i className="bi bi-graph-up-arrow nav-submenu-icon"></i>
                         <span>Tính lãi suất kép</span>
                       </Link>
-                      <Link to="" className="nav-submenu-link">
+                      <Link to="/tools?tool=savings" className="nav-submenu-link">
                         <i className="bi bi-piggy-bank nav-submenu-icon"></i>
                         <span>Lập kế hoạch tiết kiệm</span>
                       </Link>
@@ -258,7 +258,7 @@ export default function Navbar() {
             {/* Cẩm nang */}
             <li className="nav-item dropdown nav-hover-dropdown">
               <div className="d-flex align-items-center">
-                <Link className="nav-link fw-medium text-dark pe-1" to="">
+                <Link className="nav-link fw-medium text-dark pe-1" to="/guides">
                   Cẩm nang
                 </Link>
                 <span className="nav-link ps-0 pe-2 text-dark" style={{ cursor: "pointer" }}>
@@ -270,15 +270,15 @@ export default function Navbar() {
                 <div className="nav-dropdown-col">
                   <div className="nav-submenu-header">CẨM NANG NGHỀ NGHIỆP</div>
                   <div className="nav-submenu-list">
-                    <Link to="" className="nav-submenu-link">
+                    <Link to="/guides?guide=career" className="nav-submenu-link">
                       <i className="bi bi-compass nav-submenu-icon"></i>
                       <span>Định hướng nghề nghiệp</span>
                     </Link>
-                    <Link to="" className="nav-submenu-link">
+                    <Link to="/guides?guide=job-search" className="nav-submenu-link">
                       <i className="bi bi-lightbulb nav-submenu-icon"></i>
                       <span>Bí quyết tìm việc</span>
                     </Link>
-                    <Link to="" className="nav-submenu-link">
+                    <Link to="/guides?guide=market" className="nav-submenu-link">
                       <i className="bi bi-graph-up nav-submenu-icon"></i>
                       <span>Thị trường &amp; xu hướng tuyển dụng</span>
                     </Link>
@@ -311,7 +311,9 @@ export default function Navbar() {
                 <div className="user-menu nav-hover-dropdown">
                   <button type="button" className="user-menu-trigger" aria-label="Mở menu tài khoản">
                     <span className="user-avatar">
-                      {(user.username || user.email || "U").charAt(0).toUpperCase()}
+                      {user.avatar
+                        ? <img alt="" src={user.avatar} />
+                        : (user.username || user.email || "U").charAt(0).toUpperCase()}
                     </span>
                     <i className="bi bi-chevron-down user-menu-chevron"></i>
                   </button>
@@ -319,7 +321,9 @@ export default function Navbar() {
                   <div className="dropdown-menu user-dropdown-menu border-0 shadow-lg p-2">
                     <div className="user-dropdown-header">
                       <span className="user-avatar user-avatar-large">
-                        {(user.username || user.email || "U").charAt(0).toUpperCase()}
+                        {user.avatar
+                          ? <img alt="" src={user.avatar} />
+                          : (user.username || user.email || "U").charAt(0).toUpperCase()}
                       </span>
                       <div className="user-identity">
                         <strong>{user.username || user.email?.split("@")[0] || "Tài khoản"}</strong>
@@ -328,29 +332,38 @@ export default function Navbar() {
                     </div>
                     <div className="dropdown-divider"></div>
 
-                    <div className="user-submenu nav-hover-dropdown">
-                      <button
-                        type="button"
-                        className="user-dropdown-item user-primary-item user-submenu-trigger"
-                        aria-expanded={activeSubmenu === "jobs"}
-                        onClick={() => setActiveSubmenu(activeSubmenu === "jobs" ? null : "jobs")}
-                      >
-                        <span><i className="bi bi-briefcase me-2"></i>Quản lí tìm việc</span>
-                        <i className="bi bi-chevron-right"></i>
-                      </button>
-                      <div className={`user-submenu-menu${activeSubmenu === "jobs" ? " is-open" : ""}`}>
-                        <Link to="/student/dashboard?tab=saved" className="user-dropdown-item">
-                          <i className="bi bi-bookmark me-2"></i>Việc làm đã lưu
+                    {user.role === "student" && (
+                      <>
+                        <div className="user-submenu nav-hover-dropdown">
+                          <button
+                            type="button"
+                            className="user-dropdown-item user-primary-item user-submenu-trigger"
+                            aria-expanded={activeSubmenu === "jobs"}
+                            onClick={() => setActiveSubmenu(activeSubmenu === "jobs" ? null : "jobs")}
+                          >
+                            <span><i className="bi bi-briefcase me-2"></i>Quản lí tìm việc</span>
+                            <i className="bi bi-chevron-right"></i>
+                          </button>
+                          <div className={`user-submenu-menu${activeSubmenu === "jobs" ? " is-open" : ""}`}>
+                            <Link to="/student/dashboard?tab=saved" className="user-dropdown-item">
+                              <i className="bi bi-bookmark me-2"></i>Việc làm đã lưu
+                            </Link>
+                            <Link to="/student/dashboard?tab=applied" className="user-dropdown-item">
+                              <i className="bi bi-file-earmark-check me-2"></i>Việc làm đã ứng tuyển
+                            </Link>
+                          </div>
+                        </div>
+                        <Link to="/student/dashboard?tab=cv&mode=manage" className="user-dropdown-item user-primary-item">
+                          <i className="bi bi-file-earmark-text me-2"></i>Quản lí CV
                         </Link>
-                        <Link to="/student/dashboard?tab=applied" className="user-dropdown-item">
-                          <i className="bi bi-file-earmark-check me-2"></i>Việc làm đã ứng tuyển
-                        </Link>
-                      </div>
-                    </div>
+                      </>
+                    )}
 
-                    <Link to="/student/dashboard?tab=cv" className="user-dropdown-item user-primary-item">
-                      <i className="bi bi-file-earmark-text me-2"></i>Quản lí CV
-                    </Link>
+                    {user.role === "employer" && (
+                      <Link to="/employer/dashboard" className="user-dropdown-item user-primary-item">
+                        <i className="bi bi-briefcase me-2"></i>Quản lí tuyển dụng
+                      </Link>
+                    )}
 
                     <div className="user-submenu nav-hover-dropdown">
                       <button
@@ -363,9 +376,21 @@ export default function Navbar() {
                         <i className="bi bi-chevron-right"></i>
                       </button>
                       <div className={`user-submenu-menu${activeSubmenu === "security" ? " is-open" : ""}`}>
-                        <Link to="/student/profile" className="user-dropdown-item">
-                          <i className="bi bi-person me-2"></i>Cài đặt thông tin cá nhân
-                        </Link>
+                        {user.role === "student" && (
+                          <Link to="/student/profile" className="user-dropdown-item">
+                            <i className="bi bi-person me-2"></i>Cài đặt thông tin cá nhân
+                          </Link>
+                        )}
+                        {user.role === "employer" && (
+                          <Link to="/employer/profile" className="user-dropdown-item">
+                            <i className="bi bi-person me-2"></i>Cài đặt thông tin cá nhân
+                          </Link>
+                        )}
+                        {user.role === "admin" && (
+                          <Link to="/account/profile" className="user-dropdown-item">
+                            <i className="bi bi-person me-2"></i>Cài đặt ảnh đại diện
+                          </Link>
+                        )}
                         <Link to="/change-password" className="user-dropdown-item">
                           <i className="bi bi-shield-lock me-2"></i>Đổi mật khẩu
                         </Link>
