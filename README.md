@@ -124,20 +124,20 @@ Chi tiết field từng bảng: xem lịch sử thảo luận thiết kế / s�
 |---|---|---|---|
 | POST | `/auth/token/` | Đăng nhập, trả access + refresh token | ✅ đã wire (simplejwt) |
 | POST | `/auth/token/refresh/` | Lấy access token mới | ✅ đã wire |
-| POST | `/auth/register/` | Đăng ký (student/employer) | ⬜ TODO |
-| GET/PATCH | `/auth/me/` | Xem/sửa thông tin cá nhân | ⬜ TODO |
-| GET | `/catalog/industries/`, `/locations/`, `/skills/`, `/job-categories/` | Danh mục dùng chung | ⬜ TODO |
-| GET | `/jobs/` | Danh sách tin (filter: job_category, location, salary, keyword) | ⬜ TODO |
-| POST | `/jobs/` | Đăng tin (employer) | ⬜ TODO |
-| GET | `/jobs/{id}/` | Chi tiết tin (tăng `job_views`) | ⬜ TODO |
-| PATCH/DELETE | `/jobs/{id}/` | Sửa / ẩn tin | ⬜ TODO |
-| POST/DELETE | `/jobs/{id}/save/` | Lưu / bỏ lưu tin yêu thích | ⬜ TODO |
-| GET | `/jobs/recommendations/` | Gợi ý việc làm cá nhân hóa | ⬜ TODO (tuần 7) |
-| GET | `/jobs/{id}/stats/` | Views / Applications / Shortlisted / Interviews | ⬜ TODO |
+| POST | `/auth/register/` | Đăng ký tài khoản ứng viên/nhà tuyển dụng | ✅ Đã wire |
+| GET/PATCH | `/auth/me/` | Xem và cập nhật tài khoản hiện tại | ✅ Đã wire |
+| GET | `/catalog/industries/`, `/locations/`, `/skills/`, `/job-categories/` | Danh mục ngành, địa điểm, kỹ năng và vị trí | ✅ Đã wire |
+| GET | `/jobs/` | Danh sách tin, tìm kiếm và lọc | ✅ Đã wire |
+| POST | `/jobs/manage/` | Nhà tuyển dụng tạo tin chờ duyệt | ✅ Đã wire |
+| GET | `/jobs/{id}/` | Chi tiết tin đã được duyệt | ✅ Đã wire |
+| PATCH | `/jobs/manage/{id}/` | Nhà tuyển dụng sửa tin của mình; đóng tin qua `/jobs/manage/{id}/close/` | ✅ Đã wire |
+| POST | `/jobs/{id}/save/` | Lưu hoặc bỏ lưu tin (toggle) | ✅ Đã wire |
+| GET | `/jobs/recommendations/` | Gợi ý tin theo kỹ năng và chuyên ngành (cần đăng nhập ứng viên) | ✅ Đã wire |
+| GET | `/jobs/manage/` | Nhà tuyển dụng xem số liệu hồ sơ theo từng tin | ✅ Đã wire |
 | POST | `/applications/` | Nộp hồ sơ; gửi thông báo cho ứng viên và nhà tuyển dụng | ✅ đã wire |
 | GET | `/applications/my/` | Danh sách đơn ứng tuyển của ứng viên hiện tại | ✅ đã wire |
 | PATCH | `/jobs/manage/{job_id}/applications/{application_id}/status/` | Nhà tuyển dụng cập nhật trạng thái; tạo thông báo cho ứng viên | ✅ đã wire |
-| DELETE | `/applications/{id}/` | Hủy ứng tuyển | ⬜ TODO |
+| DELETE | `/applications/{id}/` | Hủy hồ sơ đang chờ xử lý của chính ứng viên | ✅ Đã wire |
 | GET | `/notifications/` | Danh sách tối đa 50 thông báo của tài khoản hiện tại | ✅ đã wire |
 | PATCH | `/notifications/{id}/read/` | Đánh dấu một thông báo đã đọc | ✅ đã wire |
 | POST | `/notifications/read-all/` | Đánh dấu tất cả thông báo đã đọc | ✅ đã wire |
@@ -145,12 +145,10 @@ Chi tiết field từng bảng: xem lịch sử thảo luận thiết kế / s�
 | POST | `/chat/conversations/` | Mở hoặc tạo hội thoại từ `application_id` | ✅ đã wire |
 | GET | `/chat/conversations/{id}/messages/` | Tải tin nhắn trong hội thoại | ✅ đã wire |
 | POST | `/chat/conversations/{id}/messages/` | Gửi tin nhắn (tối đa 5.000 ký tự) | ✅ đã wire |
-| GET | `/moderation/jobs/pending/` | Tin chờ duyệt (Admin) | ⬜ TODO |
-| POST | `/moderation/jobs/{id}/approve\|reject/` | Duyệt/từ chối tin (Admin) | ⬜ TODO |
-| GET | `/moderation/reports/` | Báo cáo vi phạm (Admin) | ⬜ TODO |
+| POST | `/moderation/reports/` | Gửi báo cáo tin tuyển dụng/người dùng; quản trị xử lý tại `/admin/reports/` | ✅ Đã wire |
 | GET | `/health/` | Health check | ✅ đã wire |
 
-Một số API trong bảng đã được triển khai; các route còn TODO vẫn cần được bổ sung trong `views.py` và `urls.py` của app tương ứng.
+Bảng trên phản ánh các luồng API hiện có. API quản trị nằm dưới `/api/v1/admin/` và được giới hạn theo quyền quản trị.
 
 ### Chat và thông báo
 
