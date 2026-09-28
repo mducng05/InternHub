@@ -626,6 +626,9 @@ export default function EmployerDashboard() {
                                     {applicant.phone && <a href={`tel:${applicant.phone}`}><i className="bi bi-telephone" aria-hidden="true" />{applicant.phone}</a>}
                                     <span><i className="bi bi-clock" aria-hidden="true" />Ứng tuyển {new Date(applicant.applied_at).toLocaleDateString("vi-VN")}</span>
                                   </div>
+                                  <Link className="btn btn-sm btn-outline-danger rounded-pill mt-2" to={`/chat?application_id=${applicant.id}`}>
+                                    <i className="bi bi-chat-dots me-1" /> Nhắn tin ứng viên
+                                  </Link>
                                   {applicant.cover_letter && <p className="employer-applicant__letter">{applicant.cover_letter}</p>}
                                   {applicant.cv_url && (
                                     <a className="employer-cv-link" href={applicant.cv_url} rel="noreferrer" target="_blank">

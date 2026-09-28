@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from apps.applications.models import Application, ApplicationStatusLog
+from apps.notifications.models import Notification
 from .models import Job, SavedJob
 from .serializers import EmployerJobSerializer, JobListSerializer, JobDetailSerializer
 from apps.profiles.models import EmployerProfile, StudentProfile
@@ -191,6 +192,15 @@ class EmployerJobApplicationsView(generics.GenericAPIView):
 				status=new_status,
 				note=request.data.get("note", "")[:255],
 				changed_by=request.user,
+			)
+			is_interview = new_status == Application.Status.INTERVIEW_INVITED
+			Notification.objects.create(
+				user=application.student_profile.user,
+				type=Notification.Type.INTERVIEW_INVITE if is_interview else Notification.Type.APPLICATION_STATUS,
+				title="Bạn được mời phỏng vấn" if is_interview else "Đơn ứng tuyển có cập nhật mới",
+				content=f"Đơn ứng tuyển vị trí {application.job.title} đã chuyển sang trạng thái: {application.get_status_display()}.",
+				related_object_type="application",
+				related_object_id=application.pk,
 			)
 		return Response({
 			"id": application.pk,

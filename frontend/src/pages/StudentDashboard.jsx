@@ -316,6 +316,9 @@ export default function StudentDashboard() {
 
                       <div className="d-flex flex-column align-items-md-end gap-2">
                         {getStatusBadge(app.status, app.status_display)}
+                        <Link className="btn btn-sm btn-outline-danger rounded-pill" to={`/chat?application_id=${app.id}`}>
+                          <i className="bi bi-chat-dots me-1" /> Nhắn tin với nhà tuyển dụng
+                        </Link>
                         <span className="text-muted small" style={{ fontSize: "0.8rem" }}>
                           <i className="bi bi-calendar-check me-1"></i>
                           Nộp lúc: {new Date(app.applied_at).toLocaleDateString("vi-VN", {
@@ -459,7 +462,12 @@ export default function StudentDashboard() {
                             <small className="text-secondary">{app.job?.company_name}</small>
                           </div>
                         </div>
-                        <div>{getStatusBadge(app.status, app.status_display)}</div>
+                        <div className="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+                          {getStatusBadge(app.status, app.status_display)}
+                          <Link className="btn btn-sm btn-outline-danger rounded-pill" to={`/chat?application_id=${app.id}`}>
+                            <i className="bi bi-chat-dots me-1" /> Nhắn tin
+                          </Link>
+                        </div>
                       </div>
                     ))}
                   </div>

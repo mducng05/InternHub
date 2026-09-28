@@ -21,6 +21,7 @@ import InterviewQuestions from "../pages/InterviewQuestions";
 import CompanyProfile from "../pages/CompanyProfile";
 import CareerTools from "../pages/CareerTools";
 import CareerGuides from "../pages/CareerGuides";
+import Chat from "../pages/Chat";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRoutes() {
@@ -41,6 +42,9 @@ export default function AppRoutes() {
         <Route path="/cau-hoi-phong-van" element={<InterviewQuestions />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route element={<ProtectedRoute allowedRoles={["student", "employer"]} />}>
+          <Route path="/chat" element={<Chat />} />
+        </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
 
         <Route element={<ProtectedRoute allowedRoles={["student", "admin"]} />}>

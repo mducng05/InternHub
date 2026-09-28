@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from apps.accounts.models import User
 from apps.jobs.models import Job
+from apps.notifications.models import Notification
 from apps.profiles.models import StudentProfile
 from .models import Application, ApplicationStatusLog
 
@@ -140,6 +141,22 @@ class ApplyJobView(generics.CreateAPIView):
             status=Application.Status.PENDING,
             note="Ứng viên nộp hồ sơ thành công",
             changed_by=user if user.is_authenticated else None,
+        )
+        Notification.objects.create(
+            user=job.employer.user,
+            type=Notification.Type.SYSTEM,
+            title="Có ứng viên mới",
+            content=f"{profile.full_name} đã ứng tuyển vị trí {job.title}.",
+            related_object_type="application",
+            related_object_id=application.pk,
+        )
+        Notification.objects.create(
+            user=profile.user,
+            type=Notification.Type.APPLICATION_STATUS,
+            title="Ứng tuyển thành công",
+            content=f"Hồ sơ của bạn đã được gửi đến nhà tuyển dụng cho vị trí {job.title}.",
+            related_object_type="application",
+            related_object_id=application.pk,
         )
 
         return Response(
