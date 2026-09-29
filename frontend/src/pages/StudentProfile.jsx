@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
 import { getStudentProfile, updateStudentProfile } from "../api/profile";
-import './StudentProfile.css';
+import { MBTI_IMAGES } from "../data/mbtiData";
+import MbtiResultModal from "../components/MbtiResultModal";
+import "./MbtiTest.css";
+import "./StudentProfile.css";
 
 const profileFields = [
 	{ key: "full_name", label: "Họ và tên", placeholder: "Nhập họ và tên", required: true },
@@ -40,6 +43,17 @@ export default function StudentProfile() {
 	const [saving, setSaving] = useState(false);
 	const [saved, setSaved] = useState(false);
 	const [error, setError] = useState("");
+
+	// MBTI Result state
+	const [mbtiResult, setMbtiResult] = useState(() => {
+		try {
+			const saved = localStorage.getItem("internhub_mbti_result");
+			return saved ? JSON.parse(saved) : null;
+		} catch {
+			return null;
+		}
+	});
+	const [showMbtiModal, setShowMbtiModal] = useState(false);
 
 	// Tải thông tin hồ sơ theo đúng tài khoản đăng nhập
 	useEffect(() => {
@@ -158,15 +172,8 @@ export default function StudentProfile() {
 	return (
 		<main className="student-profile-page">
 			<div className="container py-4 py-lg-5">
-				<div className="profile-breadcrumb mb-3">
-					<Link to="/student/dashboard">Dashboard</Link>
-					<i className="bi bi-chevron-right"></i>
-					<span>Hồ sơ cá nhân</span>
-				</div>
-
 				<div className="profile-heading mb-4">
 					<div>
-						<span className="profile-eyebrow">HỒ SƠ SINH VIÊN</span>
 						<h1>Thông tin cá nhân</h1>
 						<p>Cập nhật hồ sơ để nhà tuyển dụng hiểu rõ hơn về bạn.</p>
 					</div>
@@ -176,9 +183,9 @@ export default function StudentProfile() {
 					</div>
 				</div>
 
-				<div className="row g-4 align-items-start">
+				<div className="row g-4 profile-main-row">
 					<div className="col-lg-8">
-						<form className="profile-panel" onSubmit={handleSubmit}>
+						<form className="profile-panel profile-form-panel" onSubmit={handleSubmit}>
 							<div className="profile-panel-heading">
 								<div>
 									<h2>Thông tin cơ bản</h2>
@@ -202,35 +209,37 @@ export default function StudentProfile() {
 								</div>
 							)}
 
-							<div className="row g-3 mt-1">
-								{profileFields.map((field) => (
-									<div className={field.key === "address" ? "col-12" : "col-md-6"} key={field.key}>
-										<label className="form-label" htmlFor={`profile-${field.key}`}>
-											{field.label}{field.required && <span className="text-danger"> *</span>}
-										</label>
-										<input
-											id={`profile-${field.key}`}
+							<div className="profile-form-body">
+								<div className="row g-3">
+									{profileFields.map((field) => (
+										<div className={field.key === "address" ? "col-12" : "col-md-6"} key={field.key}>
+											<label className="form-label" htmlFor={`profile-${field.key}`}>
+												{field.label}{field.required && <span className="text-danger"> *</span>}
+											</label>
+											<input
+												id={`profile-${field.key}`}
+												className="form-control profile-input"
+												type={field.type || "text"}
+												placeholder={field.placeholder}
+												value={profile[field.key] || ""}
+												onChange={(event) => updateField(field.key, event.target.value)}
+												required={field.required}
+												disabled={loading || saving}
+											/>
+										</div>
+									))}
+									<div className="col-12">
+										<label className="form-label" htmlFor="profile-bio">Giới thiệu bản thân</label>
+										<textarea
+											id="profile-bio"
 											className="form-control profile-input"
-											type={field.type || "text"}
-											placeholder={field.placeholder}
-											value={profile[field.key] || ""}
-											onChange={(event) => updateField(field.key, event.target.value)}
-											required={field.required}
+											placeholder="Chia sẻ ngắn về mục tiêu, kỹ năng hoặc định hướng nghề nghiệp của bạn..."
+											rows="3"
+											value={profile.bio || ""}
+											onChange={(event) => updateField("bio", event.target.value)}
 											disabled={loading || saving}
 										/>
 									</div>
-								))}
-								<div className="col-12">
-									<label className="form-label" htmlFor="profile-bio">Giới thiệu bản thân</label>
-									<textarea
-										id="profile-bio"
-										className="form-control profile-input"
-										placeholder="Chia sẻ ngắn về mục tiêu, kỹ năng hoặc định hướng nghề nghiệp của bạn..."
-										rows="5"
-										value={profile.bio || ""}
-										onChange={(event) => updateField("bio", event.target.value)}
-										disabled={loading || saving}
-									/>
 								</div>
 							</div>
 
@@ -276,7 +285,7 @@ export default function StudentProfile() {
 								<Link to="/student/dashboard?tab=cv" className="btn cv-button">Đi đến quản lý CV <i className="bi bi-arrow-up-right ms-1"></i></Link>
 							</section>
 
-							<section className="profile-panel cv-panel mt-3">
+							<section className="profile-panel cv-panel">
 								<div className="side-panel-icon"><i className="bi bi-shield-lock"></i></div>
 								<h2>Bảo mật tài khoản</h2>
 								<p>Đổi mật khẩu định kỳ để giữ an toàn cho tài khoản của bạn.</p>
@@ -290,7 +299,80 @@ export default function StudentProfile() {
 						</aside>
 					</div>
 				</div>
+
+				{/* PHẦN KẾT QUẢ TRẮC NGHIỆM TÍNH CÁCH MBTI - ĐƯA XUỐNG DƯỚI */}
+				{mbtiResult && (
+					<div className="mbti-completed-banner mt-4 d-flex align-items-center gap-3 shadow-sm py-3 px-3 px-md-4">
+						<img
+							src={mbtiResult.image || MBTI_IMAGES[mbtiResult.type] || MBTI_IMAGES["INTJ"]}
+							alt={mbtiResult.type}
+							style={{
+								width: "72px",
+								height: "90px",
+								objectFit: "contain",
+								borderRadius: "12px",
+								border: "1.5px solid #ffccd5",
+								background: "#fff",
+								padding: "3px",
+								boxShadow: "0 4px 12px rgba(201, 24, 74, 0.08)",
+								flexShrink: 0,
+							}}
+						/>
+						<div className="flex-grow-1 d-flex flex-column justify-content-center text-start" style={{ minWidth: 0, textAlign: "left" }}>
+							{/* Hàng 1: Nhóm tính cách bên trái & các nút thao tác bên phải */}
+							<div className="d-flex align-items-center justify-content-between gap-3">
+								<div className="d-flex align-items-center gap-2 flex-shrink-0 text-start">
+									<span
+										className="badge bg-pink text-white fw-bold px-2 py-0.5 rounded-pill"
+										style={{ fontSize: "0.8rem", letterSpacing: "0.3px" }}
+									>
+										{mbtiResult.type}
+									</span>
+									<span className="fw-bold text-dark" style={{ fontSize: "0.92rem" }}>
+										{mbtiResult.info?.name} <span className="text-secondary fw-normal">({mbtiResult.info?.englishTitle})</span>
+									</span>
+								</div>
+
+								<div className="d-flex align-items-center gap-2 flex-shrink-0">
+									<button
+										type="button"
+										className="btn btn-pink rounded-pill shadow-sm"
+										style={{ fontSize: "0.78rem", fontWeight: 600, padding: "0.32rem 0.85rem" }}
+										onClick={() => setShowMbtiModal(true)}
+									>
+										<i className="bi bi-eye-fill me-1"></i> Xem kết quả
+									</button>
+									<Link
+										to="/mbti-test"
+										className="btn btn-outline-secondary rounded-pill"
+										style={{ fontSize: "0.78rem", fontWeight: 500, padding: "0.32rem 0.75rem" }}
+									>
+										<i className="bi bi-arrow-repeat me-1"></i> Làm lại
+									</Link>
+								</div>
+							</div>
+
+							{/* Hàng 2: Dòng text căn lề trái, nằm ngay dưới nhóm tính cách */}
+							<p
+								className="text-secondary small mb-0 mt-2 text-truncate text-start"
+								style={{ fontSize: "0.86rem", lineHeight: "1.4", textAlign: "left" }}
+								title={mbtiResult.info?.tagline}
+							>
+								{mbtiResult.info?.tagline
+									? `“${mbtiResult.info.tagline}”`
+									: "Định hình thế mạnh tính cách và phong cách làm việc lý tưởng của bạn."}
+							</p>
+						</div>
+					</div>
+				)}
 			</div>
+
+			{/* Modal xem lại kết quả MBTI ngay trên trang hồ sơ */}
+			<MbtiResultModal
+				show={showMbtiModal}
+				onHide={() => setShowMbtiModal(false)}
+				result={mbtiResult}
+			/>
 		</main>
 	);
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import banner01 from "../assets/banner03.png";
-import banner02 from "../assets/banner04.png";
+import banner01 from "../assets/Banner/banner03.png";
+import banner02 from "../assets/Banner/banner04.png";
 import './HomeSearchBanner.css';
 
 const banners = [banner01, banner02];

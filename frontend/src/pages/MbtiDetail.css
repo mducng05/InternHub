@@ -1,0 +1,311 @@
+/* Minimalist & Clean Editorial Layout for MBTI Detail Page - InternHub Red/Pink Theme */
+:root {
+  --mbti-brand: #c9184a;
+  --mbti-brand-dark: #800f2f;
+  --mbti-brand-deep: #590d22;
+  --mbti-brand-soft: #fff0f3;
+  --mbti-brand-light: #fff5f7;
+  --mbti-brand-border: #ffd8e0;
+  --mbti-brand-border-dark: #ffccd5;
+}
+
+.mbti-simple-page {
+  background-color: #fafbfc;
+  min-height: 100vh;
+  color: #333333;
+  text-align: left;
+}
+
+/* Header */
+.mbti-simple-header {
+  background: linear-gradient(135deg, #ffffff 0%, #fff7f9 100%);
+  border-bottom: 1px solid var(--mbti-brand-border);
+  padding: 2.25rem 0;
+  text-align: left;
+}
+
+.mbti-simple-thumb-frame {
+  width: 140px;
+  height: 100%;
+  min-height: 165px;
+  background: var(--mbti-brand-soft);
+  border: 1.5px solid var(--mbti-brand-border);
+  border-radius: 14px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(201, 24, 74, 0.06);
+}
+
+.mbti-simple-thumb-img {
+  width: 100%;
+  height: 100%;
+  max-height: 175px;
+  object-fit: contain;
+}
+
+.mbti-simple-category-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--mbti-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.35rem;
+  text-align: left;
+}
+
+.mbti-simple-main-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.25;
+  margin-bottom: 0.45rem;
+  text-align: left;
+}
+
+.mbti-code-brand {
+  color: var(--mbti-brand);
+  background: linear-gradient(135deg, #c9184a 0%, #800f2f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.mbti-simple-tagline {
+  font-size: 1rem;
+  color: #555555;
+  line-height: 1.5;
+  font-style: italic;
+  max-width: 780px;
+  text-align: left;
+}
+
+/* Custom Red/Pink Brand Buttons */
+.btn-mbti-primary {
+  background: linear-gradient(135deg, #c9184a 0%, #a0103b 100%);
+  color: #ffffff !important;
+  border: 1px solid #c9184a;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(201, 24, 74, 0.2);
+}
+
+.btn-mbti-primary:hover {
+  background: linear-gradient(135deg, #a0103b 0%, #800f2f 100%);
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(201, 24, 74, 0.3);
+}
+
+.btn-mbti-outline {
+  background: #ffffff;
+  color: var(--mbti-brand) !important;
+  border: 1px solid var(--mbti-brand-border-dark);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-mbti-outline:hover {
+  background: var(--mbti-brand-soft);
+  color: var(--mbti-brand-dark) !important;
+  border-color: var(--mbti-brand);
+}
+
+/* Article Body - Clean, Reading Format (Matching User's Image Example) */
+.mbti-article-content {
+  background: #ffffff;
+  border: 1px solid #f0e2e5;
+  border-radius: 12px;
+  padding: 2.5rem 2.75rem;
+  box-shadow: 0 1px 4px rgba(201, 24, 74, 0.04);
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .mbti-article-content {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+.mbti-article-section {
+  margin-bottom: 2.5rem;
+  text-align: left;
+}
+
+.mbti-article-section:last-child {
+  margin-bottom: 0;
+}
+
+.mbti-article-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-top: 0;
+  margin-bottom: 1.15rem;
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+  text-align: left;
+  border-left: 3.5px solid var(--mbti-brand);
+  padding-left: 0.75rem;
+}
+
+.mbti-article-subheading {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--mbti-brand-dark);
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.mbti-article-content p {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: #374151;
+  margin-bottom: 1.15rem;
+  text-align: left;
+}
+
+/* Bulleted Lists - Clean, Left-Aligned and Readable */
+.mbti-article-list {
+  list-style-type: disc;
+  padding-left: 1.4rem;
+  margin-bottom: 1.35rem;
+  text-align: left;
+}
+
+.mbti-article-list li {
+  font-size: 1.02rem;
+  line-height: 1.78;
+  color: #374151;
+  margin-bottom: 0.95rem;
+  text-align: left;
+}
+
+.mbti-article-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Highlight Lead Terms in Pink/Red Brand Colors */
+.mbti-letter-lead {
+  color: var(--mbti-brand);
+  font-weight: 700;
+}
+
+.mbti-term-lead {
+  color: #111827;
+  font-weight: 700;
+}
+
+.mbti-article-job-link {
+  font-size: 0.85rem;
+  color: var(--mbti-brand);
+  font-weight: 600;
+}
+
+.mbti-article-job-link:hover {
+  color: var(--mbti-brand-dark);
+  text-decoration: underline !important;
+}
+
+/* Sidebar Styling */
+.mbti-simple-sidebar {
+  padding-left: 0.5rem;
+  text-align: left;
+  position: sticky;
+  top: 85px;
+  z-index: 10;
+}
+
+@media (max-width: 991px) {
+  .mbti-simple-sidebar {
+    position: static;
+    padding-left: 0;
+    margin-top: 1.5rem;
+  }
+}
+
+.mbti-sidebar-block {
+  background: #ffffff;
+  border: 1px solid #f0e2e5;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: left;
+}
+
+.mbti-sidebar-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 0.95rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--mbti-brand-border);
+  text-align: left;
+}
+
+.mbti-sidebar-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  text-align: left;
+}
+
+.mbti-toc-link {
+  font-size: 0.88rem;
+  color: #4b5563;
+  text-decoration: none;
+  padding: 0.35rem 0.55rem;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  line-height: 1.4;
+  text-align: left;
+  border-left: 2px solid transparent;
+}
+
+.mbti-toc-link:hover {
+  background: var(--mbti-brand-soft);
+  color: var(--mbti-brand);
+  font-weight: 600;
+  border-left-color: var(--mbti-brand);
+  padding-left: 0.75rem;
+}
+
+/* Sidebar Callout Card */
+.mbti-sidebar-callout {
+  background: linear-gradient(135deg, #fff0f3 0%, #fffbfd 100%);
+  border: 1px solid var(--mbti-brand-border);
+}
+
+.text-pink-dark {
+  color: var(--mbti-brand-dark) !important;
+}
+
+.mbti-sidebar-grp-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--mbti-brand-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+.btn-mbti-current {
+  background: var(--mbti-brand) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--mbti-brand) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(201, 24, 74, 0.25);
+}
+
+.btn-mbti-subtle {
+  background: #ffffff;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  transition: all 0.15s ease;
+}
+
+.btn-mbti-subtle:hover {
+  background: var(--mbti-brand-soft);
+  color: var(--mbti-brand);
+  border-color: var(--mbti-brand-border-dark);
+}

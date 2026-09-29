@@ -16,6 +16,9 @@ import StudentDashboard from "../pages/StudentDashboard";
 import StudentProfile from "../pages/StudentProfile";
 import ChangePassword from "../pages/ChangePassword";
 import InterviewQuestions from "../pages/InterviewQuestions";
+import MbtiTest from "../pages/MbtiTest";
+import MbtiDetail from "../pages/MbtiDetail";
+import TaxCalculator from "../pages/TaxCalculator";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRoutes() {
@@ -31,6 +34,14 @@ export default function AppRoutes() {
         <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="/interview-questions" element={<InterviewQuestions />} />
         <Route path="/cau-hoi-phong-van" element={<InterviewQuestions />} />
+        <Route path="/mbti-test" element={<MbtiTest />} />
+        <Route path="/trac-nghiem-tinh-cach" element={<MbtiTest />} />
+        <Route path="/mbti" element={<MbtiDetail />} />
+        <Route path="/mbti/:type" element={<MbtiDetail />} />
+        <Route path="/nhom-tinh-cach/:type" element={<MbtiDetail />} />
+        <Route path="/tinh-thue-tncn" element={<TaxCalculator />} />
+        <Route path="/tinh-thue-thu-nhap-ca-nhan" element={<TaxCalculator />} />
+        <Route path="/tax-calculator" element={<TaxCalculator />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin/login" element={<AdminLogin />} />

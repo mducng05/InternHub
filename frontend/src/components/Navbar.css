@@ -2,6 +2,7 @@
 .navbar {
   --navbar-dropdown-duration: 0.2s;
   --navbar-dropdown-easing: ease-out;
+  z-index: 1030 !important;
 }
 
 

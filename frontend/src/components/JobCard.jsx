@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import defaultLogo from "../assets/logo01.png";
+import defaultLogo from "../assets/Logo/logo01.png";
 import './JobCard.css';
 
 export default function JobCard({ job, onSave, isSaved }) {

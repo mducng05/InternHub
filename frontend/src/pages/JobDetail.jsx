@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import defaultLogo from "../assets/logo01.png";
+import defaultLogo from "../assets/Logo/logo01.png";
 import { fetchJobDetail, saveJob } from "../api/jobs";
 import { useAuth } from "../store/AuthContext";
 import ApplyModal from "../components/ApplyModal";

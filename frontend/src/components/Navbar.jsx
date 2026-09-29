@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../store/AuthContext";
-import logo from "../assets/logo02.png";
+import logo from "../assets/Logo/logo02.png";
 import './Navbar.css';
 
 export default function Navbar() {
@@ -218,7 +218,7 @@ export default function Navbar() {
                   <div className="nav-dropdown-col border-end pe-4">
                     <div className="nav-submenu-header">KHÁM PHÁ BẢN THÂN</div>
                     <div className="nav-submenu-list">
-                      <Link to="" className="nav-submenu-link">
+                      <Link to="/mbti-test" className="nav-submenu-link">
                         <i className="bi bi-person-vcard nav-submenu-icon"></i>
                         <span>Trắc nghiệm tính cách</span>
                       </Link>
@@ -233,7 +233,7 @@ export default function Navbar() {
                   <div className="nav-dropdown-col ps-4">
                     <div className="nav-submenu-header">CÔNG CỤ TÍNH TOÁN</div>
                     <div className="nav-submenu-list">
-                      <Link to="" className="nav-submenu-link">
+                      <Link to="/tinh-thue-tncn" className="nav-submenu-link">
                         <i className="bi bi-receipt nav-submenu-icon"></i>
                         <span>Tính thuế thu nhập cá nhân</span>
                       </Link>

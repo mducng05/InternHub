@@ -5,7 +5,7 @@ import { getStudentProfile } from "../api/profile";
 import { fetchSavedJobs, saveJob } from "../api/jobs";
 import { fetchMyApplications } from "../api/applications";
 import JobCard from "../components/JobCard";
-import defaultLogo from "../assets/logo01.png";
+import defaultLogo from "../assets/Logo/logo01.png";
 import './StudentDashboard.css';
 
 export default function StudentDashboard() {

@@ -1,0 +1,553 @@
+/*70 Continuous Questions Layout*/
+
+:root {
+  --mbti-primary: #c9184a;
+  --mbti-primary-hover: #a4133c;
+  --mbti-primary-dark: #800f2f;
+  --mbti-primary-light: #ff4d6d;
+  --mbti-bg-subtle: #fff0f3;
+  --mbti-border-pink: #f1c2cd;
+  --mbti-border-soft: #ffe5ec;
+  --mbti-text-dark: #2b2d42;
+  --mbti-text-muted: #6b6375;
+}
+
+.mbti-page-wrapper {
+  background-color: #fff7f8;
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+/* Banner / Hero Header */
+.mbti-hero-header {
+  background: linear-gradient(135deg, #a4133c 0%, #c9184a 55%, #ff4d6d 100%);
+  color: #ffffff;
+  padding: 3.25rem 1rem 2.75rem;
+  border-radius: 0;
+  box-shadow: 0 10px 30px rgba(164, 19, 60, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.mbti-hero-header::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.mbti-hero-header::after {
+  content: "";
+  position: absolute;
+  bottom: -60px;
+  left: 10%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.mbti-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  border-radius: 50rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.mbti-stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.75rem;
+  font-size: 0.88rem;
+}
+
+/* Progress Control Bar (cuộn tự nhiên theo trang, không ghim cố định) */
+.mbti-sticky-bar {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid var(--mbti-border-pink);
+  border-radius: 1.15rem;
+  box-shadow: 0 4px 16px rgba(201, 24, 74, 0.06);
+  padding: 1rem 1.35rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  transition: all 0.25s ease;
+}
+
+.mbti-progress-track {
+  height: 10px;
+  background: #fce7ec;
+  border-radius: 50rem;
+  overflow: hidden;
+}
+
+.mbti-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4d6d 0%, #c9184a 100%);
+  border-radius: 50rem;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Question Card */
+.mbti-question-card {
+  background: #ffffff;
+  border: 1px solid var(--mbti-border-soft);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+}
+
+.mbti-question-card:hover {
+  border-color: var(--mbti-border-pink);
+  box-shadow: 0 8px 24px rgba(201, 24, 74, 0.06);
+}
+
+.mbti-question-card.answered {
+  border-left: 4.5px solid var(--mbti-primary);
+}
+
+.mbti-question-card.highlight-pulse {
+  animation: pulse-border 1.2s ease;
+}
+
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(201, 24, 74, 0.6);
+  }
+
+  70% {
+    box-shadow: 0 0 0 12px rgba(201, 24, 74, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(201, 24, 74, 0);
+  }
+}
+
+.mbti-question-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 50rem;
+  background: var(--mbti-bg-subtle);
+  color: var(--mbti-primary-dark);
+}
+
+.mbti-question-text {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1.55;
+  margin: 0.85rem 0 1.25rem;
+}
+
+/* Option Card */
+.mbti-option-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 0.75rem;
+  color: #2d3748;
+  position: relative;
+}
+
+.mbti-option-btn:hover {
+  border-color: #ff758f;
+  background-color: #fff9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 24, 74, 0.08);
+}
+
+.mbti-option-btn.selected {
+  background-color: #fff0f3;
+  border-color: var(--mbti-primary);
+  border-width: 2px;
+  color: var(--mbti-primary-dark);
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(201, 24, 74, 0.12);
+}
+
+.mbti-option-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f1f3f5;
+  color: #495057;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.mbti-option-btn.selected .mbti-option-letter {
+  background: var(--mbti-primary);
+  color: #ffffff;
+}
+
+.mbti-option-check {
+  margin-left: auto;
+  font-size: 1.25rem;
+  color: var(--mbti-primary);
+  animation: mbti-pop 0.25s ease;
+}
+
+@keyframes mbti-pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Palette Drawer / Modal */
+.mbti-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.45rem;
+}
+
+@media (max-width: 768px) {
+  .mbti-palette-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+
+.mbti-palette-num {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+  background: #f8f9fa;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mbti-palette-num:hover {
+  border-color: var(--mbti-primary);
+  color: var(--mbti-primary);
+}
+
+.mbti-palette-num.answered {
+  background: #fff0f3;
+  border-color: var(--mbti-border-pink);
+  color: var(--mbti-primary);
+  font-weight: 700;
+}
+
+/* Result Modal Custom Styling */
+/* MBTI Result Modal */
+.mbti-result-modal .modal-content,
+.mbti-result-modal-content {
+  border: none !important;
+  border-radius: 1.5rem !important;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(201, 24, 74, 0.18) !important;
+}
+
+/* Modal Close Button */
+.mbti-modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff0f3;
+  border: 1px solid #ffccd5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c9184a;
+  font-size: 1rem;
+  transition: all 0.25s ease;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.mbti-modal-close-btn:hover {
+  background: #c9184a;
+  border-color: #c9184a;
+  color: #ffffff;
+  transform: rotate(90deg) scale(1.08);
+}
+
+/* Congrats Title in Pink Theme */
+.mbti-result-congrats {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #c9184a;
+  text-align: center;
+  margin-top: 0.25rem;
+  margin-bottom: 2rem;
+  letter-spacing: -0.5px;
+}
+
+/* Modal Body Spacing */
+.mbti-result-modal .modal-body {
+  padding: 2.25rem 2.5rem 2.5rem 2.5rem !important;
+}
+
+/* Side-by-side horizontal alignment: Ảnh và chữ luôn cao ngang bằng nhau cho tất cả 16 nhóm tính cách */
+.mbti-result-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 2.25rem;
+}
+
+/* Cột trái: ảnh đại diện to rõ nét, tự động khớp chiều cao với cột chữ */
+.mbti-result-img-col {
+  flex: 0 0 270px;
+  width: 270px;
+  display: flex;
+}
+
+.mbti-result-ref-img {
+  width: 100%;
+  height: 100%;
+  min-height: 330px;
+  object-fit: cover;
+  border-radius: 22px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12), 0 3px 10px rgba(201, 24, 74, 0.1);
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mbti-result-ref-img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 14px 36px rgba(201, 24, 74, 0.2);
+}
+
+/* Cột phải: thông tin tính cách & nút thao tác */
+.mbti-result-info-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.mbti-result-text-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.mbti-result-label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 0.35rem;
+}
+
+.mbti-result-main-heading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #c9184a;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+}
+
+.mbti-result-persona-desc {
+  font-size: 0.92rem;
+  color: #495057;
+  line-height: 1.62;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+/* Actions buttons theo đúng theme đỏ hồng, luôn hiển thị rõ ràng và thoáng đãng */
+.mbti-result-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+/* Nút Xem chi tiết: Đỏ hồng rực rỡ chuẩn InternHub */
+.mbti-btn-view-detail {
+  background: linear-gradient(135deg, #d90429 0%, #c9184a 55%, #a0123a 100%);
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.2px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50rem;
+  border: none;
+  box-shadow: 0 4px 16px rgba(201, 24, 74, 0.3);
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mbti-btn-view-detail:hover {
+  background: linear-gradient(135deg, #ef233c 0%, #d90429 55%, #c9184a 100%);
+  color: #ffffff !important;
+  box-shadow: 0 8px 24px rgba(201, 24, 74, 0.45);
+  transform: translateY(-2px);
+}
+
+/* Nút Về trang chủ MBTI: Chữ hồng đậm thanh lịch */
+.mbti-back-home-link {
+  color: #c9184a !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.mbti-back-home-link:hover {
+  color: #800f2f !important;
+  text-decoration: underline !important;
+  transform: translateX(-3px);
+}
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 767.98px) {
+  .mbti-result-layout {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .mbti-result-img-col {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+  .mbti-result-ref-img {
+    width: 100%;
+    height: auto;
+    max-width: 260px;
+    min-height: auto;
+  }
+  .mbti-result-main-heading {
+    font-size: 1.6rem;
+  }
+}
+
+/* Dimension Progress Bars in Result */
+.mbti-dimension-bar-container {
+  background: #f8f9fa;
+  border: 1px solid #edf2f7;
+  border-radius: 0.85rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.mbti-dim-split-track {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 50rem;
+  overflow: hidden;
+  display: flex;
+}
+
+.mbti-dim-left-fill {
+  background: #c9184a;
+  height: 100%;
+  transition: width 0.6s ease;
+}
+
+.mbti-dim-right-fill {
+  background: #6c757d;
+  height: 100%;
+  transition: width 0.6s ease;
+}
+
+/* Trait chip */
+.mbti-trait-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  background: #fff0f3;
+  border: 1px solid #f8c9d4;
+  color: #a4133c;
+  border-radius: 50rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+/* Career tag */
+.mbti-career-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  color: #2b2d42;
+  border-radius: 0.75rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.mbti-career-chip:hover {
+  background: #fff0f3;
+  border-color: #c9184a;
+  color: #c9184a;
+  transform: translateY(-1px);
+}
+
+/* Banner shown on the test page if completed */
+.mbti-completed-banner {
+  background: linear-gradient(135deg, #fff0f3 0%, #ffe5ec 100%);
+  border: 1.5px solid var(--mbti-border-pink);
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 6px 20px rgba(201, 24, 74, 0.08);
+}
