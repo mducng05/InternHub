@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
 from apps.accounts.models import User
 from apps.jobs.models import Job
+from apps.notifications.models import Notification
 from apps.profiles.models import StudentProfile
 from .models import Application, ApplicationStatusLog
 
@@ -26,6 +28,11 @@ class ApplyJobView(generics.CreateAPIView):
             )
 
         job = get_object_or_404(Job, pk=job_id)
+        if job.status != Job.Status.APPROVED or job.deadline < timezone.localdate():
+            return Response(
+                {"detail": "Tin tuyển dụng đã đóng hoặc hết hạn, hiện không nhận hồ sơ."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         if job.slug.startswith("demo-"):
             return Response(
                 {"detail": "Tin tuyển dụng minh họa không nhận hồ sơ ứng tuyển."},
@@ -141,6 +148,22 @@ class ApplyJobView(generics.CreateAPIView):
             note="Ứng viên nộp hồ sơ thành công",
             changed_by=user if user.is_authenticated else None,
         )
+        Notification.objects.create(
+            user=job.employer.user,
+            type=Notification.Type.SYSTEM,
+            title="Có ứng viên mới",
+            content=f"{profile.full_name} đã ứng tuyển vị trí {job.title}.",
+            related_object_type="application",
+            related_object_id=application.pk,
+        )
+        Notification.objects.create(
+            user=profile.user,
+            type=Notification.Type.APPLICATION_STATUS,
+            title="Ứng tuyển thành công",
+            content=f"Hồ sơ của bạn đã được gửi đến nhà tuyển dụng cho vị trí {job.title}.",
+            related_object_type="application",
+            related_object_id=application.pk,
+        )
 
         return Response(
             {
@@ -217,4 +240,34 @@ class MyApplicationsView(generics.ListAPIView):
             "count": len(results),
             "results": results,
         })
+
+
+class CancelApplicationView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, pk):
+        try:
+            profile = request.user.student_profile
+        except StudentProfile.DoesNotExist:
+            return Response({"detail": "Không tìm thấy hồ sơ ứng viên."}, status=status.HTTP_404_NOT_FOUND)
+        application = get_object_or_404(Application, pk=pk, student_profile=profile)
+        if application.status != Application.Status.PENDING:
+            return Response({"detail": "Chỉ có thể hủy hồ sơ đang chờ xử lý."}, status=status.HTTP_400_BAD_REQUEST)
+        application.status = Application.Status.CANCELLED
+        application.save(update_fields=["status", "updated_at"])
+        ApplicationStatusLog.objects.create(
+            application=application,
+            status=Application.Status.CANCELLED,
+            note="Ứng viên đã hủy hồ sơ",
+            changed_by=request.user,
+        )
+        Notification.objects.create(
+            user=application.job.employer.user,
+            type=Notification.Type.APPLICATION_STATUS,
+            title="Ứng viên đã hủy hồ sơ",
+            content=f"{profile.full_name} đã hủy ứng tuyển vị trí {application.job.title}.",
+            related_object_type="application",
+            related_object_id=application.pk,
+        )
+        return Response({"id": application.pk, "status": application.status, "status_display": application.get_status_display()})
 

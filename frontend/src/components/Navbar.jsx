@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../store/AuthContext";
+import { fetchNotifications, markAllNotificationsRead, markNotificationRead } from "../api/notifications";
 import logo from "../assets/logo02.png";
 import './Navbar.css';
 
@@ -8,10 +9,78 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notificationsError, setNotificationsError] = useState("");
+
+  useEffect(() => {
+    if (!user?.id) {
+      setNotifications([]);
+      return undefined;
+    }
+    let active = true;
+    let loading = false;
+    let timer;
+    const load = async () => {
+      if (loading || !active) return;
+      loading = true;
+      try {
+        const { data } = await fetchNotifications();
+        if (active) {
+          setNotifications(Array.isArray(data) ? data : data?.results || []);
+          setNotificationsError("");
+        }
+      } catch {
+        if (active) setNotificationsError("Không thể tải thông báo.");
+      } finally {
+        loading = false;
+        if (active && document.visibilityState === "visible") {
+          timer = window.setTimeout(load, 2000);
+        }
+      }
+    };
+    const handleVisibility = () => {
+      window.clearTimeout(timer);
+      if (document.visibilityState === "visible") load();
+    };
+    load();
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [user?.id]);
 
   const handleLogout = () => {
     logout();
     navigate("/login", { replace: true });
+  };
+
+  const handleNotificationClick = async (notification) => {
+    if (!notification.is_read) {
+      setNotifications((current) => current.map((item) => item.id === notification.id ? { ...item, is_read: true } : item));
+      try {
+        await markNotificationRead(notification.id);
+      } catch {
+        setNotifications((current) => current.map((item) => item.id === notification.id ? { ...item, is_read: false } : item));
+      }
+    }
+    setNotificationsOpen(false);
+    if (notification.related_object_type === "chat_conversation" && notification.related_object_id) {
+      navigate(`/chat?conversation=${notification.related_object_id}`);
+    } else if (notification.related_object_type === "application") {
+      navigate(user.role === "student" ? "/student/dashboard?tab=applied" : "/employer/dashboard");
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    setNotifications((current) => current.map((item) => ({ ...item, is_read: true })));
+    try {
+      await markAllNotificationsRead();
+    } catch {
+      setNotificationsError("Không thể cập nhật trạng thái thông báo.");
+    }
   };
 
   return (
@@ -303,10 +372,28 @@ export default function Navbar() {
 
             {user && (
               <>
-                <button type="button" className="navbar-icon-button" aria-label="Xem thông báo">
-                  <i className="bi bi-bell"></i>
-                  <span className="notification-dot" aria-hidden="true"></span>
-                </button>
+                <div className="notification-menu">
+                  <button type="button" className="navbar-icon-button" aria-label="Xem thông báo" aria-expanded={notificationsOpen} onClick={() => setNotificationsOpen((value) => !value)}>
+                    <i className="bi bi-bell"></i>
+                    {notifications.some((notification) => !notification.is_read) && <span className="notification-dot" aria-hidden="true"></span>}
+                  </button>
+                  {notificationsOpen && <section className="notification-panel" aria-label="Thông báo">
+                    <header className="notification-panel-header">
+                      <strong>Thông báo</strong>
+                      <button type="button" onClick={handleMarkAllRead} disabled={!notifications.some((item) => !item.is_read)}>Đọc tất cả</button>
+                    </header>
+                    <div className="notification-list">
+                      {notificationsError && <p className="notification-empty is-error">{notificationsError}</p>}
+                      {!notificationsError && notifications.length === 0 ? <p className="notification-empty">Bạn chưa có thông báo nào.</p> : notifications.map((notification) => (
+                        <button type="button" key={notification.id} className={`notification-item ${notification.is_read ? "" : "is-unread"}`} onClick={() => handleNotificationClick(notification)}>
+                          <span className="notification-item-icon"><i className={`bi ${notification.related_object_type === "chat_conversation" ? "bi-chat-dots" : "bi-bell"}`} /></span>
+                          <span className="notification-item-copy"><strong>{notification.title}</strong><span>{notification.content}</span><time>{new Date(notification.created_at).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" })}</time></span>
+                          {!notification.is_read && <i className="notification-unread-dot" aria-label="Chưa đọc" />}
+                        </button>
+                      ))}
+                    </div>
+                  </section>}
+                </div>
 
                 <div className="user-menu nav-hover-dropdown">
                   <button type="button" className="user-menu-trigger" aria-label="Mở menu tài khoản">

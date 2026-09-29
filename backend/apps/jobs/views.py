@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from apps.applications.models import Application, ApplicationStatusLog
+from apps.notifications.models import Notification
 from .models import Job, SavedJob
 from .serializers import EmployerJobSerializer, JobListSerializer, JobDetailSerializer
 from apps.profiles.models import EmployerProfile, StudentProfile
@@ -192,6 +193,15 @@ class EmployerJobApplicationsView(generics.GenericAPIView):
 				note=request.data.get("note", "")[:255],
 				changed_by=request.user,
 			)
+			is_interview = new_status == Application.Status.INTERVIEW_INVITED
+			Notification.objects.create(
+				user=application.student_profile.user,
+				type=Notification.Type.INTERVIEW_INVITE if is_interview else Notification.Type.APPLICATION_STATUS,
+				title="Bạn được mời phỏng vấn" if is_interview else "Đơn ứng tuyển có cập nhật mới",
+				content=f"Đơn ứng tuyển vị trí {application.job.title} đã chuyển sang trạng thái: {application.get_status_display()}.",
+				related_object_type="application",
+				related_object_id=application.pk,
+			)
 		return Response({
 			"id": application.pk,
 			"status": application.status,
@@ -206,6 +216,7 @@ class JobListView(generics.ListAPIView):
 	def get_queryset(self):
 		queryset = (
 			Job.objects.filter(status=Job.Status.APPROVED)
+			.filter(deadline__gte=timezone.localdate())
 			.select_related("employer", "employer__industry", "location", "job_category")
 			.order_by("-is_featured", "-created_at")
 		)
@@ -321,6 +332,46 @@ class JobListView(generics.ListAPIView):
 		return queryset
 
 
+class RecommendedJobsView(APIView):
+	permission_classes = [IsAuthenticated]
+
+	def get(self, request):
+		if getattr(request.user, "role", None) != "student":
+			return Response({"detail": "Chức năng này dành cho ứng viên."}, status=403)
+		profile = StudentProfile.objects.filter(user=request.user).first()
+		if not profile:
+			return Response({"count": 0, "results": []})
+
+		student_skill_ids = set(profile.student_skills.values_list("skill_id", flat=True))
+		major = (profile.major or "").strip().casefold()
+		jobs = list(
+		Job.objects.filter(status=Job.Status.APPROVED, deadline__gte=timezone.localdate())
+			.exclude(slug__startswith="demo-")
+			.select_related("employer", "employer__industry", "location", "job_category")
+			.prefetch_related("skills")
+			.order_by("-is_featured", "-created_at")[:200]
+		)
+		applied_ids = set(Application.objects.filter(student_profile=profile).values_list("job_id", flat=True))
+		results = []
+		for job in jobs:
+			if job.id in applied_ids:
+				continue
+			matched_skills = [skill.name for skill in job.skills.all() if skill.id in student_skill_ids]
+			score = len(matched_skills) * 10
+			reasons = [f"Kỹ năng phù hợp: {', '.join(matched_skills)}"] if matched_skills else []
+			category_name = job.job_category.name if job.job_category else ""
+			if major and any(term in f"{job.title} {category_name} {job.description}".casefold() for term in major.split() if len(term) > 2):
+				score += 5
+				reasons.append(f"Liên quan đến chuyên ngành {profile.major}")
+			if score:
+				data = JobListSerializer(job, context={"request": request}).data
+				data["match_score"] = score
+				data["match_reasons"] = reasons
+				results.append((score, job.created_at, data))
+		results.sort(key=lambda item: (item[0], item[1]), reverse=True)
+		return Response({"count": len(results), "results": [item[2] for item in results[:50]]})
+
+
 class JobSalaryInsightsView(APIView):
 	permission_classes = [AllowAny]
 
@@ -411,7 +462,8 @@ class JobDetailView(generics.RetrieveAPIView):
 	serializer_class = JobDetailSerializer
 	permission_classes = [AllowAny]
 	queryset = (
-		Job.objects.select_related("employer", "employer__industry", "location", "job_category")
+		Job.objects.filter(status=Job.Status.APPROVED, deadline__gte=timezone.localdate())
+		.select_related("employer", "employer__industry", "location", "job_category")
 		.prefetch_related("skills")
 	)
 

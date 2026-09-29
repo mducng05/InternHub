@@ -6,5 +6,6 @@ app_name = "applications"
 urlpatterns = [
     path("", views.ApplyJobView.as_view(), name="application-create"),
     path("my/", views.MyApplicationsView.as_view(), name="my-applications"),
+    path("<int:pk>/", views.CancelApplicationView.as_view(), name="application-cancel"),
     path("check/<int:pk>/", views.CheckAppliedView.as_view(), name="application-check"),
 ]
