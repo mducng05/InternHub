@@ -1,0 +1,25 @@
+﻿Summary,Issue Type,Description,Priority,Assignee,Sprint,Original Estimate
+"Khảo sát các nền tảng tuyển dụng tương tự (TopCV, Ybox...)",Task,"Khảo sát giao diện, tính năng của các nền tảng tuyển dụng hiện có để lấy ý tưởng thiết kế.",Medium,Hưng Thịnh,Sprint 1,16h
+Phân tích yêu cầu nghiệp vụ & thiết kế mô hình dữ liệu sơ bộ,Task,Xác định các luồng nghiệp vụ chính và thiết kế sơ đồ thực thể mối quan hệ (ERD) cho 16 bảng dữ liệu.,High,Minh Đức,Sprint 1,20h
+Xác định đối tượng sử dụng và chức năng hệ thống,Task,"Xác định rõ các role (Guest, Student, Employer, Admin) và danh sách tính năng tương ứng.",Medium,Đức Minh,Sprint 1,12h
+Thiết kế wireframe/mockup giao diện & cấu trúc project React,Task,"Thiết kế giao diện các trang chính và dựng cấu trúc thư mục dự án React (Vite, Tailwind/CSS, Router).",High,Hưng Thịnh,Sprint 2,24h
+"Thiết kế REST API, cơ sở dữ liệu MySQL & thuật toán gợi ý",Task,"Khởi tạo project Django, cấu hình MySQL 8.4, định nghĩa models cho 16 bảng và thiết kế khung API.",High,Minh Đức,Sprint 2,24h
+Xây dựng Use Case Diagram và Activity Diagram,Task,Vẽ biểu đồ Use Case và Activity cho các chức năng cốt lõi phục vụ báo cáo môn học.,Medium,Đức Minh,Sprint 2,16h
+"Xây dựng giao diện Đăng ký, Đăng nhập, Phân quyền",Story,"Làm form đăng ký/đăng nhập cho Sinh viên và Nhà tuyển dụng, tích hợp AuthContext lưu JWT token.",High,Hưng Thịnh,Sprint 3,20h
+"Xây dựng API Đăng ký, Đăng nhập, Xác thực JWT & phân quyền",Story,"Cài đặt simplejwt, viết API đăng ký tài khoản, đăng nhập trả về token và phân quyền theo role.",High,Minh Đức,Sprint 3,20h
+Xây dựng test case và kiểm thử chức năng tài khoản,Task,"Viết test case kiểm thử luồng đăng ký, đăng nhập, token expired và phân quyền truy cập.",Medium,Đức Minh,Sprint 3,12h
+"Xây dựng giao diện danh sách, chi tiết và đăng tin tuyển dụng",Story,"Làm trang danh sách job, bộ lọc tìm kiếm, trang chi tiết tin và form đăng tin cho Nhà tuyển dụng.",High,Hưng Thịnh,Sprint 4,24h
+"Xây dựng API quản lý tin tuyển dụng, tìm kiếm & lọc",Story,"Viết CRUD API cho Job, hỗ trợ filter theo ngành nghề, khu vực, mức lương, kỹ năng.",High,Minh Đức,Sprint 4,24h
+"Kiểm thử chức năng tìm kiếm, lọc và đăng tin tuyển dụng",Task,"Thực hiện test case kiểm tra kết quả lọc tin, phân trang và quyền đăng tin của Nhà tuyển dụng.",Medium,Đức Minh,Sprint 4,16h
+Xây dựng giao diện nộp hồ sơ/CV và theo dõi trạng thái ứng tuyển,Story,Tạo giao diện ứng tuyển (upload CV/chọn hồ sơ) và bảng quản lý trạng thái đơn ứng tuyển của sinh viên.,High,Hưng Thịnh,Sprint 5,20h
+"Xây dựng API nộp hồ sơ, duyệt/từ chối hồ sơ ứng tuyển",Story,"Viết API xử lý đơn ứng tuyển (Applications), API cho Employer duyệt/từ chối đơn và ghi log trạng thái.",High,Minh Đức,Sprint 5,20h
+Xây dựng test case và kiểm thử chức năng ứng tuyển,Task,"Kiểm thử ràng buộc UNIQUE (1 sinh viên chỉ ứng tuyển 1 lần/job), luồng duyệt đơn của NTD.",Medium,Đức Minh,Sprint 5,12h
+Xây dựng giao diện hiển thị việc làm gợi ý & lưu tin yêu thích,Story,Làm widget/trang gợi ý việc làm cá nhân hóa cho sinh viên và tính năng lưu/bỏ lưu tin tuyển dụng.,High,Hưng Thịnh,Sprint 6,20h
+Xây dựng API & thuật toán gợi ý việc làm thực tập,Story,"Phát triển thuật toán rule-based (khớp % kỹ năng, ngành học, khu vực) và API endpoint /jobs/recommendations/.",High,Minh Đức,Sprint 6,24h
+Kiểm thử độ chính xác chức năng gợi ý & ghi nhận lỗi,Task,Test độ chính xác của thuật toán gợi ý với các bộ profile sinh viên khác nhau và log bug.,Medium,Đức Minh,Sprint 6,16h
+"Tích hợp API Frontend với Backend, hoàn thiện UI/UX & responsive",Task,"Kiểm tra toàn bộ các API call từ React sang Django, tinh chỉnh giao diện responsive trên mọi thiết bị.",High,Hưng Thịnh,Sprint 7,24h
+"Hoàn thiện Backend, xử lý lỗi, tối ưu hệ thống & Admin Dashboard",Task,"Tối ưu câu lệnh truy vấn, xử lý ngoại lệ, hoàn thiện các API kiểm duyệt tin (Moderation) cho Admin.",High,Minh Đức,Sprint 7,24h
+Kiểm thử tích hợp (Integration Testing) toàn hệ thống,Task,Thực hiện kiểm thử tích hợp toàn bộ hệ thống từ End-to-End và báo cáo các lỗi phát sinh.,High,Đức Minh,Sprint 7,20h
+Hoàn thiện giao diện & chuẩn bị slide/nội dung demo sản phẩm,Task,"Tinh chỉnh UI/UX lần cuối, chuẩn bị kịch bản và slide demo các tính năng chính trên Frontend.",High,Hưng Thịnh,Sprint 8,16h
+"Hoàn thiện Backend, chạy thử nghiệm local & hỗ trợ demo",Task,"Kiểm tra seed data, đảm bảo server chạy ổn định trên Laragon/Python và hỗ trợ quay video/demo trực tiếp.",High,Minh Đức,Sprint 8,16h
+"Tổng hợp báo cáo đồ án môn học, slide thuyết trình & kết quả test",Task,"Viết báo cáo đồ án Quản lý dự án phần mềm hoàn chỉnh, tổng hợp tài liệu thiết kế và kết quả kiểm thử.",High,Đức Minh,Sprint 8,24h

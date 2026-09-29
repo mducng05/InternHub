@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { patchStudentProfile } from "../api/profile";
+import { patchStudentProfile, recommendJobsFromCv } from "../api/profile";
+import CvScanModal from "./CvScanModal";
 import "./StudentCVStudio.css";
 
 const TEMPLATES = [
@@ -64,6 +65,9 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [uploadMessage, setUploadMessage] = useState("");
+  const [isScanOpen, setIsScanOpen] = useState(false);
+  const [scanResult, setScanResult] = useState(null);
+  const [scanning, setScanning] = useState(false);
   const currentFile = profile?.cv_file || "";
 
   useEffect(() => {
@@ -116,6 +120,22 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
       const { data } = await patchStudentProfile(payload);
       onProfileUpdate?.(data);
       setUploadMessage("CV đã được tải lên hồ sơ của bạn.");
+
+      // Auto scan CV and open recommendation modal
+      setScanResult(null);
+      setScanning(true);
+      setIsScanOpen(true);
+      try {
+        const scanFormData = new FormData();
+        scanFormData.append("cv_file", file);
+        const { data: result } = await recommendJobsFromCv(scanFormData);
+        setScanResult(result);
+      } catch {
+        // Scan is optional — don't break upload flow on failure
+        setIsScanOpen(false);
+      } finally {
+        setScanning(false);
+      }
     } catch (error) {
       setUploadError(error.response?.data?.cv_file?.[0] || error.response?.data?.detail || "Không tải được CV. Vui lòng thử lại.");
     } finally {
@@ -168,7 +188,6 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
           </div>
           {uploadError && <p className="student-cv-message is-error" role="alert">{uploadError}</p>}
           {uploadMessage && <p className="student-cv-message is-success" role="status">{uploadMessage}</p>}
-          <div className="student-cv-upload-help"><i className="bi bi-info-circle" aria-hidden="true" /><span>CV tải lên sẽ được dùng khi bạn ứng tuyển. Bản CV đang dựng ở tab “Tạo CV” là bản nháp riêng trên trình duyệt.</span></div>
         </section>
       ) : (
         <div className="student-cv-builder" role="tabpanel">
@@ -199,6 +218,14 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
           <p className="student-cv-note">Khi chọn “Tải CV PDF”, trong hộp thoại in hãy chọn lưu thành PDF.</p>
         </div>
       )}
+
+      {/* Auto-scan popup after CV upload */}
+      <CvScanModal
+        isOpen={isScanOpen}
+        onClose={() => { setIsScanOpen(false); setScanResult(null); }}
+        preloadedResult={scanResult}
+        preloadedScanning={scanning}
+      />
     </section>
   );
 }
