@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import defaultLogo from "../assets/Logo/logo01.png";
 import { fetchJobDetail, saveJob } from "../api/jobs";
+import { createReport } from "../api/reports";
 import { useAuth } from "../store/AuthContext";
 import ApplyModal from "../components/ApplyModal";
 import './JobDetail.css';
@@ -49,6 +50,10 @@ export default function JobDetail() {
   const [saved, setSaved] = useState(false);
   const [savingJob, setSavingJob] = useState(false);
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDescription, setReportDescription] = useState("");
+  const [reportState, setReportState] = useState({ busy: false, message: "", error: false });
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -85,6 +90,17 @@ export default function JobDetail() {
       console.error("Lỗi khi lưu việc làm:", err);
     } finally {
       setSavingJob(false);
+    }
+  };
+
+  const handleReport = async (event) => {
+    event.preventDefault();
+    setReportState({ busy: true, message: "", error: false });
+    try {
+      const { data } = await createReport({ target_type: "job", target_id: job.id, reason: reportReason, description: reportDescription });
+      setReportState({ busy: false, message: data.message || "Đã gửi báo cáo.", error: false });
+    } catch (error) {
+      setReportState({ busy: false, message: error.response?.data?.reason || error.response?.data?.detail || "Không gửi được báo cáo. Vui lòng thử lại.", error: true });
     }
   };
 
@@ -165,6 +181,7 @@ export default function JobDetail() {
           <section className="col-lg-8">
             <div className="job-detail-hero job-detail-job-box bg-white border rounded-3 shadow-sm p-3 p-md-4 text-start">
               {job?.is_featured && <span className="badge bg-warning text-dark mb-2"><i className="bi bi-star-fill me-1"></i>Nổi bật</span>}
+              {job?.is_demo && <span className="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle mb-2 ms-2"><i className="bi bi-info-circle me-1"></i>Tin minh họa</span>}
               <h1 className="h3 fw-bold mb-2">{job.title}</h1>
               <p className="text-secondary mb-2"><i className="bi bi-building me-2"></i>{companyName}</p>
               <div className="d-flex flex-wrap gap-2 small text-secondary">
@@ -205,10 +222,15 @@ export default function JobDetail() {
                 <p><i className="bi bi-building-gear me-2"></i><span className="job-company-label">Lĩnh vực</span><strong>{industry}</strong></p>
                 <p><i className="bi bi-geo-alt me-2"></i><span className="job-company-label">Địa chỉ</span><strong>{companyAddress}</strong></p>
               </div>
-              {employer?.website ? (
-                <a href={employer.website} target="_blank" rel="noreferrer" className="btn btn-outline-pink w-100 mt-2">Xem trang công ty <i className="bi bi-arrow-up-right ms-1"></i></a>
-              ) : (
-                <Link to={`/companies/${employer?.id || companyName}`} className="btn btn-outline-pink w-100 mt-2">Xem trang công ty <i className="bi bi-arrow-right ms-1"></i></Link>
+              {employer?.id && (
+                <Link to={`/companies/${employer.id}`} className="btn btn-outline-pink w-100 mt-2">
+                  Xem trang công ty <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+              )}
+              {employer?.website && (
+                <a href={employer.website} target="_blank" rel="noreferrer" className="btn btn-link btn-sm w-100 mt-1 text-secondary">
+                  Website doanh nghiệp <i className="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
               )}
             </div>
 
@@ -216,11 +238,13 @@ export default function JobDetail() {
               <button
                 type="button"
                 className="btn btn-pink text-white w-100 fw-semibold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2"
-                onClick={() => setIsApplyModalOpen(true)}
+                disabled={Boolean(job.is_demo)}
+                onClick={() => !job.is_demo && setIsApplyModalOpen(true)}
               >
-                <i className="bi bi-send-fill"></i>
-                Ứng tuyển ngay
+                <i className={`bi ${job.is_demo ? "bi-info-circle" : "bi-send-fill"}`}></i>
+                {job.is_demo ? "Tin minh họa" : "Ứng tuyển ngay"}
               </button>
+              {job.is_demo && <p className="small text-secondary text-center mt-2 mb-0">Tin mẫu chỉ dùng để xem giao diện, không nhận hồ sơ ứng tuyển.</p>}
               <button
                 type="button"
                 className={`btn w-100 mt-2 ${saved ? "btn-danger text-white" : "btn-outline-danger"}`}
@@ -229,6 +253,13 @@ export default function JobDetail() {
               >
                 <i className={`bi ${saved ? "bi-bookmark-fill" : "bi-bookmark"} me-2`}></i>
                 {savingJob ? "Đang xử lý..." : (saved ? "Đã lưu việc làm" : "Lưu việc làm")}
+              </button>
+              <button type="button" className="btn btn-link btn-sm text-secondary w-100 mt-1" onClick={() => {
+                if (!user) { navigate("/login"); return; }
+                setIsReportOpen(true);
+                setReportState({ busy: false, message: "", error: false });
+              }}>
+                <i className="bi bi-flag me-1" /> Báo cáo tin tuyển dụng
               </button>
             </div>
           </aside>
@@ -266,6 +297,27 @@ export default function JobDetail() {
 
         </div>
       </div>
+
+      {isReportOpen && (
+        <div className="modal d-block" role="dialog" aria-modal="true" aria-labelledby="report-job-title" style={{ background: "rgba(0,0,0,.45)" }} onMouseDown={(event) => event.target === event.currentTarget && setIsReportOpen(false)}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <form onSubmit={handleReport}>
+                <div className="modal-header"><h2 className="modal-title fs-5" id="report-job-title">Báo cáo tin tuyển dụng</h2><button type="button" className="btn-close" aria-label="Đóng" onClick={() => setIsReportOpen(false)} /></div>
+                <div className="modal-body">
+                  {reportState.message ? <div className={`alert ${reportState.error ? "alert-danger" : "alert-success"}`}>{reportState.message}</div> : <>
+                    <label className="form-label" htmlFor="report-reason">Lý do</label>
+                    <input id="report-reason" className="form-control mb-3" maxLength={255} required value={reportReason} onChange={(event) => setReportReason(event.target.value)} placeholder="Ví dụ: thông tin tuyển dụng không chính xác" />
+                    <label className="form-label" htmlFor="report-description">Mô tả thêm (không bắt buộc)</label>
+                    <textarea id="report-description" className="form-control" rows={3} maxLength={2000} value={reportDescription} onChange={(event) => setReportDescription(event.target.value)} />
+                  </>}
+                </div>
+                <div className="modal-footer"><button type="button" className="btn btn-light" onClick={() => setIsReportOpen(false)}>Đóng</button>{!reportState.message && <button type="submit" className="btn btn-danger" disabled={reportState.busy}>{reportState.busy ? "Đang gửi…" : "Gửi báo cáo"}</button>}</div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* POPUP ỨNG TUYỂN */}
       {isApplyModalOpen && (

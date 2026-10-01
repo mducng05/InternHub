@@ -42,7 +42,7 @@ class EmployerProfile(models.Model):
     website = models.URLField(blank=True)
     tax_code = models.CharField(max_length=50, blank=True)
     address = models.CharField(max_length=255, blank=True)
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False, db_default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

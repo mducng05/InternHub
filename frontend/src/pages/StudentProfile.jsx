@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
 import { getStudentProfile, updateStudentProfile } from "../api/profile";
-import { MBTI_IMAGES } from "../data/mbtiData";
-import MbtiResultModal from "../components/MbtiResultModal";
-import "./MbtiTest.css";
-import "./StudentProfile.css";
+import AccountAvatarSettings from "../components/AccountAvatarSettings";
+import './StudentProfile.css';
 
 const profileFields = [
 	{ key: "full_name", label: "Họ và tên", placeholder: "Nhập họ và tên", required: true },
@@ -195,12 +193,16 @@ export default function StudentProfile() {
 							</div>
 
 							<div className="profile-avatar-row">
-								<div className="profile-avatar">{getInitials(displayName)}</div>
+								<div className="profile-avatar">
+									{user?.avatar ? <img alt="" src={user.avatar} /> : getInitials(displayName)}
+								</div>
 								<div>
 									<strong>{displayName}</strong>
 									<span>{user?.email}</span>
 								</div>
 							</div>
+
+							<AccountAvatarSettings />
 
 							{error && (
 								<div className="alert alert-warning py-2 px-3 small mt-3" role="alert">

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { login as loginRequest, googleAuth as googleAuthRequest } from "../api/auth";
+import { fetchMe, login as loginRequest, googleAuth as googleAuthRequest } from "../api/auth";
 
 const AuthContext = createContext(null);
 
@@ -10,7 +10,27 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (stored) setUser(JSON.parse(stored));
-    setLoading(false);
+
+    if (!localStorage.getItem("access_token")) {
+      setLoading(false);
+      return undefined;
+    }
+
+    let isCurrent = true;
+    fetchMe()
+      .then(({ data }) => {
+        if (!isCurrent) return;
+        setUser(data);
+        localStorage.setItem("user", JSON.stringify(data));
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (isCurrent) setLoading(false);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
   }, []);
 
   const login = async (email, password) => {

@@ -11,6 +11,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=20, choices=Role.choices)
     phone = models.CharField(max_length=20, blank=True)
+    avatar = models.ImageField(upload_to="avatars/accounts/", blank=True, null=True)
     is_verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"

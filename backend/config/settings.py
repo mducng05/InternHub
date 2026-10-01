@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'apps.moderation',
     'apps.common',
     'apps.admin_api',
+    'apps.chat',
 ]
 
 MIDDLEWARE = [

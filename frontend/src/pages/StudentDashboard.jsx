@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
 import { getStudentProfile } from "../api/profile";
-import { fetchSavedJobs, saveJob } from "../api/jobs";
-import { fetchMyApplications } from "../api/applications";
+import { fetchRecommendedJobs, fetchSavedJobs, saveJob } from "../api/jobs";
+import { cancelApplication, fetchMyApplications } from "../api/applications";
 import JobCard from "../components/JobCard";
-import defaultLogo from "../assets/Logo/logo01.png";
+import StudentCVStudio from "../components/StudentCVStudio";
+import defaultLogo from "../assets/logo01.png";
 import './StudentDashboard.css';
 
 export default function StudentDashboard() {
@@ -26,6 +27,10 @@ export default function StudentDashboard() {
 
   const [appliedJobs, setAppliedJobs] = useState([]);
   const [loadingApplied, setLoadingApplied] = useState(false);
+  const [recommendedJobs, setRecommendedJobs] = useState([]);
+  const [loadingRecommended, setLoadingRecommended] = useState(false);
+  const [cancelingApplicationId, setCancelingApplicationId] = useState(null);
+  const [recommendationError, setRecommendationError] = useState("");
 
   // 1. Tải thông tin hồ sơ sinh viên
   useEffect(() => {
@@ -48,7 +53,7 @@ export default function StudentDashboard() {
           }
         }
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       isCurrent = false;
@@ -81,6 +86,33 @@ export default function StudentDashboard() {
       isCurrent = false;
     };
   }, [user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    let isCurrent = true;
+    setLoadingRecommended(true);
+    setRecommendationError("");
+    fetchRecommendedJobs()
+      .then(({ data }) => isCurrent && setRecommendedJobs(data?.results || []))
+      .catch(() => isCurrent && setRecommendationError("Chưa tải được gợi ý. Hãy cập nhật chuyên ngành hoặc kỹ năng trong hồ sơ."))
+      .finally(() => isCurrent && setLoadingRecommended(false));
+    return () => { isCurrent = false; };
+  }, [user?.id]);
+
+  const handleCancelApplication = async (applicationId) => {
+    if (!window.confirm("Bạn muốn hủy hồ sơ ứng tuyển này?")) return;
+    setCancelingApplicationId(applicationId);
+    try {
+      const { data } = await cancelApplication(applicationId);
+      setAppliedJobs((previous) => previous.map((application) => application.id === applicationId
+        ? { ...application, status: data.status, status_display: data.status_display }
+        : application));
+    } catch (error) {
+      window.alert(error.response?.data?.detail || "Không thể hủy hồ sơ lúc này.");
+    } finally {
+      setCancelingApplicationId(null);
+    }
+  };
 
   // 3. Tải danh sách việc làm đã ứng tuyển từ Database
   useEffect(() => {
@@ -128,7 +160,7 @@ export default function StudentDashboard() {
   const quickStats = [
     { label: "Tin đã lưu", value: savedJobs.length, icon: "bi-heart", tab: "saved" },
     { label: "Đã ứng tuyển", value: appliedJobs.length, icon: "bi-send", tab: "applied" },
-    { label: "Việc phù hợp", value: 0, icon: "bi-stars", tab: "recommended" },
+    { label: "Việc phù hợp", value: recommendedJobs.length, icon: "bi-stars", tab: "recommended" },
   ];
 
   const getStatusBadge = (status, statusDisplay) => {
@@ -228,7 +260,17 @@ export default function StudentDashboard() {
         </section>
 
         {/* TAB 1: VIỆC LÀM ĐÃ ỨNG TUYỂN */}
-        {currentTab === "applied" ? (
+        {currentTab === "cv" || currentTab === "resume" ? (
+          <StudentCVStudio
+            initialMode={currentTab === "resume" ? "upload" : "builder"}
+            onProfileUpdate={(nextProfile) => {
+              setProfile(nextProfile);
+              if (userProfileKey) localStorage.setItem(userProfileKey, JSON.stringify(nextProfile));
+            }}
+            profile={profile}
+            user={user}
+          />
+        ) : currentTab === "applied" ? (
           <section className="student-dashboard-panel mt-4 p-4 bg-white rounded-3 border shadow-sm">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div>
@@ -305,6 +347,19 @@ export default function StudentDashboard() {
 
                       <div className="d-flex flex-column align-items-md-end gap-2">
                         {getStatusBadge(app.status, app.status_display)}
+                        <Link className="btn btn-sm btn-outline-danger rounded-pill" to={`/chat?application_id=${app.id}`}>
+                          <i className="bi bi-chat-dots me-1" /> Nhắn tin với nhà tuyển dụng
+                        </Link>
+                        {app.status === "pending" && (
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-secondary rounded-pill"
+                            disabled={cancelingApplicationId === app.id}
+                            onClick={() => handleCancelApplication(app.id)}
+                          >
+                            {cancelingApplicationId === app.id ? "Đang hủy…" : "Hủy ứng tuyển"}
+                          </button>
+                        )}
                         <span className="text-muted small" style={{ fontSize: "0.8rem" }}>
                           <i className="bi bi-calendar-check me-1"></i>
                           Nộp lúc: {new Date(app.applied_at).toLocaleDateString("vi-VN", {
@@ -354,6 +409,25 @@ export default function StudentDashboard() {
                   </div>
                 ))}
               </div>
+            )}
+          </section>
+        ) : currentTab === "recommended" ? (
+          <section className="student-dashboard-panel mt-4 p-4 bg-white rounded-3 border shadow-sm">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h2 className="h4 fw-bold mb-1" style={{ color: "#800f2f" }}><i className="bi bi-stars me-2" />Việc làm phù hợp ({recommendedJobs.length})</h2>
+                <p className="text-secondary small mb-0">Gợi ý dựa trên kỹ năng và chuyên ngành trong hồ sơ của bạn.</p>
+              </div>
+              <Link to="/student/dashboard" className="btn btn-outline-secondary btn-sm rounded-pill px-3">Về tổng quan</Link>
+            </div>
+            {loadingRecommended ? (
+              <div className="text-center py-5"><div className="spinner-border text-pink" role="status" /></div>
+            ) : recommendationError ? (
+              <div className="text-center py-5 text-secondary">{recommendationError}<div className="mt-3"><Link to="/student/profile" className="btn btn-outline-danger rounded-pill">Cập nhật hồ sơ</Link></div></div>
+            ) : recommendedJobs.length ? (
+              <div className="row g-3">{recommendedJobs.map((job) => <div key={job.id} className="col-12 col-md-6 col-lg-4"><JobCard job={job} onSave={handleToggleSaveJob} isSaved={savedJobIds.includes(job.id)} /></div>)}</div>
+            ) : (
+              <div className="text-center py-5 text-secondary">Chưa có việc phù hợp. Thêm chuyên ngành hoặc kỹ năng vào hồ sơ để nhận gợi ý tốt hơn.<div className="mt-3"><Link to="/student/profile" className="btn btn-outline-danger rounded-pill">Cập nhật hồ sơ</Link></div></div>
             )}
           </section>
         ) : currentTab === "saved" ? (
@@ -448,7 +522,12 @@ export default function StudentDashboard() {
                             <small className="text-secondary">{app.job?.company_name}</small>
                           </div>
                         </div>
-                        <div>{getStatusBadge(app.status, app.status_display)}</div>
+                        <div className="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+                          {getStatusBadge(app.status, app.status_display)}
+                          <Link className="btn btn-sm btn-outline-danger rounded-pill" to={`/chat?application_id=${app.id}`}>
+                            <i className="bi bi-chat-dots me-1" /> Nhắn tin
+                          </Link>
+                        </div>
                       </div>
                     ))}
                   </div>

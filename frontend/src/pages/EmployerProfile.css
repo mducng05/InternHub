@@ -1,0 +1,826 @@
+/* ============================================================
+   EMPLOYER PROFILE – ENHANCED CSS (avatar nổi bật ở giữa)
+   ============================================================ */
+
+.employer-profile-page {
+  --profile-ink: #2c1119;
+  --profile-ink-soft: #57333f;
+  --profile-muted: #8b6b76;
+  --profile-accent: #d81b60;
+  --profile-accent-strong: #a81046;
+  --profile-accent-soft: #fff0f5;
+  --profile-line: #f2dde4;
+  --profile-surface: #ffffff;
+  --profile-radius-xs: 8px;
+  --profile-radius-sm: 10px;
+  --profile-radius: 14px;
+  --profile-radius-lg: 20px;
+  --profile-shadow-xs: 0 1px 2px rgb(70 20 40 / 6%);
+  --profile-shadow-sm: 0 1px 2px rgb(70 20 40 / 5%), 0 6px 16px -10px rgb(70 20 40 / 18%);
+  --profile-shadow-md: 0 2px 4px rgb(70 20 40 / 5%), 0 18px 40px -20px rgb(70 20 40 / 30%);
+  --profile-shadow-accent: 0 8px 20px -8px rgb(216 27 96 / 55%);
+  --profile-transition: 180ms cubic-bezier(.2, .7, .3, 1);
+
+  background:
+    radial-gradient(1000px 460px at 100% -12%, #ffe7f0 0%, transparent 62%),
+    radial-gradient(760px 420px at -8% -6%, #fff0e4 0%, transparent 58%),
+    #fffafb;
+  color: var(--profile-ink);
+  flex: 1;
+  min-height: calc(100vh - 72px);
+  padding: 2.25rem clamp(1rem, 4vw, 3rem) 4.5rem;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+
+.employer-profile-page__inner {
+  margin: 0 auto;
+  max-width: 1040px;
+}
+
+/* ============================================================
+   BREADCRUMB
+   ============================================================ */
+.employer-profile-breadcrumb {
+  align-items: center;
+  color: #907a83;
+  display: flex;
+  font-size: 0.8rem;
+  gap: 0.55rem;
+  margin-bottom: 1.5rem;
+}
+
+.employer-profile-breadcrumb a {
+  color: var(--profile-accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--profile-transition);
+}
+
+.employer-profile-breadcrumb a:hover {
+  color: var(--profile-accent-strong);
+  text-decoration: underline;
+}
+
+.employer-profile-breadcrumb i {
+  color: #c9a4b2;
+  font-size: 0.65rem;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.employer-profile-header {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1.6rem;
+  padding-bottom: 1.5rem;
+  position: relative;
+}
+
+.employer-profile-header::after {
+  background: linear-gradient(90deg, var(--profile-line) 0%, #fbe9ef 45%, transparent 100%);
+  bottom: 0;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.employer-profile-eyebrow {
+  color: var(--profile-accent);
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.employer-profile-header h1 {
+  color: var(--profile-ink);
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  margin: 0 0 0.45rem;
+}
+
+.employer-profile-header p {
+  color: var(--profile-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.employer-profile-verification {
+  align-items: center;
+  border: 1px solid;
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  font-weight: 750;
+  gap: 0.45rem;
+  padding: 0.6rem 0.9rem;
+  transition: box-shadow var(--profile-transition);
+  white-space: nowrap;
+}
+
+.employer-profile-verification.is-verified {
+  background: #e9f6f1;
+  border-color: #a6d6c5;
+  box-shadow: 0 0 0 3px rgb(23 99 78 / 6%);
+  color: #17634e;
+}
+
+.employer-profile-verification.is-unverified {
+  background: #fff2e8;
+  border-color: #edc4a3;
+  box-shadow: 0 0 0 3px rgb(146 80 31 / 6%);
+  color: #92501f;
+}
+
+/* ============================================================
+   FORM WRAPPER
+   ============================================================ */
+.employer-profile-form {
+  display: grid;
+  gap: 1.1rem;
+}
+
+/* ============================================================
+   ★ AVATAR SECTION — phần tử đầu tiên trong form
+   Nổi bật ở giữa, có nền gradient + avatar lớn + nút chỉnh sửa
+   ============================================================ */
+.employer-profile-form > :first-child {
+  align-items: center;
+  background:
+    radial-gradient(520px 220px at 50% -30%, #ffe1ec 0%, transparent 70%),
+    linear-gradient(180deg, #fff7fa 0%, #fffdfd 100%);
+  border: 1px solid var(--profile-line);
+  border-radius: var(--profile-radius-lg);
+  box-shadow: var(--profile-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  padding: 2.25rem 1.5rem 1.75rem;
+  position: relative;
+  text-align: center;
+  transition: box-shadow var(--profile-transition), border-color var(--profile-transition);
+}
+
+/* Vòng trang trí phía sau avatar */
+.employer-profile-form > :first-child::before {
+  background:
+    radial-gradient(circle at 50% 50%, rgb(216 27 96 / 10%) 0%, transparent 62%);
+  content: "";
+  height: 260px;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 0.5rem;
+  transform: translateX(-50%);
+  width: 260px;
+  z-index: 0;
+}
+
+/* Đường viền accent phía trên */
+.employer-profile-form > :first-child::after {
+  background: linear-gradient(90deg, transparent 0%, var(--profile-accent) 50%, transparent 100%);
+  content: "";
+  height: 3px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.employer-profile-form > :first-child > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Tiêu đề / nhãn trong khu vực avatar (nếu có) */
+.employer-profile-form > :first-child > h2,
+.employer-profile-form > :first-child > h3,
+.employer-profile-form > :first-child > p,
+.employer-profile-form > :first-child > span {
+  color: var(--profile-ink-soft);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0;
+  text-align: center;
+}
+
+.employer-profile-form > :first-child > h2,
+.employer-profile-form > :first-child > h3 {
+  color: var(--profile-ink);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+/* ---------- Avatar (ảnh) ---------- */
+.employer-profile-form > :first-child img {
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px rgb(216 27 96 / 22%),
+    0 18px 38px -14px rgb(70 20 40 / 40%);
+  display: block;
+  height: 150px;
+  margin: 0 auto;
+  object-fit: cover;
+  transition: transform var(--profile-transition), box-shadow var(--profile-transition);
+  width: 150px;
+}
+
+.employer-profile-form > :first-child img:hover {
+  box-shadow:
+    0 0 0 4px rgb(216 27 96 / 32%),
+    0 22px 44px -14px rgb(70 20 40 / 48%);
+  transform: scale(1.02);
+}
+
+/* Nếu avatar dùng div/span có class chứa "avatar", "photo", "image" */
+.employer-profile-form > :first-child [class*="avatar"],
+.employer-profile-form > :first-child [class*="photo"],
+.employer-profile-form > :first-child [class*="image"] {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- Nút bên trong khu vực avatar ---------- */
+.employer-profile-form > :first-child button,
+.employer-profile-form > :first-child label[for],
+.employer-profile-form > :first-child a.button,
+.employer-profile-form > :first-child a[role="button"] {
+  align-items: center;
+  background: linear-gradient(135deg, var(--profile-accent) 0%, #f0426f 100%);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: var(--profile-shadow-accent);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 750;
+  gap: 0.45rem;
+  justify-content: center;
+  margin-top: 0.25rem;
+  min-height: 40px;
+  padding: 0.55rem 1.15rem;
+  text-decoration: none;
+  transition: transform var(--profile-transition), box-shadow var(--profile-transition), filter var(--profile-transition);
+}
+
+.employer-profile-form > :first-child button:hover,
+.employer-profile-form > :first-child label[for]:hover,
+.employer-profile-form > :first-child a.button:hover,
+.employer-profile-form > :first-child a[role="button"]:hover {
+  box-shadow: 0 12px 26px -8px rgb(216 27 96 / 65%);
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+/* Nút phụ (hủy / xóa) */
+.employer-profile-form > :first-child button[class*="remove"],
+.employer-profile-form > :first-child button[class*="delete"],
+.employer-profile-form > :first-child button[class*="cancel"] {
+  background: #fff;
+  border: 1px solid #e6ccd5;
+  box-shadow: none;
+  color: var(--profile-ink-soft);
+}
+
+.employer-profile-form > :first-child button[class*="remove"]:hover,
+.employer-profile-form > :first-child button[class*="delete"]:hover,
+.employer-profile-form > :first-child button[class*="cancel"]:hover {
+  background: #fff0f5;
+  border-color: var(--profile-accent);
+  color: var(--profile-accent);
+}
+
+/* Nhóm nút cạnh nhau */
+.employer-profile-form > :first-child > div:last-child {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+/* Input file ẩn (nếu có) */
+.employer-profile-form > :first-child input[type="file"] {
+  display: none;
+}
+
+/* Gợi ý văn bản dưới avatar */
+.employer-profile-form > :first-child small,
+.employer-profile-form > :first-child .hint,
+.employer-profile-form > :first-child [class*="hint"] {
+  color: var(--profile-muted);
+  font-size: 0.74rem;
+  text-align: center;
+}
+
+/* ============================================================
+   SECTION CARD
+   ============================================================ */
+.employer-profile-section {
+  background: var(--profile-surface);
+  border: 1px solid var(--profile-line);
+  border-radius: var(--profile-radius-lg);
+  box-shadow: var(--profile-shadow-sm);
+  padding: 1.5rem 1.5rem 1.6rem;
+  transition: box-shadow var(--profile-transition), border-color var(--profile-transition);
+}
+
+.employer-profile-section:hover {
+  border-color: #e9c4d2;
+  box-shadow: var(--profile-shadow-md);
+}
+
+.employer-profile-section__heading {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  position: relative;
+}
+
+.employer-profile-section__heading::after {
+  background: linear-gradient(90deg, #f7e2e9 0%, #fdf2f5 60%, transparent 100%);
+  bottom: 0;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.employer-profile-section__heading h2 {
+  color: var(--profile-ink);
+  font-size: 1.08rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.25rem;
+}
+
+.employer-profile-section__heading p {
+  color: var(--profile-muted);
+  font-size: 0.79rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.employer-profile-section__heading > i {
+  align-items: center;
+  background: linear-gradient(135deg, #ffe4ee, #fff2e6);
+  border: 1px solid var(--profile-line);
+  border-radius: 12px;
+  color: var(--profile-accent);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 1.05rem;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+/* ============================================================
+   GRID + FIELDS
+   ============================================================ */
+.employer-profile-grid {
+  display: grid;
+  gap: 1.05rem 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.employer-profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.employer-profile-field--wide {
+  grid-column: 1 / -1;
+}
+
+.employer-profile-field > span {
+  color: var(--profile-ink-soft);
+  font-size: 0.77rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.employer-profile-field > span b {
+  color: var(--profile-accent);
+  font-weight: 800;
+}
+
+.employer-profile-field input,
+.employer-profile-field select,
+.employer-profile-field textarea {
+  background: #fffdfd;
+  border: 1px solid #e6ccd5;
+  border-radius: var(--profile-radius-sm);
+  color: var(--profile-ink);
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  min-height: 42px;
+  outline: none;
+  padding: 0.6rem 0.75rem;
+  transition: border-color var(--profile-transition), box-shadow var(--profile-transition), background var(--profile-transition);
+  width: 100%;
+}
+
+.employer-profile-field textarea {
+  line-height: 1.55;
+  min-height: 116px;
+  resize: vertical;
+}
+
+.employer-profile-field input:hover,
+.employer-profile-field select:hover,
+.employer-profile-field textarea:hover {
+  border-color: #dcb0c0;
+}
+
+.employer-profile-field input:focus,
+.employer-profile-field select:focus,
+.employer-profile-field textarea:focus {
+  background: #fff;
+  border-color: var(--profile-accent);
+  box-shadow: 0 0 0 3.5px rgb(216 27 96 / 11%);
+}
+
+.employer-profile-field input::placeholder,
+.employer-profile-field textarea::placeholder {
+  color: #b39aa4;
+}
+
+/* ============================================================
+   PASSWORD LINK
+   ============================================================ */
+.employer-profile-password-link {
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.employer-profile-password-link > span {
+  color: var(--profile-ink-soft);
+  font-size: 0.77rem;
+  font-weight: 700;
+}
+
+.employer-profile-password-link a {
+  align-items: center;
+  background: var(--profile-accent-soft);
+  border: 1px solid #f6d3e0;
+  border-radius: 999px;
+  color: var(--profile-accent);
+  display: inline-flex;
+  font-size: 0.8rem;
+  font-weight: 750;
+  gap: 0.4rem;
+  margin-top: 0.15rem;
+  padding: 0.45rem 0.85rem;
+  text-decoration: none;
+  transition: background var(--profile-transition), border-color var(--profile-transition), color var(--profile-transition), transform var(--profile-transition), box-shadow var(--profile-transition);
+  width: fit-content;
+}
+
+.employer-profile-password-link a:hover {
+  background: #fff;
+  border-color: var(--profile-accent);
+  box-shadow: 0 4px 12px -6px rgb(216 27 96 / 55%);
+  color: var(--profile-accent-strong);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   NOTE
+   ============================================================ */
+.employer-profile-verification-note {
+  align-items: flex-start;
+  background: linear-gradient(135deg, #fff6ee, #ffefe2);
+  border: 1px solid #f4d5ba;
+  border-radius: var(--profile-radius);
+  color: #7a431d;
+  display: flex;
+  font-size: 0.82rem;
+  gap: 0.6rem;
+  line-height: 1.55;
+  padding: 0.85rem 1rem;
+}
+
+.employer-profile-verification-note i {
+  color: #b2621f;
+  flex: 0 0 auto;
+  font-size: 1.05rem;
+  margin-top: 0.05rem;
+}
+
+/* ============================================================
+   MESSAGES
+   ============================================================ */
+.employer-profile-message {
+  border-radius: var(--profile-radius-sm);
+  font-size: 0.83rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+}
+
+.employer-profile-message.is-error {
+  background: #fff0f2;
+  border: 1px solid #f8d3da;
+  color: #a4262c;
+}
+
+.employer-profile-message.is-success {
+  background: #eaf7f1;
+  border: 1px solid #c9e9dc;
+  color: #17634e;
+}
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
+.employer-profile-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+  justify-content: space-between;
+  padding-top: 0.4rem;
+}
+
+.employer-profile-back {
+  align-items: center;
+  color: var(--profile-muted);
+  display: inline-flex;
+  font-size: 0.84rem;
+  font-weight: 600;
+  gap: 0.35rem;
+  text-decoration: none;
+  transition: color var(--profile-transition), transform var(--profile-transition);
+}
+
+.employer-profile-back::before {
+  content: "←";
+  font-size: 0.95rem;
+  transition: transform var(--profile-transition);
+}
+
+.employer-profile-back:hover {
+  color: var(--profile-accent);
+}
+
+.employer-profile-back:hover::before {
+  transform: translateX(-3px);
+}
+
+.employer-profile-save {
+  align-items: center;
+  background: linear-gradient(135deg, var(--profile-accent) 0%, #f0426f 100%);
+  border: 0;
+  border-radius: var(--profile-radius-sm);
+  box-shadow: var(--profile-shadow-accent);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 750;
+  gap: 0.5rem;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.6rem 1.15rem;
+  transition: transform var(--profile-transition), box-shadow var(--profile-transition), filter var(--profile-transition);
+}
+
+.employer-profile-save:hover:not(:disabled) {
+  box-shadow: 0 12px 26px -8px rgb(216 27 96 / 65%);
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.employer-profile-save:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.employer-profile-save:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.employer-profile-save i {
+  font-size: 0.95rem;
+}
+
+.employer-profile-save:disabled i {
+  animation: employer-profile-spin 0.8s linear infinite;
+}
+
+@keyframes employer-profile-spin {
+  to { transform: rotate(360deg); }
+}
+
+.employer-company-logo-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.employer-company-logo-field > span {
+  color: var(--profile-ink-soft);
+  font-size: 0.77rem;
+  font-weight: 700;
+}
+
+.employer-company-logo-editor {
+  align-items: center;
+  background: #fff9fb;
+  border: 1px dashed #e8c6d2;
+  border-radius: var(--profile-radius-sm);
+  display: flex;
+  gap: 1rem;
+  min-height: 126px;
+  padding: 0.8rem;
+}
+
+.employer-company-logo-preview {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--profile-line);
+  border-radius: 10px;
+  color: #c98ba1;
+  display: flex;
+  flex: 0 0 96px;
+  height: 96px;
+  justify-content: center;
+  overflow: hidden;
+  width: 96px;
+}
+
+.employer-company-logo-preview > i {
+  font-size: 1.7rem;
+}
+
+.employer-company-logo-preview > img {
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.employer-company-logo-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.employer-company-logo-actions > span {
+  color: var(--profile-muted);
+  flex-basis: 100%;
+  font-size: 0.72rem;
+}
+
+.employer-company-logo-pick,
+.employer-company-logo-remove {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e6ccd5;
+  border-radius: 999px;
+  color: var(--profile-ink-soft);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  gap: 0.4rem;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0.45rem 0.85rem;
+}
+
+.employer-company-logo-pick:hover,
+.employer-company-logo-remove:hover {
+  background: var(--profile-accent-soft);
+  border-color: var(--profile-accent);
+  color: var(--profile-accent);
+}
+
+.employer-company-logo-pick input {
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+/* ============================================================
+   FOCUS & SELECTION
+   ============================================================ */
+.employer-profile-page button:focus-visible,
+.employer-profile-page a:focus-visible,
+.employer-profile-page input:focus-visible,
+.employer-profile-page select:focus-visible,
+.employer-profile-page textarea:focus-visible {
+  outline: 2px solid var(--profile-accent);
+  outline-offset: 2px;
+}
+
+.employer-profile-page ::selection {
+  background: #f9c9d8;
+  color: var(--profile-ink);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .employer-profile-page {
+    padding-top: 1.4rem;
+  }
+
+  .employer-profile-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .employer-profile-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .employer-profile-section {
+    padding: 1.1rem 1rem 1.2rem;
+  }
+
+  .employer-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .employer-company-logo-editor {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .employer-profile-field--wide {
+    grid-column: auto;
+  }
+
+  .employer-profile-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+    gap: 0.65rem;
+  }
+
+  .employer-profile-save {
+    width: 100%;
+  }
+
+  .employer-profile-back {
+    justify-content: center;
+  }
+
+  /* Avatar section trên mobile gọn hơn */
+  .employer-profile-form > :first-child {
+    padding: 1.75rem 1rem 1.4rem;
+  }
+
+  .employer-profile-form > :first-child img {
+    height: 120px;
+    width: 120px;
+  }
+
+  .employer-profile-form > :first-child::before {
+    height: 200px;
+    width: 200px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

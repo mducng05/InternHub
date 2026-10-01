@@ -16,3 +16,5 @@ export const fetchMyApplications = () => {
   return client.get("/applications/my/");
 };
 
+export const cancelApplication = (id) => client.delete(`/applications/${id}/`);
+

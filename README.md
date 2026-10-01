@@ -48,7 +48,8 @@ backend/
 │   ├── catalog/                # Industry, Location, Skill, JobCategory (danh mục)
 │   ├── jobs/                   # Job, JobSkill, JobView, SavedJob
 │   ├── applications/           # Application, ApplicationStatusLog
-│   ├── notifications/          # Notification
+│   ├── notifications/          # Notification, danh sách và trạng thái đã đọc
+│   ├── chat/                   # Hội thoại giữa ứng viên và nhà tuyển dụng
 │   ├── moderation/             # Report, duyệt tin (dành cho Admin)
 │   └── common/                 # Health-check, permission/pagination dùng chung
 ├── media/                      # File upload (CV, avatar, logo) — KHÔNG commit
@@ -74,7 +75,7 @@ frontend/
 ├── src/
 │   ├── api/            # Gọi API — 1 file/domain (client.js, auth.js, jobs.js...)
 │   ├── pages/           # 1 trang = 1 file (Home, JobList, JobDetail, Login...)
-│   ├── components/      # UI dùng lại nhiều nơi (Navbar, JobCard...)
+│   ├── components/      # UI dùng lại nhiều nơi (Navbar, JobCard, MessengerWidget...)
 │   ├── routes/          # Khai báo route + guard theo role (AppRoutes, ProtectedRoute)
 │   ├── store/           # State toàn cục (AuthContext — user, token)
 │   ├── hooks/           # Custom hook dùng chung
@@ -87,7 +88,7 @@ frontend/
 
 ---
 
-## 2. Database (MySQL) — 16 bảng
+## 2. Database (MySQL) — 18 bảng
 
 | Bảng | Chức năng | Django app |
 |---|---|---|
@@ -107,6 +108,8 @@ frontend/
 | application_status_logs | Lịch sử trạng thái đơn (timeline) | applications |
 | notifications | Thông báo hệ thống | notifications |
 | reports | Báo cáo vi phạm | moderation |
+| conversations | Hội thoại gắn với đơn ứng tuyển | chat |
+| messages | Tin nhắn trong hội thoại | chat |
 
 Chi tiết field từng bảng: xem lịch sử thảo luận thiết kế / sẽ được thể hiện trực tiếp trong `apps/*/models.py` khi implement.
 
@@ -121,28 +124,38 @@ Chi tiết field từng bảng: xem lịch sử thảo luận thiết kế / s�
 |---|---|---|---|
 | POST | `/auth/token/` | Đăng nhập, trả access + refresh token | ✅ đã wire (simplejwt) |
 | POST | `/auth/token/refresh/` | Lấy access token mới | ✅ đã wire |
-| POST | `/auth/register/` | Đăng ký (student/employer) | ⬜ TODO |
-| GET/PATCH | `/auth/me/` | Xem/sửa thông tin cá nhân | ⬜ TODO |
-| GET | `/catalog/industries/`, `/locations/`, `/skills/`, `/job-categories/` | Danh mục dùng chung | ⬜ TODO |
-| GET | `/jobs/` | Danh sách tin (filter: job_category, location, salary, keyword) | ⬜ TODO |
-| POST | `/jobs/` | Đăng tin (employer) | ⬜ TODO |
-| GET | `/jobs/{id}/` | Chi tiết tin (tăng `job_views`) | ⬜ TODO |
-| PATCH/DELETE | `/jobs/{id}/` | Sửa / ẩn tin | ⬜ TODO |
-| POST/DELETE | `/jobs/{id}/save/` | Lưu / bỏ lưu tin yêu thích | ⬜ TODO |
-| GET | `/jobs/recommendations/` | Gợi ý việc làm cá nhân hóa | ⬜ TODO (tuần 7) |
-| GET | `/jobs/{id}/stats/` | Views / Applications / Shortlisted / Interviews | ⬜ TODO |
-| POST | `/applications/` | Ứng tuyển | ⬜ TODO |
-| GET | `/applications/` | Danh sách đơn (theo role) | ⬜ TODO |
-| PATCH | `/applications/{id}/status/` | Duyệt / từ chối / mời phỏng vấn | ⬜ TODO |
-| DELETE | `/applications/{id}/` | Hủy ứng tuyển | ⬜ TODO |
-| GET | `/notifications/` | Danh sách thông báo | ⬜ TODO |
-| PATCH | `/notifications/{id}/read/` | Đánh dấu đã đọc | ⬜ TODO |
-| GET | `/moderation/jobs/pending/` | Tin chờ duyệt (Admin) | ⬜ TODO |
-| POST | `/moderation/jobs/{id}/approve\|reject/` | Duyệt/từ chối tin (Admin) | ⬜ TODO |
-| GET | `/moderation/reports/` | Báo cáo vi phạm (Admin) | ⬜ TODO |
+| POST | `/auth/register/` | Đăng ký tài khoản ứng viên/nhà tuyển dụng | ✅ Đã wire |
+| GET/PATCH | `/auth/me/` | Xem và cập nhật tài khoản hiện tại | ✅ Đã wire |
+| GET | `/catalog/industries/`, `/locations/`, `/skills/`, `/job-categories/` | Danh mục ngành, địa điểm, kỹ năng và vị trí | ✅ Đã wire |
+| GET | `/jobs/` | Danh sách tin, tìm kiếm và lọc | ✅ Đã wire |
+| POST | `/jobs/manage/` | Nhà tuyển dụng tạo tin chờ duyệt | ✅ Đã wire |
+| GET | `/jobs/{id}/` | Chi tiết tin đã được duyệt | ✅ Đã wire |
+| PATCH | `/jobs/manage/{id}/` | Nhà tuyển dụng sửa tin của mình; đóng tin qua `/jobs/manage/{id}/close/` | ✅ Đã wire |
+| POST | `/jobs/{id}/save/` | Lưu hoặc bỏ lưu tin (toggle) | ✅ Đã wire |
+| GET | `/jobs/recommendations/` | Gợi ý tin theo kỹ năng và chuyên ngành (cần đăng nhập ứng viên) | ✅ Đã wire |
+| GET | `/jobs/manage/` | Nhà tuyển dụng xem số liệu hồ sơ theo từng tin | ✅ Đã wire |
+| POST | `/applications/` | Nộp hồ sơ; gửi thông báo cho ứng viên và nhà tuyển dụng | ✅ đã wire |
+| GET | `/applications/my/` | Danh sách đơn ứng tuyển của ứng viên hiện tại | ✅ đã wire |
+| PATCH | `/jobs/manage/{job_id}/applications/{application_id}/status/` | Nhà tuyển dụng cập nhật trạng thái; tạo thông báo cho ứng viên | ✅ đã wire |
+| DELETE | `/applications/{id}/` | Hủy hồ sơ đang chờ xử lý của chính ứng viên | ✅ Đã wire |
+| GET | `/notifications/` | Danh sách tối đa 50 thông báo của tài khoản hiện tại | ✅ đã wire |
+| PATCH | `/notifications/{id}/read/` | Đánh dấu một thông báo đã đọc | ✅ đã wire |
+| POST | `/notifications/read-all/` | Đánh dấu tất cả thông báo đã đọc | ✅ đã wire |
+| GET | `/chat/conversations/` | Liệt kê hội thoại của ứng viên/nhà tuyển dụng | ✅ đã wire |
+| POST | `/chat/conversations/` | Mở hoặc tạo hội thoại từ `application_id` | ✅ đã wire |
+| GET | `/chat/conversations/{id}/messages/` | Tải tin nhắn trong hội thoại | ✅ đã wire |
+| POST | `/chat/conversations/{id}/messages/` | Gửi tin nhắn (tối đa 5.000 ký tự) | ✅ đã wire |
+| POST | `/moderation/reports/` | Gửi báo cáo tin tuyển dụng/người dùng; quản trị xử lý tại `/admin/reports/` | ✅ Đã wire |
 | GET | `/health/` | Health check | ✅ đã wire |
 
-File `urls.py` của mỗi app đã tạo sẵn (comment sẵn tên route dự kiến) — chỉ cần bỏ comment và viết `views.py` tương ứng.
+Bảng trên phản ánh các luồng API hiện có. API quản trị nằm dưới `/api/v1/admin/` và được giới hạn theo quyền quản trị.
+
+### Chat và thông báo
+
+- Ứng viên và nhà tuyển dụng có thể bắt đầu chat từ đơn ứng tuyển; mỗi đơn có một hội thoại riêng.
+- Trang chat đầy đủ nằm tại `/chat`. Khung Messenger nổi ở góc phải xuất hiện trên các trang dành cho người dùng; tin nhắn trong khung tự cập nhật khi khung đang mở.
+- Chuông thông báo trên thanh điều hướng hiển thị thông báo của tài khoản hiện tại, tự kiểm tra khoảng mỗi 2 giây khi tab đang mở. Thông báo được tạo khi có đơn ứng tuyển mới, khi trạng thái đơn thay đổi và khi có tin nhắn mới.
+- API chat và thông báo yêu cầu đăng nhập bằng JWT. Chỉ người tham gia đơn ứng tuyển mới có quyền xem/gửi tin nhắn trong hội thoại đó.
 
 ---
 
@@ -208,12 +221,12 @@ git push origin <tên-nhánh>
 
 ## 7. Trạng thái hiện tại (đã scaffold)
 
-- ✅ Django project + 8 app (`accounts, profiles, catalog, jobs, applications, notifications, moderation, common`) — chạy được, đã kết nối MySQL qua PyMySQL.
+- ✅ Django project + các app `accounts, profiles, catalog, jobs, applications, notifications, moderation, common, admin_api, chat` — chạy được, đã kết nối MySQL qua PyMySQL.
 - ✅ Custom `User` model (`role`, `phone`, `is_verified`) — đăng ký sẵn với Django Admin.
-- ✅ **Toàn bộ 16 bảng đã có model + migration + đăng ký Django Admin** (`apps/*/models.py`, `apps/*/admin.py`) — xem mục 2 để đối chiếu bảng ↔ model. Đã seed thử 1 job demo (Backend Developer Intern, Demo Tech Co., kỹ năng Python) để xác nhận toàn bộ FK/M2M (Job → EmployerProfile → Industry, Job → JobCategory/Location, Job ↔ Skill qua `JobSkill`) hoạt động đúng.
+- ✅ Các bảng nghiệp vụ có model và migration; app chat thêm hai bảng `conversations` và `messages`. Chạy `python manage.py migrate` sau khi cập nhật code để tạo bảng chat.
 - ✅ DRF + SimpleJWT (trả kèm `user.role` khi login) + CORS đã cấu hình, `manage.py check` pass.
 - ✅ React (Vite) + React Router + Axios, cấu trúc `api/pages/components/routes/store`, `AuthContext` (login/logout, lưu token, tự refresh khi 401), route guard theo role, redirect đúng dashboard theo role sau khi login — đã test bằng Playwright (login admin → vào `/admin/dashboard`) và `npm run build` thành công.
-- ⬜ Chưa viết bất kỳ `serializers.py`/`views.py` nghiệp vụ nào cho các domain khác ngoài login — các `urls.py` hiện là stub có comment sẵn route dự kiến (xem mục 3). Đây là phần việc chính còn lại: mỗi app cần `serializers.py` (validate + format JSON) và `views.py` (DRF `APIView`/`ViewSet`) rồi bỏ comment route tương ứng trong `urls.py`.
+- ✅ Chat, thông báo, luồng ứng tuyển và cập nhật trạng thái đơn đã có API nghiệp vụ; một số domain khác vẫn đang được hoàn thiện.
 - ⬜ Thuật toán gợi ý việc làm (tuần 6-7).
 
 ### Tài khoản demo có sẵn (chỉ trên máy dev hiện tại)
