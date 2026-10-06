@@ -26,9 +26,17 @@ export const scanCv = (formData) =>
 
 /**
  * Upload CV and get recommended jobs.
- * Returns: { skills_found, address_found, recommendations, jobs_url_params }
+ * Returns: { skills_found, address_found, candidate, recommendations, jobs_url_params }
  */
-export const recommendJobsFromCv = (formData) =>
+export const recommendJobsFromCv = (formData = new FormData()) =>
   client.post("/profiles/student/recommend-from-cv/", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+
+/**
+ * Sync extracted skills into student's profile.
+ * Body: { skills: string[] }
+ */
+export const syncStudentSkills = (skills) =>
+  client.post("/profiles/student/sync-skills/", { skills });
+

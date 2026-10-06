@@ -88,6 +88,12 @@ export default function JobCard({ job, onSave, isSaved }) {
     navigate(`/jobs/${job?.id}`);
   };
 
+  const matchPercent =
+    job?.match_percentage ??
+    (job?.match_score !== undefined && job?.match_score !== null
+      ? Math.round(Number(job.match_score) * (Number(job.match_score) <= 1 ? 100 : 1))
+      : null);
+
   return (
     <div
       onClick={handleCardClick}
@@ -114,16 +120,32 @@ export default function JobCard({ job, onSave, isSaved }) {
           />
 
           <div className="flex-grow-1 min-width-0 job-card-main-info">
-            {job?.is_featured && (
-              <span className="badge bg-warning text-dark fw-semibold rounded-pill mb-1 d-inline-block">
-                <i className="bi bi-star-fill me-1"></i> Nổi bật
-              </span>
-            )}
-            {job?.is_demo && (
-              <span className="badge home-demo-badge rounded-pill mb-1 d-inline-block">
-                <i className="bi bi-info-circle me-1" aria-hidden="true"></i> Tin minh họa
-              </span>
-            )}
+            <div className="d-flex flex-wrap gap-1 align-items-center mb-1">
+              {job?.is_featured && (
+                <span className="badge bg-warning text-dark fw-semibold rounded-pill">
+                  <i className="bi bi-star-fill me-1"></i> Nổi bật
+                </span>
+              )}
+              {matchPercent !== null && matchPercent > 0 && (
+                <span
+                  className={`badge rounded-pill fw-semibold ${
+                    matchPercent >= 70
+                      ? "bg-success text-white"
+                      : matchPercent >= 40
+                      ? "bg-info text-dark"
+                      : "bg-secondary text-white"
+                  }`}
+                  title={job?.match_reasons?.join(" • ") || `${matchPercent}% phù hợp`}
+                >
+                  <i className="bi bi-stars me-1"></i> {matchPercent}% phù hợp
+                </span>
+              )}
+              {job?.is_demo && (
+                <span className="badge home-demo-badge rounded-pill">
+                  <i className="bi bi-info-circle me-1" aria-hidden="true"></i> Tin minh họa
+                </span>
+              )}
+            </div>
             <h6 className="card-title mb-1 fw-bold text-truncate job-title-row">
               <span
                 className="text-dark"
@@ -137,6 +159,29 @@ export default function JobCard({ job, onSave, isSaved }) {
             </p>
           </div>
         </div>
+
+        {/* Kỹ năng trùng khớp (nếu có từ gợi ý) */}
+        {job?.matched_skills && job.matched_skills.length > 0 && (
+          <div className="d-flex flex-wrap align-items-center gap-1 mb-2 px-1">
+            <span className="text-success small fw-medium" style={{ fontSize: "0.75rem" }}>
+              <i className="bi bi-check2-circle me-1"></i>Khớp:
+            </span>
+            {job.matched_skills.slice(0, 3).map((sk) => (
+              <span
+                key={sk}
+                className="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill"
+                style={{ fontSize: "0.72rem" }}
+              >
+                {sk}
+              </span>
+            ))}
+            {job.matched_skills.length > 3 && (
+              <span className="text-muted small" style={{ fontSize: "0.72rem" }}>
+                +{job.matched_skills.length - 3}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Phần 2: Thông tin chi tiết (Badges) */}
         <div className="d-flex flex-wrap gap-1 my-2 job-details-row">

@@ -10,6 +10,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from apps.applications.models import Application, ApplicationStatusLog
 from apps.notifications.models import Notification
+from apps.profiles.cv_scanner import extract_skills
 from .models import Job, SavedJob
 from .serializers import EmployerJobSerializer, JobListSerializer, JobDetailSerializer
 from apps.profiles.models import EmployerProfile, StudentProfile
@@ -344,8 +345,10 @@ class RecommendedJobsView(APIView):
 
 		student_skill_ids = set(profile.student_skills.values_list("skill_id", flat=True))
 		major = (profile.major or "").strip().casefold()
+		address = (profile.address or "").strip().casefold()
+
 		jobs = list(
-		Job.objects.filter(status=Job.Status.APPROVED, deadline__gte=timezone.localdate())
+			Job.objects.filter(status=Job.Status.APPROVED, deadline__gte=timezone.localdate())
 			.exclude(slug__startswith="demo-")
 			.select_related("employer", "employer__industry", "location", "job_category")
 			.prefetch_related("skills")
@@ -353,23 +356,68 @@ class RecommendedJobsView(APIView):
 		)
 		applied_ids = set(Application.objects.filter(student_profile=profile).values_list("job_id", flat=True))
 		results = []
+
+		student_skill_names = set(profile.student_skills.select_related("skill").values_list("skill__name", flat=True))
+		student_skill_names_lower = {s.lower() for s in student_skill_names}
+
 		for job in jobs:
 			if job.id in applied_ids:
 				continue
-			matched_skills = [skill.name for skill in job.skills.all() if skill.id in student_skill_ids]
-			score = len(matched_skills) * 10
-			reasons = [f"Kỹ năng phù hợp: {', '.join(matched_skills)}"] if matched_skills else []
+
+			# Combine explicit skills (M2M) and skills extracted from job title, requirements, description
+			explicit_skills = {s.name for s in job.skills.all()}
+			job_text = f"{job.title} {job.requirements or ''} {job.description or ''}"
+			text_skills = set(extract_skills(job_text))
+			all_job_skills = sorted(list(explicit_skills | text_skills))
+
+			matched_skills = [s for s in all_job_skills if s.lower() in student_skill_names_lower]
+			missing_skills = [s for s in all_job_skills if s.lower() not in student_skill_names_lower]
+
+			# 1. Skill match (weight: 60%)
+			skill_score = 0.0
+			if all_job_skills:
+				skill_score = (len(matched_skills) / len(all_job_skills)) * 60
+			elif matched_skills:
+				skill_score = 25.0
+
+			# 2. Major match (weight: 25%)
+			major_score = 0.0
 			category_name = job.job_category.name if job.job_category else ""
-			if major and any(term in f"{job.title} {category_name} {job.description}".casefold() for term in major.split() if len(term) > 2):
-				score += 5
-				reasons.append(f"Liên quan đến chuyên ngành {profile.major}")
-			if score:
+			searchable_text = f"{job.title} {category_name} {job.description} {job.requirements or ''}".casefold()
+			if major and any(term in searchable_text for term in major.split() if len(term) > 2):
+				major_score = 25.0
+
+			# 3. Location match (weight: 15%)
+			loc_score = 0.0
+			loc_matched = False
+			if address and job.location:
+				loc_name = job.location.name.casefold()
+				if loc_name in address or address in loc_name:
+					loc_score = 15.0
+					loc_matched = True
+
+			total_score = skill_score + major_score + loc_score
+
+			reasons = []
+			if matched_skills:
+				reasons.append(f"Khớp {len(matched_skills)}/{len(all_job_skills)} kỹ năng: {', '.join(matched_skills[:4])}")
+			if major_score > 0 and profile.major:
+				reasons.append(f"Chuyên ngành phù hợp: {profile.major}")
+			if loc_matched and job.location:
+				reasons.append(f"Khu vực phù hợp: {job.location.name}")
+
+			if total_score > 0:
+				pct = min(max(round(total_score), 15), 99)
 				data = JobListSerializer(job, context={"request": request}).data
-				data["match_score"] = score
+				data["match_score"] = round(total_score / 100, 2)
+				data["match_percentage"] = pct
+				data["matched_skills"] = matched_skills
+				data["missing_skills"] = missing_skills
 				data["match_reasons"] = reasons
-				results.append((score, job.created_at, data))
-		results.sort(key=lambda item: (item[0], item[1]), reverse=True)
-		return Response({"count": len(results), "results": [item[2] for item in results[:50]]})
+				results.append((total_score, job.is_featured, job.created_at, data))
+
+		results.sort(key=lambda item: (item[0], item[1], item[2]), reverse=True)
+		return Response({"count": len(results), "results": [item[3] for item in results[:50]]})
 
 
 class JobSalaryInsightsView(APIView):

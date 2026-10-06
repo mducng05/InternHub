@@ -1,3 +1,5 @@
+from django.utils import timezone
+from django.utils.text import slugify
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
@@ -5,8 +7,9 @@ from rest_framework.views import APIView
 from django.db.models import Count, Q
 from apps.jobs.models import Job
 from apps.jobs.serializers import JobListSerializer
-from apps.catalog.models import Skill, Location
-from .cv_scanner import scan_cv
+from apps.catalog.models import Skill, Location, StudentSkill
+from apps.applications.models import Application
+from .cv_scanner import scan_cv, extract_skills
 from .models import EmployerProfile, StudentProfile
 from .serializers import EmployerProfileSerializer, PublicCompanySerializer, StudentProfileSerializer
 
@@ -63,30 +66,42 @@ class PublicCompanyDetailView(generics.RetrieveAPIView):
 class CvScanView(APIView):
     """
     POST body: multipart/form-data with field `cv_file` (PDF/DOC/DOCX).
-    Returns: { skills, address, raw_text_preview }
-    Requires authentication (any role).
+    If no cv_file is provided, uses the user's existing StudentProfile.cv_file.
+    Returns: { skills, address, candidate, raw_text_preview }
     """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         uploaded = request.FILES.get("cv_file")
         if not uploaded:
+            profile = StudentProfile.objects.filter(user=request.user).first()
+            if profile and profile.cv_file:
+                try:
+                    uploaded = profile.cv_file.open("rb")
+                except Exception:
+                    uploaded = None
+
+        if not uploaded:
             return Response(
-                {"detail": "Vui lòng gửi kèm file CV (field: cv_file)."},
+                {"detail": "Vui lòng gửi kèm file CV hoặc tải CV lên hồ sơ của bạn trước."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        name = getattr(uploaded, "name", "").lower()
         allowed_ext = (".pdf", ".doc", ".docx")
-        if not uploaded.name.lower().endswith(allowed_ext):
+        if not any(name.endswith(ext) for ext in allowed_ext):
             return Response(
                 {"detail": "Chỉ hỗ trợ định dạng PDF, DOC, DOCX."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if uploaded.size > 10 * 1024 * 1024:
+        if hasattr(uploaded, "size") and uploaded.size > 10 * 1024 * 1024:
             return Response(
                 {"detail": "File CV không được vượt quá 10 MB."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        result = scan_cv(uploaded)
+
+        db_skills = list(Skill.objects.values_list("name", flat=True))
+        result = scan_cv(uploaded, extra_skills=db_skills)
         return Response(result, status=status.HTTP_200_OK)
 
 
@@ -96,98 +111,224 @@ class CvScanView(APIView):
 
 class RecommendedJobsFromCvView(APIView):
     """
-    POST body: multipart/form-data with field `cv_file`.
-    Scans CV, matches extracted skills against Job.skills and address against
-    Job.location, returns top-N approved jobs sorted by match score.
+    POST body: multipart/form-data with field `cv_file` (optional if user has uploaded CV).
+    Scans CV, extracts skills and address, matches against active jobs,
+    and returns top approved jobs sorted by % match score.
     """
     permission_classes = [permissions.IsAuthenticated]
-    MAX_RESULTS = 5
+    MAX_RESULTS = 8
 
     def post(self, request):
         uploaded = request.FILES.get("cv_file")
         if not uploaded:
+            profile = StudentProfile.objects.filter(user=request.user).first()
+            if profile and profile.cv_file:
+                try:
+                    uploaded = profile.cv_file.open("rb")
+                except Exception:
+                    uploaded = None
+
+        if not uploaded:
             return Response(
-                {"detail": "Vui lòng gửi kèm file CV (field: cv_file)."},
+                {"detail": "Vui lòng chọn file CV để phân tích hoặc tải CV lên hồ sơ cá nhân."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if not uploaded.name.lower().endswith((".pdf", ".doc", ".docx")):
+
+        name = getattr(uploaded, "name", "").lower()
+        if not any(name.endswith(ext) for ext in (".pdf", ".doc", ".docx")):
             return Response(
                 {"detail": "Chỉ hỗ trợ định dạng PDF, DOC, DOCX."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if uploaded.size > 10 * 1024 * 1024:
+        if hasattr(uploaded, "size") and uploaded.size > 10 * 1024 * 1024:
             return Response(
                 {"detail": "File CV không được vượt quá 10 MB."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        scan_result = scan_cv(uploaded)
+        db_skills = list(Skill.objects.all())
+        db_skill_names = [s.name for s in db_skills]
+        scan_result = scan_cv(uploaded, extra_skills=db_skill_names)
         skills_found = scan_result.get("skills", [])
         address_found = scan_result.get("address")
+        candidate_info = scan_result.get("candidate", {})
 
-        # --- Match skills against DB Skill records ---
-        matched_skill_ids = []
+        # Match skills against DB Skill records
+        matched_skill_ids = set()
         if skills_found:
-            skills_lower = [s.lower() for s in skills_found]
-            for db_skill in Skill.objects.all():
+            skills_lower = {s.lower() for s in skills_found}
+            for db_skill in db_skills:
                 if db_skill.name.lower() in skills_lower:
-                    matched_skill_ids.append(db_skill.pk)
+                    matched_skill_ids.add(db_skill.pk)
 
-        # --- Match location ---
-        matched_location_ids = []
+        # Match location against DB Location records
+        matched_location_ids = set()
         if address_found:
             addr_lower = address_found.lower()
             for loc in Location.objects.all():
-                if loc.name.lower() in addr_lower or addr_lower in loc.name.lower():
-                    matched_location_ids.append(loc.pk)
+                loc_lower = loc.name.lower()
+                if loc_lower in addr_lower or addr_lower in loc_lower:
+                    matched_location_ids.add(loc.pk)
 
-        # --- Fetch approved jobs and score them ---
+        # Fetch active, non-expired jobs
         approved_jobs = (
-            Job.objects.filter(status=Job.Status.APPROVED)
+            Job.objects.filter(
+                status=Job.Status.APPROVED,
+                deadline__gte=timezone.localdate(),
+            )
+            .exclude(slug__startswith="demo-")
             .select_related("employer", "employer__industry", "location", "job_category")
             .prefetch_related("skills")
             .order_by("-is_featured", "-created_at")
         )
 
+        # Exclude jobs candidate already applied to
+        applied_job_ids = set()
+        if request.user.is_authenticated and getattr(request.user, "role", None) == "student":
+            student_profile = StudentProfile.objects.filter(user=request.user).first()
+            if student_profile:
+                applied_job_ids = set(
+                    Application.objects.filter(student_profile=student_profile).values_list("job_id", flat=True)
+                )
+
         scored = []
         for job in approved_jobs:
-            job_skill_ids = set(job.skills.values_list("pk", flat=True))
+            if job.id in applied_job_ids:
+                continue
 
-            skill_score = 0.0
-            if job_skill_ids and matched_skill_ids:
-                skill_score = len(job_skill_ids & set(matched_skill_ids)) / len(job_skill_ids)
-            elif matched_skill_ids and not job_skill_ids:
-                skill_score = 0.1
+            # Combine explicit skills and skills extracted from job title, requirements, description
+            explicit_skills = {s.name for s in job.skills.all()}
+            job_text = f"{job.title} {job.requirements or ''} {job.description or ''}"
+            text_skills = set(extract_skills(job_text, extra_skills=db_skill_names))
+            all_job_skills = sorted(list(explicit_skills | text_skills))
 
-            loc_score = 0.0
-            if matched_location_ids and job.location_id in matched_location_ids:
-                loc_score = 0.3
+            skills_found_lower = {s.lower() for s in skills_found}
+            matched_in_job = [s for s in all_job_skills if s.lower() in skills_found_lower]
+            missing_in_job = [s for s in all_job_skills if s.lower() not in skills_found_lower]
 
-            score = skill_score * 0.7 + loc_score
-            scored.append((score, job))
+            # Skill ratio calculation
+            if all_job_skills:
+                skill_ratio = len(matched_in_job) / len(all_job_skills)
+            elif skills_found:
+                skill_ratio = 0.25
+            else:
+                skill_ratio = 0.05
 
-        scored.sort(key=lambda t: (-t[0], -t[1].is_featured, t[1].pk))
-        top_jobs = [job for _, job in scored[:self.MAX_RESULTS]]
-        top_scores = {job.pk: round(score, 2) for score, job in scored[:self.MAX_RESULTS]}
+            # Location match calculation
+            loc_matched = False
+            if address_found and job.location:
+                loc_lower = job.location.name.lower()
+                addr_lower = address_found.lower()
+                if loc_lower in addr_lower or addr_lower in loc_lower:
+                    loc_matched = True
 
-        serializer = JobListSerializer(top_jobs, many=True, context={"request": request})
+            # Weighted final score (0.0 to 1.0)
+            if job.location_id:
+                score = skill_ratio * 0.70 + (0.30 if loc_matched else 0.05)
+            else:
+                score = skill_ratio * 0.85 + 0.15
+
+            # Build human-readable match reasons
+            reasons = []
+            if matched_in_job:
+                reasons.append(f"Khớp {len(matched_in_job)}/{len(all_job_skills)} kỹ năng yêu cầu: {', '.join(matched_in_job[:4])}")
+            if loc_matched and job.location:
+                reasons.append(f"Khu vực phù hợp: {job.location.name}")
+
+            # Keep items with reasonable relevance or general openings
+            scored.append((score, job, matched_in_job, missing_in_job, reasons))
+
+        # Sort primarily by score, then featured, then newest
+        scored.sort(key=lambda t: (-t[0], -t[1].is_featured, -t[1].created_at.timestamp() if t[1].created_at else 0))
+        top_candidates = scored[:self.MAX_RESULTS]
+
+        serializer = JobListSerializer([item[1] for item in top_candidates], many=True, context={"request": request})
         results_with_score = []
-        for item in serializer.data:
-            item = dict(item)
-            item["match_score"] = top_scores.get(item["id"], 0.0)
-            results_with_score.append(item)
+        for index, item in enumerate(serializer.data):
+            _, job_obj, matched_skills, missing_skills, reasons = top_candidates[index]
+            score_val = round(top_candidates[index][0], 2)
+            pct = min(max(round(score_val * 100), 10), 99)
+            item_dict = dict(item)
+            item_dict["match_score"] = score_val
+            item_dict["match_percentage"] = pct
+            item_dict["matched_skills"] = matched_skills
+            item_dict["missing_skills"] = missing_skills
+            item_dict["match_reasons"] = reasons
+            results_with_score.append(item_dict)
 
-        # Build URL params for /jobs?keyword=...&location=...
+        # Build URL query params for /jobs
         url_parts = []
         if skills_found:
             url_parts.append(f"keyword={skills_found[0]}")
         if matched_location_ids:
-            url_parts.append(f"location={matched_location_ids[0]}")
+            url_parts.append(f"location={list(matched_location_ids)[0]}")
         jobs_url_params = "&".join(url_parts)
 
         return Response({
             "skills_found": skills_found,
             "address_found": address_found,
+            "candidate": candidate_info,
             "recommendations": results_with_score,
             "jobs_url_params": jobs_url_params,
         }, status=status.HTTP_200_OK)
+
+
+# ---------------------------------------------------------------------------
+# Sync Skills into StudentProfile — POST /api/v1/profiles/student/sync-skills/
+# ---------------------------------------------------------------------------
+
+class SyncStudentSkillsView(APIView):
+    """
+    POST /api/v1/profiles/student/sync-skills/
+    Body: { "skills": ["Python", "Django", "React"] }
+    Syncs/saves selected skills into the student's profile.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        if getattr(request.user, "role", None) != "student":
+            return Response({"detail": "Chức năng chỉ dành cho tài khoản sinh viên."}, status=status.HTTP_403_FORBIDDEN)
+
+        profile = StudentProfile.objects.filter(user=request.user).first()
+        if not profile:
+            return Response({"detail": "Chưa tìm thấy hồ sơ sinh viên."}, status=status.HTTP_404_NOT_FOUND)
+
+        skill_names = request.data.get("skills", [])
+        if not isinstance(skill_names, list):
+            return Response({"detail": "Danh sách kỹ năng phải là mảng chuỗi."}, status=status.HTTP_400_BAD_REQUEST)
+
+        added = []
+        for raw_name in skill_names:
+            name = str(raw_name).strip()
+            if not name or len(name) > 100:
+                continue
+
+            skill_obj = Skill.objects.filter(name__iexact=name).first()
+            if not skill_obj:
+                slug = slugify(name) or f"skill-{name.lower()}"
+                base_slug = slug
+                counter = 1
+                while Skill.objects.filter(slug=slug).exists():
+                    slug = f"{base_slug}-{counter}"
+                    counter += 1
+                skill_obj = Skill.objects.create(name=name, slug=slug)
+
+            _, created = StudentSkill.objects.get_or_create(
+                student_profile=profile,
+                skill=skill_obj,
+                defaults={"level": StudentSkill.Level.INTERMEDIATE},
+            )
+            if created:
+                added.append(skill_obj.name)
+
+        all_current_skills = list(
+            profile.student_skills.select_related("skill").values_list("skill__name", flat=True)
+        )
+        return Response({
+            "success": True,
+            "added_count": len(added),
+            "added_skills": added,
+            "all_skills": all_current_skills,
+            "message": f"Đã thêm thành công {len(added)} kỹ năng vào hồ sơ của bạn." if added else "Các kỹ năng đã có sẵn trong hồ sơ của bạn.",
+        }, status=status.HTTP_200_OK)
+

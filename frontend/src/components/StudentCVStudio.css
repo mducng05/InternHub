@@ -180,6 +180,17 @@
   color: #fff;
 }
 
+.student-cv-button--scan {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #15803d;
+}
+
+.student-cv-button--scan:hover {
+  background: #dcfce7;
+  color: #166534;
+}
+
 .student-cv-button--primary:hover {
   background: #a9153f;
   border-color: #a9153f;

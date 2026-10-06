@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo cáo Đồ án QLPM - InternHub (PTIT)</title>
+    <!-- MathJax for formula rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-size: 13pt;
+            line-height: 1.4;
+            color: #111827;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 30px 0;
+        }
+
+        /* Document Paper container */
+        .paper-container {
+            max-width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20mm 20mm 20mm 30mm;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            border-radius: 4px;
+        }
+
+        /* Typography & Headings */
+        h1, h2, h3, h4 {
+            font-family: "Times New Roman", Times, serif;
+            color: #000000;
+            page-break-after: avoid;
+        }
+
+        h1 {
+            font-size: 16pt;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            margin-top: 24pt;
+            margin-bottom: 14pt;
+            line-height: 1.5;
+        }
+
+        h2 {
+            font-size: 14.5pt;
+            font-weight: bold;
+            border-bottom: 1.5px solid #cbd5e1;
+            padding-bottom: 4px;
+            margin-top: 20pt;
+            margin-bottom: 10pt;
+        }
+
+        h3 {
+            font-size: 13.5pt;
+            font-weight: bold;
+            margin-top: 14pt;
+            margin-bottom: 8pt;
+        }
+
+        h4 {
+            font-size: 13pt;
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 10pt;
+            margin-bottom: 6pt;
+        }
+
+        p {
+            text-align: justify;
+            text-indent: 1.25cm;
+            margin-top: 0;
+            margin-bottom: 8pt;
+            line-height: 1.4;
+        }
+
+        /* Paragraphs without indent */
+        .no-indent, .image-placeholder-box + p, table + p, h1 + p, h2 + p, h3 + p {
+            text-indent: 0;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-top: 4pt;
+            margin-bottom: 8pt;
+            padding-left: 2cm;
+            text-align: justify;
+        }
+
+        li {
+            margin-bottom: 4pt;
+            line-height: 1.35;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14pt 0;
+            font-size: 11pt;
+            page-break-inside: avoid;
+        }
+
+        table, th, td {
+            border: 1px solid #1f2937;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #111827;
+            font-weight: bold;
+            padding: 8px 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        td {
+            padding: 6px 8px;
+            vertical-align: top;
+            text-align: left;
+            line-height: 1.3;
+        }
+
+        td:first-child {
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Images in document */
+        .paper-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 16px auto 8px auto;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Figure captions */
+        p:has(img) + p, img + p {
+            text-align: center !important;
+            text-indent: 0 !important;
+            font-size: 11.5pt;
+            font-style: italic;
+            color: #374151;
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+
+        /* Cover Page Styling */
+        .cover-page {
+            text-align: center;
+            border: 4px double #1f2937;
+            padding: 15mm 12mm;
+            min-height: 250mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            page-break-after: always;
+            margin-bottom: 20mm;
+            background: #ffffff;
+        }
+
+        .cover-header h3 {
+            margin: 0;
+            font-size: 14pt;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .cover-line {
+            width: 180px;
+            height: 1.5px;
+            background: #111827;
+            margin: 12px auto;
+        }
+
+        .cover-title-section {
+            margin: 20px 0;
+        }
+
+        .main-report-title {
+            font-size: 26pt !important;
+            margin: 15px 0 5px 0 !important;
+            letter-spacing: 1px;
+            color: #0f172a;
+            font-weight: bold;
+        }
+
+        .sub-subject-title {
+            font-size: 16pt !important;
+            border: none !important;
+            margin: 5px 0 25px 0 !important;
+            color: #334155;
+            font-weight: bold;
+        }
+
+        .topic-box {
+            margin: 20px 0;
+            padding: 15px 20px;
+            background: #f8fafc;
+            border-top: 1px solid #cbd5e1;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .topic-label {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        .topic-name {
+            font-size: 17pt !important;
+            border: none !important;
+            margin: 0 !important;
+            color: #1e3a8a;
+            font-weight: bold;
+            line-height: 1.4;
+            text-transform: uppercase;
+        }
+
+        .cover-students-meta {
+            text-align: left;
+            margin: 20px 20px;
+            font-size: 13pt;
+            line-height: 1.6;
+        }
+
+        .cover-students-meta p {
+            text-indent: 0;
+            margin-bottom: 6px;
+        }
+
+        .cover-students-table {
+            border: none !important;
+            margin: 10px 0;
+        }
+
+        .cover-students-table td {
+            border: none !important;
+            padding: 4px 6px;
+            font-size: 12pt;
+        }
+
+        .cover-students-table td:first-child {
+            text-align: left;
+        }
+
+        .cover-footer {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 13pt;
+            text-align: center;
+        }
+
+        .cover-footer p {
+            text-indent: 0;
+            text-align: center;
+        }
+
+        /* Image Placeholder Box */
+        .image-placeholder-box {
+            border: 2px dashed #4f46e5;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 24px 16px;
+            margin: 18px auto;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            max-width: 92%;
+        }
+
+        .image-placeholder-box:hover {
+            background-color: #eef2ff;
+            border-color: #3730a3;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
+        }
+
+        .placeholder-icon {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+
+        .placeholder-title {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 12.5pt;
+            margin-bottom: 4px;
+        }
+
+        .placeholder-hint {
+            font-size: 10pt;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        }
+
+        /* Links */
+        a {
+            color: #1d4ed8;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Floating Toolbar */
+        .floating-toolbar {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            gap: 10px;
+            z-index: 9999;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 14px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(8px);
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-tool {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .btn-tool:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-tool.secondary {
+            background: #475569;
+        }
+
+        .btn-tool.secondary:hover {
+            background: #334155;
+        }
+
+        /* Print media rules */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .paper-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+            .floating-toolbar {
+                display: none !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .cover-page {
+                min-height: 270mm;
+            }
+            .image-placeholder-box {
+                border: 1px dashed #94a3b8;
+                background: #f8fafc;
+            }
+            .placeholder-hint {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-toolbar">
+        <button class="btn-tool" onclick="window.print()">🖨️ In / Lưu PDF</button>
+        <button class="btn-tool secondary" onclick="copyDocumentToClipboard()">📋 Sao chép sang Word</button>
+        <button class="btn-tool secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆️ Lên đầu</button>
+    </div>
+
+    <div class="paper-container" id="report-content">
+        
+<div class="cover-page">
+    <div class="cover-header">
+        <h3>BỘ THÔNG TIN VÀ TRUYỀN THÔNG</h3>
+        <h3>HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</h3>
+        <div class="cover-line"></div>
+    </div>
+
+    <div class="cover-logo-box">
+        <div class="image-placeholder-box" style="max-width: 140px; margin: 15px auto; padding: 12px;" onclick="this.querySelector('input[type=file]').click()">
+            <div class="placeholder-icon" style="font-size:24px">🏛️</div>
+            <div class="placeholder-title" style="font-size:10pt">Logo PTIT</div>
+            <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+            <img class="preview-img" style="display:none; max-height: 100px;" alt="Logo PTIT">
+        </div>
+    </div>
+
+    <div class="cover-title-section">
+        <h1 class="main-report-title">BÁO CÁO ĐỒ ÁN MÔN HỌC</h1>
+        <h2 class="sub-subject-title">MÔN HỌC: QUẢN LÝ DỰ ÁN PHẦN MỀM</h2>
+        
+        <div class="topic-box">
+            <div class="topic-label">ĐỀ TÀI:</div>
+            <h2 class="topic-name">XÂY DỰNG NỀN TẢNG KẾT NỐI VÀ GỢI Ý VIỆC LÀM THỰC TẬP CHO SINH VIÊN (INTERNHUB)</h2>
+        </div>
+    </div>
+
+    <div class="cover-students-meta">
+        <p><strong>Giảng viên hướng dẫn:</strong> TS. &lt;Điền tên Giảng viên hướng dẫn&gt;</p>
+        <p><strong>Thực hiện bởi nhóm sinh viên, bao gồm:</strong></p>
+        <table class="cover-students-table">
+            <tr>
+                <td>1. <strong>Nguyễn Minh Đức</strong></td>
+                <td>MSSV: &lt;Điền MSSV&gt;</td>
+                <td>Lớp: &lt;Điền Lớp&gt;</td>
+                <td><strong>(Trưởng nhóm - Backend Lead)</strong></td>
+            </tr>
+            <tr>
+                <td>2. <strong>Trần Hưng Thịnh</strong></td>
+                <td>MSSV: &lt;Điền MSSV&gt;</td>
+                <td>Lớp: &lt;Điền Lớp&gt;</td>
+                <td><strong>(Thành viên - Frontend Lead)</strong></td>
+            </tr>
+            <tr>
+                <td>3. <strong>Đức Minh</strong></td>
+                <td>MSSV: &lt;Điền MSSV&gt;</td>
+                <td>Lớp: &lt;Điền Lớp&gt;</td>
+                <td><strong>(Thành viên - QA / Tester)</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="cover-footer">
+        <p><strong>TP. HỒ CHÍ MINH, THÁNG 10 / 2026</strong></p>
+    </div>
+</div>
+<div class="page-break"></div>
+
+        <h1 id="muc-luc">MỤC LỤC</h1>
+<ul>
+<li><a href="#mục-lục">MỤC LỤC</a></li>
+<li><a href="#danh-sách-hình-bảng">DANH SÁCH HÌNH, BẢNG</a></li>
+<li><a href="#danh-mục-từ-viết-tắt">DANH MỤC TỪ VIẾT TẮT</a></li>
+<li><a href="#chương-i-tổng-quan">CHƯƠNG I. TỔNG QUAN</a></li>
+<li><a href="#i-giới-thiệu-đề-tài">I. Giới thiệu đề tài</a><ul>
+<li><a href="#1-mục-tiêu-của-đề-tài">1. Mục tiêu của đề tài</a></li>
+<li><a href="#2-phạm-vi-áp-dụng">2. Phạm vi áp dụng</a></li>
+<li><a href="#3-nền-tảng-kỹ-thuật">3. Nền tảng kỹ thuật</a></li>
+</ul>
+</li>
+<li><a href="#ii-cơ-sở-lý-thuyết">II. Cơ sở lý thuyết</a><ul>
+<li><a href="#1-phương-pháp-luận-quản-lý-dự-án-phần-mềm-theo-agile--scrum">1. Phương pháp luận Quản lý dự án phần mềm theo Agile / Scrum</a></li>
+<li><a href="#2-kiến-trúc-client---server-và-thiết-kế-restful-api">2. Kiến trúc Client - Server và thiết kế RESTful API</a></li>
+<li><a href="#3-cơ-chế-xác-thực-và-phân-quyền-bằng-json-web-token-jwt">3. Cơ chế xác thực và phân quyền bằng JSON Web Token (JWT)</a></li>
+<li><a href="#4-kỹ-thuật-bóc-tách-dữ-liệu-tài-liệu-document-parsing--hệ-thống-gợi-ý-recommendation-system">4. Kỹ thuật bóc tách dữ liệu tài liệu (Document Parsing) &amp; Hệ thống gợi ý (Recommendation System)</a></li>
+</ul>
+</li>
+<li><a href="#chương-ii-phân-tích-nội-dung-yêu-cầu">CHƯƠNG II. PHÂN TÍCH NỘI DUNG, YÊU CẦU</a></li>
+<li><a href="#i-giới-thiệu-quy-trình-1-quy-trình-dành-cho-sinh-viên-tìm-việc-quét-cv-và-ứng-tuyển">I. Giới thiệu quy trình 1: Quy trình dành cho Sinh viên (Tìm việc, Quét CV và Ứng tuyển)</a><ul>
+<li><a href="#1-khảo-sát-nhu-cầu-và-tạo-lập-hồ-sơ-cá-nhân--cv-trực-tuyến">1. Khảo sát nhu cầu và tạo lập hồ sơ cá nhân / CV trực tuyến</a></li>
+<li><a href="#2-quét-phân-tích-cv-thông-minh-và-nhận-gợi-ý-việc-làm-tương-thích">2. Quét phân tích CV thông minh và nhận gợi ý việc làm tương thích</a></li>
+<li><a href="#3-nộp-hồ-sơ-ứng-tuyển-trao-đổi-trực-tiếp-và-theo-dõi-trạng-thái-đơn">3. Nộp hồ sơ ứng tuyển, trao đổi trực tiếp và theo dõi trạng thái đơn</a></li>
+</ul>
+</li>
+<li><a href="#ii-giới-thiệu-quy-trình-2-quy-trình-dành-cho-doanh-nghiệp-đăng-tin-và-tuyển-dụng">II. Giới thiệu quy trình 2: Quy trình dành cho Doanh nghiệp (Đăng tin và Tuyển dụng)</a><ul>
+<li><a href="#1-đăng-ký-thông-tin-doanh-nghiệp-và-xác-thực-pháp-lý">1. Đăng ký thông tin doanh nghiệp và xác thực pháp lý</a></li>
+<li><a href="#2-đăng-tin-tuyển-dụng-thực-tập-và-quản-lý-vòng-đời-tin">2. Đăng tin tuyển dụng thực tập và quản lý vòng đời tin</a></li>
+<li><a href="#3-sàng-lọc-hồ-sơ-ứng-viên-cập-nhật-trạng-thái-tuyển-dụng-và-trao-đổi-qua-chat">3. Sàng lọc hồ sơ ứng viên, cập nhật trạng thái tuyển dụng và trao đổi qua chat</a></li>
+</ul>
+</li>
+<li><a href="#iii-yêu-cầu-chức-năng-nghiệp-vụ">III. Yêu cầu chức năng nghiệp vụ</a><ul>
+<li><a href="#1-chức-năng-của-đối-tượng-sinh-viên-ứng-viên">1. Chức năng của đối tượng Sinh viên (Ứng viên)</a></li>
+<li><a href="#2-chức-năng-của-đối-tượng-doanh-nghiệp-nhà-tuyển-dụng">2. Chức năng của đối tượng Doanh nghiệp (Nhà tuyển dụng)</a></li>
+<li><a href="#3-chức-năng-của-đối-tượng-quản-trị-viên-admin">3. Chức năng của đối tượng Quản trị viên (Admin)</a></li>
+</ul>
+</li>
+<li><a href="#iv-yêu-cầu-chức-năng-hệ-thống-và-yêu-cầu-chất-lượng">IV. Yêu cầu chức năng hệ thống và yêu cầu chất lượng</a><ul>
+<li><a href="#1-yêu-cầu-về-hiệu-năng-performance">1. Yêu cầu về hiệu năng (Performance)</a></li>
+<li><a href="#2-yêu-cầu-về-bảo-mật-và-phân-quyền-security--authorization">2. Yêu cầu về bảo mật và phân quyền (Security &amp; Authorization)</a></li>
+<li><a href="#3-yêu-cầu-về-độ-tin-cậy-và-tính-khả-dụng-reliability--usability">3. Yêu cầu về độ tin cậy và tính khả dụng (Reliability &amp; Usability)</a></li>
+</ul>
+</li>
+<li><a href="#chương-iii-phân-tích-thiết-kế">CHƯƠNG III. PHÂN TÍCH THIẾT KẾ</a></li>
+<li><a href="#i-sơ-đồ-user-case">I. Sơ đồ user case</a><ul>
+<li><a href="#1-sơ-đồ-use-case-tổng-quát-hệ-thống">1. Sơ đồ Use case tổng quát hệ thống</a></li>
+<li><a href="#2-sơ-đồ-use-case-phân-hệ-sinh-viên">2. Sơ đồ Use case phân hệ Sinh viên</a></li>
+<li><a href="#3-sơ-đồ-use-case-phân-hệ-doanh-nghiệp">3. Sơ đồ Use case phân hệ Doanh nghiệp</a></li>
+<li><a href="#4-sơ-đồ-use-case-phân-hệ-quản-trị-viên">4. Sơ đồ Use case phân hệ Quản trị viên</a></li>
+</ul>
+</li>
+<li><a href="#ii-sơ-đồ-hoạt-động">II. Sơ đồ hoạt động</a><ul>
+<li><a href="#1-sơ-đồ-hoạt-động-luồng-đăng-nhập--xác-thực-jwt">1. Sơ đồ hoạt động luồng Đăng nhập &amp; Xác thực JWT</a></li>
+<li><a href="#2-sơ-đồ-hoạt-động-luồng-quét-cv--gợi-ý-việc-làm-thực-tập">2. Sơ đồ hoạt động luồng Quét CV &amp; Gợi ý việc làm thực tập</a></li>
+<li><a href="#3-sơ-đồ-hoạt-động-luồng-nộp-hồ-sơ--chuyển-trạng-thái-tuyển-dụng">3. Sơ đồ hoạt động luồng Nộp hồ sơ &amp; Chuyển trạng thái tuyển dụng</a></li>
+</ul>
+</li>
+<li><a href="#iii-thiết-kế-cơ-sở-dữ-liệu">III. Thiết kế cơ sở dữ liệu</a><ul>
+<li><a href="#1-mô-hình-erd">1. Mô hình ERD</a></li>
+<li><a href="#2-sơ-đồ-diagram">2. Sơ đồ Diagram</a></li>
+<li><a href="#3-cấu-trúc-các-bảng">3. Cấu trúc các bảng</a></li>
+</ul>
+</li>
+<li><a href="#iv-thiết-kế-giao-diện">IV. Thiết kế giao diện</a></li>
+<li><a href="#v-thiết-kế-xử-lý">V. Thiết kế xử lý</a><ul>
+<li><a href="#1-thiết-kế-xử-lý-thuật-toán-phân-tích-và-bóc-tách-dữ-liệu-từ-cv">1. Thiết kế xử lý thuật toán phân tích và bóc tách dữ liệu từ CV</a></li>
+<li><a href="#2-thiết-kế-thuật-toán-so-khớp-và-tính-điểm-độ-phù-hợp-việc-làm-scoring-model">2. Thiết kế thuật toán so khớp và tính điểm độ phù hợp việc làm (Scoring Model)</a></li>
+<li><a href="#3-thiết-kế-luồng-chuyển-trạng-thái-đơn-ứng-tuyển-application-state-machine">3. Thiết kế luồng chuyển trạng thái đơn ứng tuyển (Application State Machine)</a></li>
+</ul>
+</li>
+<li><a href="#chương-iv-phát-triển--thực-thi">CHƯƠNG IV. PHÁT TRIỂN / THỰC THI</a></li>
+<li><a href="#i-màn-hình-trang-chủ-và-tìm-kiếm-việc-làm-thực-tập">I. Màn hình Trang chủ và Tìm kiếm việc làm thực tập</a></li>
+<li><a href="#ii-màn-hình-chi-tiết-tin-tuyển-dụng--nộp-đơn-ứng-tuyển">II. Màn hình Chi tiết tin tuyển dụng &amp; Nộp đơn ứng tuyển</a></li>
+<li><a href="#iii-màn-hình-cv-studio--modal-quét-phân-tích-cv-thông-minh">III. Màn hình CV Studio &amp; Modal Quét phân tích CV thông minh</a></li>
+<li><a href="#iv-màn-hình-bảng-điều-khiển-sinh-viên-student-dashboard--việc-làm-phù-hợp">IV. Màn hình Bảng điều khiển Sinh viên (Student Dashboard &amp; Việc làm phù hợp)</a></li>
+<li><a href="#v-màn-hình-quản-lý-tin-tuyển-dụng--hồ-sơ-ứng-viên-employer-portal">V. Màn hình Quản lý tin tuyển dụng &amp; Hồ sơ ứng viên (Employer Portal)</a></li>
+<li><a href="#vi-màn-hình-nhắn-tin-messenger-trực-tiếp-giữa-sinh-viên-và-nhà-tuyển-dụng">VI. Màn hình Nhắn tin Messenger trực tiếp giữa Sinh viên và Nhà tuyển dụng</a></li>
+<li><a href="#vii-màn-hình-quản-trị-viên-admin-management-portal">VII. Màn hình Quản trị viên (Admin Management Portal)</a></li>
+<li><a href="#chương-v-triển-khai">CHƯƠNG V. TRIỂN KHAI</a></li>
+<li><a href="#i-cài-đặt">I. Cài đặt</a><ul>
+<li><a href="#danh-sách-tình-trạng-cài-đặt-các-chức-năng-kèm-mức-độ-hoàn-thành">Danh sách tình trạng cài đặt các chức năng (kèm mức độ hoàn thành)</a></li>
+</ul>
+</li>
+<li><a href="#ii-thử-nghiệm">II. Thử nghiệm</a><ul>
+<li><a href="#1-tài-khoản-dùng-để-test-các-chức-năng-của-sinh-viên">1. Tài khoản dùng để test các chức năng của Sinh viên</a></li>
+<li><a href="#2-tài-khoản-dùng-để-test-các-chức-năng-của-doanh-nghiệp-nhà-tuyển-dụng">2. Tài khoản dùng để test các chức năng của Doanh nghiệp (Nhà tuyển dụng)</a></li>
+<li><a href="#3-tài-khoản-dùng-để-test-các-chức-năng-của-quản-trị-viên">3. Tài khoản dùng để test các chức năng của Quản trị viên</a></li>
+</ul>
+</li>
+<li><a href="#chương-vi-kết-luận">CHƯƠNG VI. KẾT LUẬN</a></li>
+<li><a href="#i-kết-quả-đã-thực-hiện">I. Kết quả đã thực hiện</a></li>
+<li><a href="#ii-ưu-khuyết-điểm">II. Ưu khuyết điểm</a></li>
+<li><a href="#iii-hướng-mở-rộng-trong-tương-lai">III. Hướng mở rộng trong tương lai</a></li>
+<li><a href="#tài-liệu-tham-khảo">TÀI LIỆU THAM KHẢO</a></li>
+</ul>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="danh-sach-hinh-bang">DANH SÁCH HÌNH, BẢNG</h1>
+<h3 id="danh-sach-hinh-ve">Danh sách hình vẽ</h3>
+<ul>
+<li><strong>Hình 1.1:</strong> Mô hình phát triển phần mềm Agile / Scrum theo Sprint</li>
+<li><strong>Hình 3.1:</strong> Sơ đồ Use case tổng quát của hệ thống InternHub</li>
+<li><strong>Hình 3.2:</strong> Sơ đồ Hoạt động (Activity Diagram) luồng Đăng nhập &amp; Xác thực JWT</li>
+<li><strong>Hình 3.3:</strong> Sơ đồ Hoạt động luồng Quét CV &amp; Gợi ý việc làm thực tập</li>
+<li><strong>Hình 3.4:</strong> Sơ đồ Hoạt động luồng Nộp hồ sơ &amp; Chuyển trạng thái tuyển dụng</li>
+<li><strong>Hình 3.5:</strong> Mô hình thực thể liên kết (ERD) cơ sở dữ liệu InternHub (16 bảng)</li>
+<li><strong>Hình 3.6:</strong> Sơ đồ lược đồ quan hệ Database Diagram</li>
+<li><strong>Hình 3.7:</strong> Thiết kế khung nhìn Wireframe / Mockup các trang chính</li>
+<li><strong>Hình 4.1:</strong> Màn hình Trang chủ và Tìm kiếm việc làm thực tập</li>
+<li><strong>Hình 4.2:</strong> Màn hình Chi tiết tin tuyển dụng &amp; Nộp đơn ứng tuyển</li>
+<li><strong>Hình 4.3:</strong> Màn hình Trình dựng CV cá nhân (CV Studio - Builder)</li>
+<li><strong>Hình 4.4:</strong> Màn hình Modal Quét phân tích CV và Bóc tách kỹ năng tự động</li>
+<li><strong>Hình 4.5:</strong> Màn hình Bảng điều khiển Sinh viên - Danh sách Việc làm phù hợp theo %</li>
+<li><strong>Hình 4.6:</strong> Màn hình Quản lý hồ sơ ứng viên và Duyệt/Từ chối của Doanh nghiệp</li>
+<li><strong>Hình 4.7:</strong> Màn hình Khung Chat Messenger trao đổi trực tiếp giữa Sinh viên và Doanh nghiệp</li>
+<li><strong>Hình 4.8:</strong> Màn hình Bảng điều khiển Quản trị viên (Admin Dashboard &amp; Moderation)</li>
+</ul>
+<h3 id="danh-sach-bang-bieu">Danh sách bảng biểu</h3>
+<ul>
+<li><strong>Bảng 1.1:</strong> Tổng hợp công nghệ sử dụng trong hệ thống (Tech Stack)</li>
+<li><strong>Bảng 2.1:</strong> Bảng phân tích yêu cầu nghiệp vụ đối tượng Sinh viên</li>
+<li><strong>Bảng 2.2:</strong> Bảng phân tích yêu cầu nghiệp vụ đối tượng Doanh nghiệp (Nhà tuyển dụng)</li>
+<li><strong>Bảng 2.3:</strong> Bảng phân tích yêu cầu nghiệp vụ đối tượng Quản trị viên (Admin)</li>
+<li><strong>Bảng 3.1:</strong> Bảng cấu trúc thực thể <code>ACCOUNTS_USER</code></li>
+<li><strong>Bảng 3.2:</strong> Bảng cấu trúc thực thể <code>PROFILES_STUDENTPROFILE</code></li>
+<li><strong>Bảng 3.3:</strong> Bảng cấu trúc thực thể <code>PROFILES_EMPLOYERPROFILE</code></li>
+<li><strong>Bảng 3.4:</strong> Bảng cấu trúc thực thể <code>JOBS_JOB</code></li>
+<li><strong>Bảng 3.5:</strong> Bảng cấu trúc thực thể <code>JOBS_JOBSKILL</code></li>
+<li><strong>Bảng 3.6:</strong> Bảng cấu trúc thực thể <code>JOBS_SAVEDJOB</code></li>
+<li><strong>Bảng 3.7:</strong> Bảng cấu trúc thực thể <code>JOBS_JOBVIEW</code></li>
+<li><strong>Bảng 3.8:</strong> Bảng cấu trúc thực thể <code>APPLICATIONS_APPLICATION</code></li>
+<li><strong>Bảng 3.9:</strong> Bảng cấu trúc thực thể <code>APPLICATIONS_APPLICATIONSTATUSLOG</code></li>
+<li><strong>Bảng 3.10:</strong> Bảng cấu trúc thực thể <code>CATALOG_SKILL</code></li>
+<li><strong>Bảng 3.11:</strong> Bảng cấu trúc thực thể <code>CATALOG_STUDENTSKILL</code></li>
+<li><strong>Bảng 3.12:</strong> Bảng cấu trúc thực thể <code>CATALOG_LOCATION</code></li>
+<li><strong>Bảng 3.13:</strong> Bảng cấu trúc thực thể <code>CATALOG_JOBCATEGORY</code></li>
+<li><strong>Bảng 3.14:</strong> Bảng cấu trúc thực thể <code>CATALOG_INDUSTRY</code></li>
+<li><strong>Bảng 3.15:</strong> Bảng cấu trúc thực thể <code>NOTIFICATIONS_NOTIFICATION</code></li>
+<li><strong>Bảng 3.16:</strong> Bảng cấu trúc thực thể <code>MODERATION_REPORT</code></li>
+<li><strong>Bảng 5.1:</strong> Danh sách tình trạng cài đặt các chức năng và mức độ hoàn thành</li>
+<li><strong>Bảng 5.2:</strong> Bảng thông tin tài khoản thử nghiệm hệ thống</li>
+</ul>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="danh-muc-tu-viet-tat">DANH MỤC TỪ VIẾT TẮT</h1>
+<table>
+<thead>
+<tr>
+<th>Từ viết tắt</th>
+<th>Tên tiếng Anh đầy đủ</th>
+<th>Ý nghĩa / Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>QLPM</strong></td>
+<td>Quản lý dự án phần mềm</td>
+<td>Môn học và phương pháp quản trị dự án công nghệ thông tin</td>
+</tr>
+<tr>
+<td><strong>API</strong></td>
+<td>Application Programming Interface</td>
+<td>Giao diện lập trình ứng dụng</td>
+</tr>
+<tr>
+<td><strong>REST</strong></td>
+<td>Representational State Transfer</td>
+<td>Kiểu kiến trúc truyền tải trạng thái đại diện</td>
+</tr>
+<tr>
+<td><strong>JWT</strong></td>
+<td>JSON Web Token</td>
+<td>Tiêu chuẩn mở truyền tải thông tin an toàn dưới dạng chuỗi JSON</td>
+</tr>
+<tr>
+<td><strong>ERD</strong></td>
+<td>Entity Relationship Diagram</td>
+<td>Sơ đồ mối quan hệ thực thể trong cơ sở dữ liệu</td>
+</tr>
+<tr>
+<td><strong>CRUD</strong></td>
+<td>Create, Read, Update, Delete</td>
+<td>Bốn thao tác dữ liệu cơ bản: Thêm, Đọc, Sửa, Xóa</td>
+</tr>
+<tr>
+<td><strong>UI / UX</strong></td>
+<td>User Interface / User Experience</td>
+<td>Giao diện người dùng và Trải nghiệm người dùng</td>
+</tr>
+<tr>
+<td><strong>DRF</strong></td>
+<td>Django REST Framework</td>
+<td>Thư viện xây dựng RESTful Web API cho nền tảng Django</td>
+</tr>
+<tr>
+<td><strong>M2M</strong></td>
+<td>Many-to-Many</td>
+<td>Mối quan hệ Nhiều - Nhiều giữa các bảng trong CSDL quan hệ</td>
+</tr>
+<tr>
+<td><strong>SPA</strong></td>
+<td>Single Page Application</td>
+<td>Ứng dụng trang đơn tải động không reload trang</td>
+</tr>
+<tr>
+<td><strong>QA / QC</strong></td>
+<td>Quality Assurance / Quality Control</td>
+<td>Đảm bảo và kiểm soát chất lượng phần mềm</td>
+</tr>
+<tr>
+<td><strong>E2E</strong></td>
+<td>End-to-End</td>
+<td>Kiểm thử tích hợp toàn diện từ đầu tới cuối</td>
+</tr>
+<tr>
+<td><strong>PDF</strong></td>
+<td>Portable Document Format</td>
+<td>Định dạng tài liệu số di động</td>
+</tr>
+<tr>
+<td><strong>DOCX</strong></td>
+<td>Office Open XML Document</td>
+<td>Định dạng tài liệu văn bản Microsoft Word nén XML</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="chuong-i-tong-quan">CHƯƠNG I. TỔNG QUAN</h1>
+<h2 id="i-gioi-thieu-e-tai">I. Giới thiệu đề tài</h2>
+<h3 id="1-muc-tieu-cua-e-tai">1. Mục tiêu của đề tài</h3>
+<p>Trong thời kỳ chuyển đổi số và thị trường việc làm công nghệ cạnh tranh gay gắt, giai đoạn thực tập là bước đệm then chốt giúp sinh viên đại học/cao đẳng cọ xát thực tế, tích lũy kinh nghiệm và mở rộng cơ hội việc làm chính thức. Tuy nhiên, thực tế quá trình tìm kiếm cơ hội thực tập hiện nay đang gặp phải nhiều rào cản lớn:<br />
+- <strong>Về phía sinh viên:</strong> Thường rơi vào trạng thái "rải CV" hàng loạt nhưng thiếu định hướng, không đánh giá được mức độ phù hợp giữa kỹ năng hiện có với yêu cầu thực tế của nhà tuyển dụng; gặp khó khăn trong việc thiết kế một bản CV đạt chuẩn và thiếu kênh tương tác phản hồi trực tiếp với doanh nghiệp.<br />
+- <strong>Về phía doanh nghiệp tuyển dụng:</strong> Nhận hàng trăm bộ hồ sơ mỗi đợt nhưng phần lớn không đáp ứng đúng kỹ năng trọng tâm; mất nhiều thời gian lọc hồ sơ thủ công và thiếu các công cụ trao đổi chuyên nghiệp, khép kín dành riêng cho ứng viên thực tập.</p>
+<p>Xuất phát từ thực trạng trên, đề tài <strong>"Xây dựng nền tảng kết nối và gợi ý việc làm thực tập cho sinh viên (InternHub)"</strong> được nghiên cứu và phát triển nhằm:<br />
+1. Xây dựng một cổng thông tin tuyển dụng thực tập trực quan, hiện đại, kết nối trực tiếp sinh viên và các doanh nghiệp tuyển dụng.<br />
+2. Ứng dụng <strong>thuật toán gợi ý cá nhân hóa (Recommendation Algorithm)</strong> và <strong>bóc tách dữ liệu từ file CV (CV Parsing)</strong> để tự động đánh giá độ phù hợp (tính theo tỷ lệ %) giữa năng lực sinh viên và tin tuyển dụng.<br />
+3. Cung cấp bộ công cụ khép kín: Trình tạo CV chuẩn mẫu (CV Studio), Quét phân tích CV tự động, Nộp đơn trực tuyến, Trao đổi tin nhắn tức thì (Messenger) và Cập nhật trạng thái tuyển dụng theo thời gian thực.<br />
+4. Áp dụng quy trình chuẩn về <strong>Quản lý dự án phần mềm theo mô hình Agile / Scrum</strong>, sử dụng Jira để quản lý backlog, sprints và phân công vai trò nhiệm vụ rõ ràng trong nhóm phát triển.</p>
+<h3 id="2-pham-vi-ap-dung">2. Phạm vi áp dụng</h3>
+<ul>
+<li><strong>Đối tượng người dùng trực tiếp:</strong></li>
+<li><strong>Sinh viên (Ứng viên):</strong> Sinh viên năm 2, 3, 4 hoặc sinh viên mới tốt nghiệp có nhu cầu tìm kiếm việc làm thực tập, xây dựng CV và đo lường độ tương thích kỹ năng với thị trường lao động.</li>
+<li><strong>Doanh nghiệp (Nhà tuyển dụng):</strong> Các công ty, doanh nghiệp công nghệ, startup hoặc phòng nhân sự có nhu cầu tuyển dụng thực tập sinh các chuyên ngành (Phần mềm, Marketing, Data, Thiết kế, Kinh doanh...).</li>
+<li><strong>Quản trị viên (Admin hệ thống):</strong> Đơn vị quản lý cổng thông tin thực hiện kiểm duyệt tin tuyển dụng, xác minh thông tin doanh nghiệp và xử lý báo cáo vi phạm.</li>
+<li><strong>Phạm vi hệ thống:</strong> Vận hành trên nền tảng Web Application, tương thích tốt trên cả máy tính để bàn (Desktop) và các thiết bị di động (Mobile Responsive).</li>
+</ul>
+<h3 id="3-nen-tang-ky-thuat">3. Nền tảng kỹ thuật</h3>
+<p>Dự án được xây dựng dựa trên kiến trúc phân tách độc lập (Decoupled Architecture) giữa Frontend và Backend nhằm tối ưu hóa hiệu năng, dễ dàng bảo trì và mở rộng:</p>
+<p><em>Bảng 1.1: Tổng hợp công nghệ sử dụng trong hệ thống (Tech Stack)</em></p>
+<table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Công nghệ / Thư viện</th>
+<th>Vai trò</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Backend Framework</strong></td>
+<td>Python 3.13, Django 6.1</td>
+<td>Nền tảng xử lý logic phía máy chủ</td>
+</tr>
+<tr>
+<td><strong>REST API</strong></td>
+<td>Django REST Framework (DRF)</td>
+<td>Xây dựng hệ thống RESTful API chuẩn JSON</td>
+</tr>
+<tr>
+<td><strong>Cơ sở dữ liệu</strong></td>
+<td>MySQL 8.4 (PyMySQL driver qua Laragon)</td>
+<td>Hệ quản trị cơ sở dữ liệu quan hệ lưu trữ 16 bảng</td>
+</tr>
+<tr>
+<td><strong>Xác thực &amp; Bảo mật</strong></td>
+<td><code>djangorestframework-simplejwt</code></td>
+<td>Cơ chế xác thực phân quyền qua JWT (Access &amp; Refresh Token)</td>
+</tr>
+<tr>
+<td><strong>Xử lý tài liệu CV</strong></td>
+<td><code>pdfminer.six</code>, <code>python-docx</code></td>
+<td>Bóc tách văn bản, kỹ năng, số điện thoại, email từ file PDF &amp; DOCX</td>
+</tr>
+<tr>
+<td><strong>Frontend Framework</strong></td>
+<td>React 19, Vite</td>
+<td>Thư viện UI xây dựng Single Page Application (SPA) tốc độ cao</td>
+</tr>
+<tr>
+<td><strong>Routing &amp; Client</strong></td>
+<td>React Router v7, Axios</td>
+<td>Điều hướng trang và gọi API bất đồng bộ</td>
+</tr>
+<tr>
+<td><strong>Styling &amp; Icons</strong></td>
+<td>Vanilla CSS, Bootstrap Icons</td>
+<td>Thiết kế giao diện hiện đại, tối ưu responsive</td>
+</tr>
+<tr>
+<td><strong>Quản lý dự án</strong></td>
+<td>Jira Software, Git / GitHub</td>
+<td>Quản lý quy trình Scrum, Sprint Backlog và mã nguồn phiên bản</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ii-co-so-ly-thuyet">II. Cơ sở lý thuyết</h2>
+<h3 id="1-phuong-phap-luan-quan-ly-du-an-phan-mem-theo-agile-scrum">1. Phương pháp luận Quản lý dự án phần mềm theo Agile / Scrum</h3>
+<p>Dự án được triển khai tuân thủ quy trình Agile/Scrum gồm 8 tuần tương ứng với các Sprint được quản lý minh bạch trên Jira:<br />
+- <strong>Product Backlog &amp; User Stories:</strong> Toàn bộ tính năng được phân rã thành các Epic, User Story và Task với độ ưu tiên rõ ràng (High, Medium, Low).<br />
+- <strong>Phân công vai trò theo chuẩn Scrum:</strong><br />
+  - <em>Product Owner / Team Leader &amp; Backend Lead (Nguyễn Minh Đức):</em> Chịu trách nhiệm kiến trúc CSDL, hệ thống API, bảo mật và thuật toán gợi ý.<br />
+  - <em>Frontend Lead (Trần Hưng Thịnh):</em> Chịu trách nhiệm thiết kế giao diện UI/UX, tích hợp API, xây dựng CV Studio và hệ thống thông báo/tin nhắn.<br />
+  - <em>Quality Assurance / Tester (Đức Minh):</em> Xây dựng kịch bản kiểm thử, thực hiện kiểm thử chức năng, tích hợp E2E và quản trị tài liệu báo cáo.<br />
+- <strong>Sprint Cycle:</strong> Mỗi Sprint hoàn thiện một gói tính năng độc lập, kiểm thử tích hợp trước khi tích hợp vào nhánh chính <code>main</code>.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Mô hình phát triển phần mềm Agile / Scrum theo Sprint vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Mô hình phát triển phần mềm Agile / Scrum theo Sprint vào đây">
+</div>
+
+<p><em>Hình 1.1: Mô hình phát triển phần mềm Agile / Scrum theo Sprint</em></p>
+<h3 id="2-kien-truc-client-server-va-thiet-ke-restful-api">2. Kiến trúc Client - Server và thiết kế RESTful API</h3>
+<ul>
+<li>Mô hình kiến trúc phân tách hoàn toàn giữa giao diện (React SPA) và nghiệp vụ (Django REST API).</li>
+<li>Tương tác thông qua các giao thức HTTP tiêu chuẩn (<code>GET</code>, <code>POST</code>, <code>PATCH</code>, <code>DELETE</code>) với dữ liệu định dạng chuẩn <code>application/json</code>.</li>
+<li>Sử dụng quy chuẩn mã trạng thái phản hồi HTTP: <code>200 OK</code>, <code>201 Created</code>, <code>400 Bad Request</code>, <code>401 Unauthorized</code>, <code>403 Forbidden</code>, <code>404 Not Found</code>.</li>
+</ul>
+<h3 id="3-co-che-xac-thuc-va-phan-quyen-bang-json-web-token-jwt">3. Cơ chế xác thực và phân quyền bằng JSON Web Token (JWT)</h3>
+<ul>
+<li>Loại bỏ session cookie truyền thống phía server để giảm tải bộ nhớ và hỗ trợ kiến trúc phi trạng thái (Stateless).</li>
+<li><strong>Quy trình cấp phát token:</strong></li>
+<li>Khi đăng nhập thành công, máy chủ phát hành cặp khóa: <code>access_token</code> (thời hạn sống 60 phút) và <code>refresh_token</code> (thời hạn sống 7 ngày).</li>
+<li>Phía Client đính kèm token trong HTTP Request Header: <code>Authorization: Bearer &lt;access_token&gt;</code>.</li>
+<li>Cơ chế <strong>Token Rotation</strong>: Mỗi lần đổi <code>access_token</code> mới, một <code>refresh_token</code> mới đồng thời được cấp phát và hủy token cũ, bảo đảm an toàn trước các cuộc tấn công đánh cắp phiên làm việc.</li>
+</ul>
+<h3 id="4-ky-thuat-boc-tach-du-lieu-tai-lieu-document-parsing-he-thong-goi-y-recommendation-system">4. Kỹ thuật bóc tách dữ liệu tài liệu (Document Parsing) &amp; Hệ thống gợi ý (Recommendation System)</h3>
+<ul>
+<li><strong>Document Parsing:</strong> Quá trình chuyển đổi dữ liệu không có cấu trúc từ các tệp tin văn bản (PDF, DOCX) thành văn bản thuần có thể đọc được bằng máy tính thông qua phân tích cú pháp cây văn bản và bảng XML nén.</li>
+<li><strong>Hệ thống gợi ý theo quy tắc kết hợp (Rule-based &amp; Similarity Filtering):</strong> Kết hợp độ đo tương đồng tập hợp dựa trên các thuộc tính then chốt: Kỹ năng chuyên môn, Chuyên ngành học tập và Vị trí địa lý.</li>
+</ul>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="chuong-ii-phan-tich-noi-dung-yeu-cau">CHƯƠNG II. PHÂN TÍCH NỘI DUNG, YÊU CẦU</h1>
+<h2 id="i-gioi-thieu-quy-trinh-1-quy-trinh-danh-cho-sinh-vien-tim-viec-quet-cv-va-ung-tuyen">I. Giới thiệu quy trình 1: Quy trình dành cho Sinh viên (Tìm việc, Quét CV và Ứng tuyển)</h2>
+<h3 id="1-khao-sat-nhu-cau-va-tao-lap-ho-so-ca-nhan-cv-truc-tuyen">1. Khảo sát nhu cầu và tạo lập hồ sơ cá nhân / CV trực tuyến</h3>
+<ul>
+<li>Sinh viên đăng ký tài khoản với vai trò "Student", kích hoạt tài khoản và điền thông tin định danh (Trường đại học, Chuyên ngành, Năm tốt nghiệp, Địa chỉ sinh sống).</li>
+<li>Sử dụng công cụ <strong>CV Studio</strong> để soạn thảo bản CV chuyên nghiệp trực tiếp trên trình duyệt với 3 phong cách thiết kế: <em>Tối giản (Classic)</em>, <em>Hiện đại (Modern)</em>, <em>Chuyên nghiệp (Professional)</em>.</li>
+<li>Hỗ trợ xem trước (Preview) theo thời gian thực và xuất bản CV sang định dạng PDF để tải về máy.</li>
+</ul>
+<h3 id="2-quet-phan-tich-cv-thong-minh-va-nhan-goi-y-viec-lam-tuong-thich">2. Quét phân tích CV thông minh và nhận gợi ý việc làm tương thích</h3>
+<ul>
+<li>Sinh viên tải tệp CV có sẵn (PDF, DOCX) lên hệ thống.</li>
+<li>Hệ thống kích hoạt module phân tích để bóc tách:</li>
+<li>Thông tin liên hệ (Email, Số điện thoại).</li>
+<li>Vị trí địa lý / Thành phố sinh sống.</li>
+<li>Danh mục các kỹ năng công nghệ và kỹ năng mềm.</li>
+<li>Ứng viên có thể bấm <strong>"Lưu vào hồ sơ"</strong> để tự động cập nhật các kỹ năng vừa quét vào kho dữ liệu kỹ năng của mình chỉ với 1 thao tác.</li>
+<li>Hệ thống lập tức đối sánh với toàn bộ các tin tuyển dụng đang hoạt động và trả về danh sách các cơ hội thực tập phù hợp nhất được xếp hạng theo điểm số tương thích (%).</li>
+</ul>
+<h3 id="3-nop-ho-so-ung-tuyen-trao-oi-truc-tiep-va-theo-doi-trang-thai-on">3. Nộp hồ sơ ứng tuyển, trao đổi trực tiếp và theo dõi trạng thái đơn</h3>
+<ul>
+<li>Sinh viên duyệt chi tiết tin tuyển dụng: nắm bắt quyền lợi, mức lương trợ cấp, mô tả và yêu cầu kỹ năng.</li>
+<li>Thực hiện nộp đơn trực tuyến kèm theo thư giới thiệu (Cover letter) và bản tệp CV đính kèm.</li>
+<li>Quy định ràng buộc: Mỗi sinh viên chỉ được nộp đơn <strong>duy nhất 1 lần</strong> cho mỗi vị trí công việc.</li>
+<li>Sau khi nộp đơn, hội thoại chat riêng biệt được tạo tự động giữa sinh viên và nhà tuyển dụng.</li>
+<li>Sinh viên theo dõi lịch sử trạng thái hồ sơ (<em>Chờ xử lý $\rightarrow$ Đã xem xét $\rightarrow$ Mời phỏng vấn $\rightarrow$ Được chấp nhận / Từ chối</em>) qua bảng điều khiển cá nhân và nhận thông báo chuông tức thời.</li>
+</ul>
+<hr />
+<h2 id="ii-gioi-thieu-quy-trinh-2-quy-trinh-danh-cho-doanh-nghiep-ang-tin-va-tuyen-dung">II. Giới thiệu quy trình 2: Quy trình dành cho Doanh nghiệp (Đăng tin và Tuyển dụng)</h2>
+<h3 id="1-ang-ky-thong-tin-doanh-nghiep-va-xac-thuc-phap-ly">1. Đăng ký thông tin doanh nghiệp và xác thực pháp lý</h3>
+<ul>
+<li>Nhà tuyển dụng đăng ký tài khoản với vai trò "Employer", khai báo tên công ty, quy mô nhân sự, mã số thuế, địa chỉ trụ sở, website và logo nhận diện.</li>
+<li>Thông tin doanh nghiệp sau khi khai báo sẽ hiển thị trang giới thiệu công ty (Company Profile) công khai cho tất cả ứng viên tra cứu.</li>
+</ul>
+<h3 id="2-ang-tin-tuyen-dung-thuc-tap-va-quan-ly-vong-oi-tin">2. Đăng tin tuyển dụng thực tập và quản lý vòng đời tin</h3>
+<ul>
+<li>Doanh nghiệp soạn thảo tin tuyển dụng: Tiêu đề công việc, Vị trí tuyển dụng, Địa điểm làm việc, Hình thức (Toàn thời gian, Bán thời gian, Từ xa, Kết hợp), Mức trợ cấp lương, Số lượng cần tuyển và Hạn chót nộp hồ sơ.</li>
+<li>Nhập chi tiết các yêu cầu kỹ năng và mô tả công việc.</li>
+<li>Quản lý vòng đời tin tuyển dụng: Chờ duyệt $\rightarrow$ Đã duyệt $\rightarrow$ Đóng tin / Gia hạn tin.</li>
+</ul>
+<h3 id="3-sang-loc-ho-so-ung-vien-cap-nhat-trang-thai-tuyen-dung-va-trao-oi-qua-chat">3. Sàng lọc hồ sơ ứng viên, cập nhật trạng thái tuyển dụng và trao đổi qua chat</h3>
+<ul>
+<li>Tiếp nhận danh sách hồ sơ nộp về theo từng tin tuyển dụng.</li>
+<li>Xem trực tiếp bản tệp CV và nội dung thư ứng tuyển của sinh viên.</li>
+<li>Thực hiện cập nhật trạng thái đơn ứng tuyển (Shortlisted, Phỏng vấn, Trúng tuyển, Từ chối). Hệ thống sẽ tự động gửi thông báo đến tài khoản của sinh viên tương ứng.</li>
+<li>Nhắn tin trực tiếp với ứng viên thông qua giao diện Chat Messenger để gửi lịch hẹn phỏng vấn hoặc giải đáp thắc mắc.</li>
+</ul>
+<hr />
+<h2 id="iii-yeu-cau-chuc-nang-nghiep-vu">III. Yêu cầu chức năng nghiệp vụ</h2>
+<h3 id="1-chuc-nang-cua-oi-tuong-sinh-vien-ung-vien">1. Chức năng của đối tượng Sinh viên (Ứng viên)</h3>
+<p><em>Bảng 2.1: Phân tích yêu cầu nghiệp vụ đối tượng Sinh viên</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">STT</th>
+<th>Công việc</th>
+<th style="text-align: center;">Loại công việc</th>
+<th>Quy định/Công thức liên quan</th>
+<th>Biểu mẫu liên quan</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td>Đăng ký tài khoản</td>
+<td style="text-align: center;">Lưu trữ</td>
+<td>- Bắt buộc nhập: Email, họ tên, mật khẩu, xác nhận mật khẩu.<br>- Email phải là duy nhất, đúng định dạng RFC.<br>- Chọn phân quyền vai trò: <code>student</code>.</td>
+<td>Form Đăng ký</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td>Đăng nhập hệ thống</td>
+<td style="text-align: center;">Tra cứu</td>
+<td>- Email và mật khẩu bắt buộc phải tồn tại trong CSDL.<br>- Mật khẩu đối sánh mã băm bcrypt an toàn.<br>- Trả về cặp token JWT: <code>access_token</code> và <code>refresh_token</code>.</td>
+<td>Form Đăng nhập</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3</strong></td>
+<td>Cập nhật thông tin hồ sơ</td>
+<td style="text-align: center;">Lưu trữ</td>
+<td>- Điền họ tên, trường ĐH, chuyên ngành, năm tốt nghiệp, địa chỉ.<br>- Bật cờ <code>is_profile_complete = True</code> khi hoàn thành.</td>
+<td>Form Hồ sơ cá nhân</td>
+<td>Tùy chọn</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td>Quản lý &amp; Tạo CV (CV Studio)</td>
+<td style="text-align: center;">Xử lý</td>
+<td>- Hỗ trợ 3 mẫu CV: Classic, Modern, Professional.<br>- Tự động điền dữ liệu hồ sơ vào CV, xuất file PDF in ấn.</td>
+<td>Giao diện CV Studio</td>
+<td>Tiện ích</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5</strong></td>
+<td>Tải lên &amp; Quét phân tích CV</td>
+<td style="text-align: center;">Xử lý</td>
+<td>- Cho phép tải tệp <code>.pdf</code>, <code>.docx</code> dung lượng $\le 10\text{MB}$.<br>- Bóc tách tự động: Số điện thoại, Email, Địa chỉ, Danh sách kỹ năng.</td>
+<td>Modal Quét CV</td>
+<td>Cốt lõi</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>6</strong></td>
+<td>Lưu kỹ năng quét từ CV vào hồ sơ</td>
+<td style="text-align: center;">Lưu trữ</td>
+<td>- Đưa danh sách kỹ năng tìm thấy từ CV vào bảng <code>catalog_studentskill</code> chỉ với 1 thao tác nút bấm.</td>
+<td>Modal Quét CV</td>
+<td>Cốt lõi</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>7</strong></td>
+<td>Xem danh sách việc làm phù hợp</td>
+<td style="text-align: center;">Trích xuất</td>
+<td>- Tính điểm phù hợp: Kỹ năng (60%) + Chuyên ngành (25%) + Địa điểm (15%).<br>- Hiển thị tỷ lệ match % giảm dần kèm lý do phù hợp.</td>
+<td>Tab Việc làm phù hợp</td>
+<td>Cốt lõi</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td>Xem danh sách tin tuyển dụng</td>
+<td style="text-align: center;">Trích xuất</td>
+<td>- Hiển thị các tin tuyển dụng ở trạng thái <code>approved</code> và còn hạn nộp hồ sơ (<code>deadline &gt;= today</code>).</td>
+<td>Trang Việc làm</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>9</strong></td>
+<td>Tìm kiếm &amp; lọc tin tuyển dụng</td>
+<td style="text-align: center;">Tra cứu</td>
+<td>- Tìm kiếm theo từ khóa tiêu đề, công ty.<br>- Lọc theo địa điểm, ngành nghề, hình thức thực tập, khoảng lương.</td>
+<td>Thanh tìm kiếm &amp; Bộ lọc</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>10</strong></td>
+<td>Xem chi tiết tin tuyển dụng</td>
+<td style="text-align: center;">Trích xuất</td>
+<td>- Hiển thị đầy đủ mô tả công việc, yêu cầu kỹ năng, quyền lợi, mức lương, thông tin nhà tuyển dụng và vị trí trên bản đồ.</td>
+<td>Trang Chi tiết Job</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>11</strong></td>
+<td>Lưu tin tuyển dụng yêu thích</td>
+<td style="text-align: center;">Lưu trữ</td>
+<td>- Thêm/xóa tin tuyển dụng vào danh sách theo dõi cá nhân của sinh viên trong bảng <code>jobs_savedjob</code>.</td>
+<td>Nút Lưu việc làm</td>
+<td>Tiện ích</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>12</strong></td>
+<td>Nộp đơn ứng tuyển</td>
+<td style="text-align: center;">Lưu trữ</td>
+<td>- Đính kèm file CV và viết thư giới thiệu (Cover letter).<br>- Ràng buộc duy nhất <code>UNIQUE(student, job)</code>: Mỗi tin chỉ được nộp 1 lần.</td>
+<td>Form Nộp đơn ứng tuyển</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>13</strong></td>
+<td>Theo dõi trạng thái đơn ứng tuyển</td>
+<td style="text-align: center;">Trích xuất</td>
+<td>- Xem danh sách đơn đã nộp và trạng thái hiện tại: Chờ xử lý, Đã xem xét, Phỏng vấn, Trúng tuyển, Từ chối.</td>
+<td>Tab Đã ứng tuyển</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>14</strong></td>
+<td>Hủy đơn ứng tuyển</td>
+<td style="text-align: center;">Cập nhật</td>
+<td>- Cho phép sinh viên rút lại hồ sơ khi đơn còn ở trạng thái <code>pending</code>.</td>
+<td>Bảng Lịch sử ứng tuyển</td>
+<td>Tiện ích</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>15</strong></td>
+<td>Nhắn tin với Nhà tuyển dụng</td>
+<td style="text-align: center;">Lưu trữ / Tra cứu</td>
+<td>- Trao đổi tin nhắn trực tiếp hai chiều theo từng đơn ứng tuyển.<br>- Giới hạn tối đa 5.000 ký tự mỗi tin.</td>
+<td>Khung Chat Messenger</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td>Xem thông báo hệ thống</td>
+<td style="text-align: center;">Tra cứu</td>
+<td>- Nhận thông báo khi nộp đơn, khi doanh nghiệp đổi trạng thái hồ sơ hoặc khi có tin nhắn mới.<br>- Đánh dấu đã đọc.</td>
+<td>Menu Chuông thông báo</td>
+<td>Bắt buộc</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-chuc-nang-cua-oi-tuong-doanh-nghiep-nha-tuyen-dung">2. Chức năng của đối tượng Doanh nghiệp (Nhà tuyển dụng)</h3>
+<p><em>Bảng 2.2: Phân tích yêu cầu nghiệp vụ đối tượng Doanh nghiệp</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">STT</th>
+<th>Công việc</th>
+<th style="text-align: center;">Loại công việc</th>
+<th>Quy định/Công thức liên quan</th>
+<th>Biểu mẫu liên quan</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td>Đăng ký tài khoản doanh nghiệp</td>
+<td style="text-align: center;">Lưu trữ</td>
+<td>- Email duy nhất, mật khẩu an toàn.<br>- Phân quyền vai trò: <code>role = employer</code>.</td>
+<td>Form Đăng ký NTD</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td>Khai báo hồ sơ công ty</td>
+<td style="text-align: center;">Lưu trữ</td>
+<td>- Tên công ty, quy mô nhân sự, mã số thuế, địa chỉ trụ sở, website, mô tả và logo nhận diện.</td>
+<td>Form Hồ sơ công ty</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3</strong></td>
+<td>Đăng tin tuyển dụng thực tập</td>
+<td style="text-align: center;">Lưu trữ / Xử lý</td>
+<td>- Tiêu đề, vị trí, hạn nộp, hình thức làm việc, trợ cấp, số lượng, mô tả, yêu cầu kỹ năng.<br>- Tin mới tạo ở trạng thái <code>pending</code> chờ duyệt.</td>
+<td>Form Đăng tin</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td>Sửa / Đóng tin tuyển dụng</td>
+<td style="text-align: center;">Cập nhật</td>
+<td>- Chỉnh sửa nội dung tin tuyển dụng hoặc đóng tin (<code>status = closed</code>) khi đã tuyển đủ số lượng.</td>
+<td>Bảng Quản lý tin đăng</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5</strong></td>
+<td>Xem danh sách hồ sơ ứng viên</td>
+<td style="text-align: center;">Trích xuất</td>
+<td>- Liệt kê tất cả ứng viên nộp hồ sơ theo từng tin tuyển dụng.<br>- Xem tệp CV đính kèm, thư giới thiệu và ngày nộp.</td>
+<td>Bảng Danh sách ứng viên</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>6</strong></td>
+<td>Cập nhật trạng thái duyệt hồ sơ</td>
+<td style="text-align: center;">Cập nhật / Xử lý</td>
+<td>- Chuyển trạng thái đơn: <code>shortlisted</code>, <code>interview_invited</code>, <code>accepted</code>, <code>rejected</code>.<br>- Tự động ghi log lịch sử và kích hoạt thông báo tới ứng viên.</td>
+<td>Chi tiết Đơn ứng tuyển</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>7</strong></td>
+<td>Nhắn tin trao đổi với ứng viên</td>
+<td style="text-align: center;">Lưu trữ / Tra cứu</td>
+<td>- Trao đổi thông tin, gửi lịch hẹn phỏng vấn trực tiếp với sinh viên đã nộp đơn qua khung chat.</td>
+<td>Khung Chat Messenger</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td>Xem thống kê số liệu tuyển dụng</td>
+<td style="text-align: center;">Trích xuất</td>
+<td>- Thống kê số lượng tin đăng, số lượt xem tin, số đơn nộp và tỷ lệ duyệt đơn thành công.</td>
+<td>Bảng điều khiển NTD</td>
+<td>Tiện ích</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-chuc-nang-cua-oi-tuong-quan-tri-vien-admin">3. Chức năng của đối tượng Quản trị viên (Admin)</h3>
+<p><em>Bảng 2.3: Phân tích yêu cầu nghiệp vụ đối tượng Quản trị viên</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">STT</th>
+<th>Công việc</th>
+<th style="text-align: center;">Loại công việc</th>
+<th>Quy định/Công thức liên quan</th>
+<th>Biểu mẫu liên quan</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td>Đăng nhập trang quản trị</td>
+<td style="text-align: center;">Tra cứu</td>
+<td>- Tài khoản quản trị viên có cờ <code>is_staff = True</code> hoặc <code>role = admin</code>.</td>
+<td>Trang Admin Login</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td>Kiểm duyệt tin tuyển dụng</td>
+<td style="text-align: center;">Cập nhật</td>
+<td>- Xem xét nội dung tin tuyển dụng mới đăng, thực hiện phê duyệt (<code>approved</code>) hoặc từ chối (<code>rejected</code>).</td>
+<td>Admin Jobs Moderation</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3</strong></td>
+<td>Quản lý người dùng &amp; khóa tài khoản</td>
+<td style="text-align: center;">Cập nhật / Xử lý</td>
+<td>- Quản lý tài khoản sinh viên và doanh nghiệp, kích hoạt hoặc khóa tài khoản (<code>is_active = False</code>) khi có vi phạm.</td>
+<td>Admin User Manager</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td>Quản lý danh mục hệ thống</td>
+<td style="text-align: center;">Lưu trữ / Cập nhật</td>
+<td>- Thêm/sửa/xóa danh mục Kỹ năng (<code>Skill</code>), Ngành nghề (<code>Industry</code>), Địa điểm (<code>Location</code>), Vị trí (<code>JobCategory</code>).</td>
+<td>Admin Catalog Manager</td>
+<td>Bắt buộc</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5</strong></td>
+<td>Tiếp nhận &amp; xử lý báo cáo vi phạm</td>
+<td style="text-align: center;">Cập nhật / Xử lý</td>
+<td>- Xem danh sách báo cáo vi phạm từ cộng đồng, đánh dấu xử lý (<code>resolved</code>) hoặc từ chối báo cáo.</td>
+<td>Admin Reports Manager</td>
+<td>Bắt buộc</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="iv-yeu-cau-chuc-nang-he-thong-va-yeu-cau-chat-luong">IV. Yêu cầu chức năng hệ thống và yêu cầu chất lượng</h2>
+<h3 id="1-yeu-cau-ve-hieu-nang-performance">1. Yêu cầu về hiệu năng (Performance)</h3>
+<ul>
+<li>Thời gian phản hồi trung bình của các API truy vấn danh sách dữ liệu không vượt quá <strong>1 giây</strong>.</li>
+<li>Thời gian quét phân tích tài liệu CV (PDF/DOCX) và trả về danh sách gợi ý việc làm không vượt quá <strong>2.5 giây</strong>.</li>
+<li>Cơ sở dữ liệu MySQL 8.4 được tối ưu hóa chỉ mục (Index) trên các trường thường xuyên tìm kiếm và lọc (<code>status</code>, <code>deadline</code>, <code>location_id</code>, <code>job_category_id</code>).</li>
+</ul>
+<h3 id="2-yeu-cau-ve-bao-mat-va-phan-quyen-security-authorization">2. Yêu cầu về bảo mật và phân quyền (Security &amp; Authorization)</h3>
+<ul>
+<li>Mật khẩu người dùng được băm an toàn một chiều bằng thuật toán PBKDF2/bcrypt.</li>
+<li>Toàn bộ các API nghiệp vụ đều được bảo vệ nghiêm ngặt bằng cơ chế JWT Auth và Permission Classes tương ứng với từng vai trò.</li>
+<li>Ngăn chặn các lỗ hổng bảo mật phổ biến: SQL Injection (thông qua Django ORM Parameterized Queries), XSS (thông qua cơ chế auto-escaping của React JSX), CSRF (thông qua HTTP Header và CORS middleware).</li>
+</ul>
+<h3 id="3-yeu-cau-ve-o-tin-cay-va-tinh-kha-dung-reliability-usability">3. Yêu cầu về độ tin cậy và tính khả dụng (Reliability &amp; Usability)</h3>
+<ul>
+<li>Giao diện thân thiện, sử dụng bảng màu hiện đại, tối ưu responsive trên mọi kích thước màn hình máy tính và điện thoại.</li>
+<li>Hiển thị thông báo, cảnh báo lỗi chi tiết, rõ ràng và có tính hướng dẫn người dùng khi thao tác sai.</li>
+<li>Dữ liệu đơn ứng tuyển, trạng thái hồ sơ và lịch sử tương tác được toàn vẹn nhờ cơ chế khóa ngoại và ràng buộc toàn vẹn của CSDL quan hệ.</li>
+</ul>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="chuong-iii-phan-tich-thiet-ke">CHƯƠNG III. PHÂN TÍCH THIẾT KẾ</h1>
+<h2 id="i-so-o-user-case">I. Sơ đồ user case</h2>
+<h3 id="1-so-o-use-case-tong-quat-he-thong">1. Sơ đồ Use case tổng quát hệ thống</h3>
+<p>Hệ thống bao gồm 3 tác nhân chính (Actors): <strong>Sinh viên (Student)</strong>, <strong>Nhà tuyển dụng (Employer)</strong>, và <strong>Quản trị viên (Admin)</strong>.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Sơ đồ Use case tổng quát của hệ thống InternHub vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Sơ đồ Use case tổng quát của hệ thống InternHub vào đây">
+</div>
+
+<p><em>Hình 3.1: Sơ đồ Use case tổng quát của hệ thống InternHub</em></p>
+<h3 id="2-so-o-use-case-phan-he-sinh-vien">2. Sơ đồ Use case phân hệ Sinh viên</h3>
+<p>Sinh viên có các chức năng: Đăng ký, Đăng nhập, Quản lý hồ sơ, Tạo CV trực tuyến (CV Studio), Tải &amp; Quét phân tích CV, Nhận gợi ý việc làm, Tìm kiếm việc làm, Lưu việc làm, Nộp hồ sơ ứng tuyển, Nhắn tin với Nhà tuyển dụng, Theo dõi trạng thái đơn.</p>
+<h3 id="3-so-o-use-case-phan-he-doanh-nghiep">3. Sơ đồ Use case phân hệ Doanh nghiệp</h3>
+<p>Nhà tuyển dụng có các chức năng: Đăng ký tài khoản, Quản lý hồ sơ công ty, Đăng tin tuyển dụng thực tập, Quản lý vòng đời tin, Sàng lọc hồ sơ ứng viên, Cập nhật trạng thái duyệt đơn, Nhắn tin với ứng viên, Xem thống kê tuyển dụng.</p>
+<h3 id="4-so-o-use-case-phan-he-quan-tri-vien">4. Sơ đồ Use case phân hệ Quản trị viên</h3>
+<p>Quản trị viên có các chức năng: Kiểm duyệt tin tuyển dụng, Quản lý tài khoản người dùng, Quản lý danh mục kỹ năng/ngành nghề/địa điểm, Tiếp nhận và xử lý báo cáo vi phạm.</p>
+<hr />
+<h2 id="ii-so-o-hoat-ong">II. Sơ đồ hoạt động</h2>
+<h3 id="1-so-o-hoat-ong-luong-ang-nhap-xac-thuc-jwt">1. Sơ đồ hoạt động luồng Đăng nhập &amp; Xác thực JWT</h3>
+<p>Mô tả tiến trình người dùng gửi thông tin xác thực lên máy chủ, máy chủ kiểm tra CSDL, phát hành cặp token JWT (<code>access</code> và <code>refresh</code>) và Client lưu trữ token để đính kèm vào các yêu cầu tiếp theo.</p>
+<p><img alt="Hình 3.2: Sơ đồ Hoạt động luồng Đăng nhập &amp; Xác thực JWT" src="images/hinh_3_2_activity_login_jwt.png" /></p>
+<p><em>Hình 3.2: Sơ đồ Hoạt động luồng Đăng nhập &amp; Xác thực JWT</em></p>
+<h3 id="2-so-o-hoat-ong-luong-quet-cv-goi-y-viec-lam-thuc-tap">2. Sơ đồ hoạt động luồng Quét CV &amp; Gợi ý việc làm thực tập</h3>
+<p>Mô tả tiến trình sinh viên tải tệp CV lên hệ thống, backend đọc text, chuẩn hóa NFC, nhận diện regex email/SĐT, trích xuất kỹ năng, đồng bộ vào CSDL và tính toán điểm phù hợp (%) với các tin tuyển dụng đang mở.</p>
+<p><img alt="Hình 3.3: Sơ đồ Hoạt động luồng Quét CV &amp; Gợi ý việc làm thực tập" src="images/hinh_3_3_activity_cv_scan_recommendation.png" /></p>
+<p><em>Hình 3.3: Sơ đồ Hoạt động luồng Quét CV &amp; Gợi ý việc làm thực tập</em></p>
+<h3 id="3-so-o-hoat-ong-luong-nop-ho-so-chuyen-trang-thai-tuyen-dung">3. Sơ đồ hoạt động luồng Nộp hồ sơ &amp; Chuyển trạng thái tuyển dụng</h3>
+<p>Mô tả tiến trình sinh viên nộp đơn ứng tuyển, kiểm tra ràng buộc duy nhất, khởi tạo hội thoại chat, doanh nghiệp tiếp nhận và đổi trạng thái hồ sơ, ghi nhận log và bắn thông báo tới sinh viên.</p>
+<p><img alt="Hình 3.4: Sơ đồ Hoạt động luồng Nộp hồ sơ &amp; Chuyển trạng thái tuyển dụng" src="images/hinh_3_4_activity_application_workflow.png" /></p>
+<p><em>Hình 3.4: Sơ đồ Hoạt động luồng Nộp hồ sơ &amp; Chuyển trạng thái tuyển dụng</em></p>
+<hr />
+<h2 id="iii-thiet-ke-co-so-du-lieu">III. Thiết kế cơ sở dữ liệu</h2>
+<h3 id="1-mo-hinh-erd">1. Mô hình ERD</h3>
+<p>Cơ sở dữ liệu hệ thống được thiết kế chuẩn hóa bậc 3 (3NF) gồm <strong>16 bảng nghiệp vụ cốt lõi</strong>, thể hiện đầy đủ các mối liên kết thực thể giữa Người dùng, Hồ sơ sinh viên, Hồ sơ công ty, Kỹ năng, Tin tuyển dụng, Đơn ứng tuyển, Lịch sử trạng thái, Thông báo và Báo cáo vi phạm.</p>
+<p><img alt="Hình 3.5: Mô hình thực thể liên kết (ERD) cơ sở dữ liệu InternHub" src="images/hinh_3_5_erd_database.png" /></p>
+<p><em>Hình 3.5: Mô hình thực thể liên kết (ERD) cơ sở dữ liệu InternHub</em></p>
+<h3 id="2-so-o-diagram">2. Sơ đồ Diagram</h3>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Sơ đồ lược đồ quan hệ Database Diagram vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Sơ đồ lược đồ quan hệ Database Diagram vào đây">
+</div>
+
+<p><em>Hình 3.6: Sơ đồ lược đồ quan hệ Database Diagram</em></p>
+<h3 id="3-cau-truc-cac-bang">3. Cấu trúc các bảng</h3>
+<h4 id="-bang-accounts_user">- Bảng: ACCOUNTS_USER</h4>
+<p><em>Bảng 3.1: Cấu trúc bảng ACCOUNTS_USER</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã định danh người dùng duy nhất</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td>VARCHAR(150)</td>
+<td>Unique, Not Null</td>
+<td>Tên tài khoản người dùng</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>VARCHAR(254)</td>
+<td>Unique, Not Null</td>
+<td>Địa chỉ thư điện tử người dùng</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>VARCHAR(128)</td>
+<td>Not Null</td>
+<td>Mật khẩu đã được mã hóa an toàn</td>
+</tr>
+<tr>
+<td><code>first_name</code></td>
+<td>VARCHAR(150)</td>
+<td>Nullable</td>
+<td>Họ đệm của người dùng</td>
+</tr>
+<tr>
+<td><code>last_name</code></td>
+<td>VARCHAR(150)</td>
+<td>Nullable</td>
+<td>Tên của người dùng</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>VARCHAR(20)</td>
+<td>Nullable</td>
+<td>Số điện thoại liên lạc</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>VARCHAR(20)</td>
+<td>Default 'student'</td>
+<td>Phân quyền vai trò: <code>student</code>, <code>employer</code>, <code>admin</code></td>
+</tr>
+<tr>
+<td><code>is_verified</code></td>
+<td>TINYINT(1)</td>
+<td>Default 0</td>
+<td>Trạng thái đã xác minh tài khoản</td>
+</tr>
+<tr>
+<td><code>is_active</code></td>
+<td>TINYINT(1)</td>
+<td>Default 1</td>
+<td>Trạng thái tài khoản đang hoạt động</td>
+</tr>
+<tr>
+<td><code>is_staff</code></td>
+<td>TINYINT(1)</td>
+<td>Default 0</td>
+<td>Cờ quyền truy cập quản trị hệ thống</td>
+</tr>
+<tr>
+<td><code>is_superuser</code></td>
+<td>TINYINT(1)</td>
+<td>Default 0</td>
+<td>Cờ quyền quản trị tối cao</td>
+</tr>
+<tr>
+<td><code>date_joined</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm người dùng đăng ký</td>
+</tr>
+<tr>
+<td><code>last_login</code></td>
+<td>DATETIME(6)</td>
+<td>Nullable</td>
+<td>Thời điểm đăng nhập gần nhất</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-profiles_studentprofile">- Bảng: PROFILES_STUDENTPROFILE</h4>
+<p><em>Bảng 3.2: Cấu trúc bảng PROFILES_STUDENTPROFILE</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã hồ sơ sinh viên</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; accounts_user(id), Unique</td>
+<td>Khóa ngoại liên kết tài khoản người dùng</td>
+</tr>
+<tr>
+<td><code>full_name</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Họ và tên đầy đủ của sinh viên</td>
+</tr>
+<tr>
+<td><code>avatar</code></td>
+<td>VARCHAR(100)</td>
+<td>Nullable</td>
+<td>Đường dẫn ảnh đại diện</td>
+</tr>
+<tr>
+<td><code>university</code></td>
+<td>VARCHAR(255)</td>
+<td>Nullable</td>
+<td>Trường Đại học / Cao đẳng theo học</td>
+</tr>
+<tr>
+<td><code>major</code></td>
+<td>VARCHAR(255)</td>
+<td>Nullable</td>
+<td>Chuyên ngành đào tạo</td>
+</tr>
+<tr>
+<td><code>graduation_year</code></td>
+<td>INT</td>
+<td>Nullable</td>
+<td>Năm tốt nghiệp dự kiến</td>
+</tr>
+<tr>
+<td><code>address</code></td>
+<td>VARCHAR(255)</td>
+<td>Nullable</td>
+<td>Địa chỉ / Tỉnh thành cư trú</td>
+</tr>
+<tr>
+<td><code>bio</code></td>
+<td>LONGTEXT</td>
+<td>Nullable</td>
+<td>Giới thiệu bản thân và mục tiêu nghề nghiệp</td>
+</tr>
+<tr>
+<td><code>cv_file</code></td>
+<td>VARCHAR(100)</td>
+<td>Nullable</td>
+<td>Đường dẫn tệp CV tải lên hệ thống</td>
+</tr>
+<tr>
+<td><code>is_profile_complete</code></td>
+<td>TINYINT(1)</td>
+<td>Default 0</td>
+<td>Cờ đánh dấu hồ sơ đã điền đầy đủ</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm tạo hồ sơ</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm cập nhật hồ sơ gần nhất</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-profiles_employerprofile">- Bảng: PROFILES_EMPLOYERPROFILE</h4>
+<p><em>Bảng 3.3: Cấu trúc bảng PROFILES_EMPLOYERPROFILE</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã hồ sơ doanh nghiệp</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; accounts_user(id), Unique</td>
+<td>Khóa ngoại liên kết tài khoản nhà tuyển dụng</td>
+</tr>
+<tr>
+<td><code>company_name</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Tên công ty / Doanh nghiệp</td>
+</tr>
+<tr>
+<td><code>industry_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; catalog_industry(id), Nullable</td>
+<td>Khóa ngoại liên kết ngành nghề hoạt động</td>
+</tr>
+<tr>
+<td><code>company_size</code></td>
+<td>VARCHAR(20)</td>
+<td>Nullable</td>
+<td>Quy mô nhân sự công ty</td>
+</tr>
+<tr>
+<td><code>website</code></td>
+<td>VARCHAR(200)</td>
+<td>Nullable</td>
+<td>Địa chỉ website chính thức</td>
+</tr>
+<tr>
+<td><code>tax_code</code></td>
+<td>VARCHAR(50)</td>
+<td>Nullable</td>
+<td>Mã số thuế doanh nghiệp</td>
+</tr>
+<tr>
+<td><code>address</code></td>
+<td>VARCHAR(255)</td>
+<td>Nullable</td>
+<td>Địa chỉ trụ sở văn phòng</td>
+</tr>
+<tr>
+<td><code>logo</code></td>
+<td>VARCHAR(100)</td>
+<td>Nullable</td>
+<td>Đường dẫn logo doanh nghiệp</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>LONGTEXT</td>
+<td>Nullable</td>
+<td>Giới thiệu về văn hóa và lĩnh vực công ty</td>
+</tr>
+<tr>
+<td><code>is_verified</code></td>
+<td>TINYINT(1)</td>
+<td>Default 0</td>
+<td>Trạng thái xác thực pháp lý doanh nghiệp</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm tạo hồ sơ công ty</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm cập nhật gần nhất</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-jobs_job">- Bảng: JOBS_JOB</h4>
+<p><em>Bảng 3.4: Cấu trúc bảng JOBS_JOB</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã tin tuyển dụng</td>
+</tr>
+<tr>
+<td><code>employer_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; profiles_employerprofile(id)</td>
+<td>Khóa ngoại liên kết doanh nghiệp đăng tin</td>
+</tr>
+<tr>
+<td><code>job_category_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; catalog_jobcategory(id), Nullable</td>
+<td>Khóa ngoại phân loại vị trí công việc</td>
+</tr>
+<tr>
+<td><code>location_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; catalog_location(id), Nullable</td>
+<td>Khóa ngoại địa điểm làm việc</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Tiêu đề tin tuyển dụng</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>VARCHAR(255)</td>
+<td>Unique, Not Null</td>
+<td>Đường dẫn URL định danh tin tuyển dụng</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>LONGTEXT</td>
+<td>Not Null</td>
+<td>Bản mô tả công việc chi tiết</td>
+</tr>
+<tr>
+<td><code>requirements</code></td>
+<td>LONGTEXT</td>
+<td>Not Null</td>
+<td>Yêu cầu về năng lực, kỹ năng ứng viên</td>
+</tr>
+<tr>
+<td><code>internship_type</code></td>
+<td>VARCHAR(20)</td>
+<td>Default 'full_time'</td>
+<td>Hình thức: full_time, part_time, remote</td>
+</tr>
+<tr>
+<td><code>duration_months</code></td>
+<td>INT</td>
+<td>Nullable</td>
+<td>Thời gian thực tập (số tháng)</td>
+</tr>
+<tr>
+<td><code>salary_min</code></td>
+<td>INT</td>
+<td>Nullable</td>
+<td>Mức lương trợ cấp tối thiểu</td>
+</tr>
+<tr>
+<td><code>salary_max</code></td>
+<td>INT</td>
+<td>Nullable</td>
+<td>Mức lương trợ cấp tối đa</td>
+</tr>
+<tr>
+<td><code>is_salary_negotiable</code></td>
+<td>TINYINT(1)</td>
+<td>Default 0</td>
+<td>Cờ lương thỏa thuận</td>
+</tr>
+<tr>
+<td><code>experience_level</code></td>
+<td>VARCHAR(20)</td>
+<td>Nullable</td>
+<td>Yêu cầu kinh nghiệm</td>
+</tr>
+<tr>
+<td><code>min_academic_year</code></td>
+<td>VARCHAR(20)</td>
+<td>Nullable</td>
+<td>Đối tượng sinh viên năm mấy</td>
+</tr>
+<tr>
+<td><code>num_positions</code></td>
+<td>INT</td>
+<td>Nullable</td>
+<td>Số lượng tuyển dụng</td>
+</tr>
+<tr>
+<td><code>deadline</code></td>
+<td>DATE</td>
+<td>Not Null</td>
+<td>Hạn chót nộp hồ sơ</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(20)</td>
+<td>Default 'pending'</td>
+<td>Trạng thái tin: pending, approved, closed</td>
+</tr>
+<tr>
+<td><code>is_featured</code></td>
+<td>TINYINT(1)</td>
+<td>Default 0</td>
+<td>Cờ tin tuyển dụng nổi bật</td>
+</tr>
+<tr>
+<td><code>featured_until</code></td>
+<td>DATETIME(6)</td>
+<td>Nullable</td>
+<td>Thời hạn hiển thị nổi bật</td>
+</tr>
+<tr>
+<td><code>views_count</code></td>
+<td>INT</td>
+<td>Default 0</td>
+<td>Số lượt xem tin</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm đăng tin</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm chỉnh sửa gần nhất</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-jobs_jobskill">- Bảng: JOBS_JOBSKILL</h4>
+<p><em>Bảng 3.5: Cấu trúc bảng JOBS_JOBSKILL</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Khóa chính bảng nối kỹ năng công việc</td>
+</tr>
+<tr>
+<td><code>job_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; jobs_job(id)</td>
+<td>Khóa ngoại liên kết tin tuyển dụng</td>
+</tr>
+<tr>
+<td><code>skill_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; catalog_skill(id)</td>
+<td>Khóa ngoại liên kết kỹ năng yêu cầu</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-jobs_savedjob">- Bảng: JOBS_SAVEDJOB</h4>
+<p><em>Bảng 3.6: Cấu trúc bảng JOBS_SAVEDJOB</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Khóa chính danh sách lưu việc làm</td>
+</tr>
+<tr>
+<td><code>job_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; jobs_job(id)</td>
+<td>Khóa ngoại tin tuyển dụng được lưu</td>
+</tr>
+<tr>
+<td><code>student_profile_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; profiles_studentprofile(id)</td>
+<td>Khóa ngoại sinh viên lưu tin</td>
+</tr>
+<tr>
+<td><code>saved_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm sinh viên lưu tin</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-jobs_jobview">- Bảng: JOBS_JOBVIEW</h4>
+<p><em>Bảng 3.7: Cấu trúc bảng JOBS_JOBVIEW</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Khóa chính nhật ký xem việc làm</td>
+</tr>
+<tr>
+<td><code>job_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; jobs_job(id)</td>
+<td>Khóa ngoại tin tuyển dụng được xem</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; accounts_user(id), Nullable</td>
+<td>Khóa ngoại người dùng đã xem tin</td>
+</tr>
+<tr>
+<td><code>viewed_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm xem tin tuyển dụng</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-applications_application">- Bảng: APPLICATIONS_APPLICATION</h4>
+<p><em>Bảng 3.8: Cấu trúc bảng APPLICATIONS_APPLICATION</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã đơn ứng tuyển</td>
+</tr>
+<tr>
+<td><code>job_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; jobs_job(id)</td>
+<td>Khóa ngoại liên kết tin tuyển dụng</td>
+</tr>
+<tr>
+<td><code>student_profile_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; profiles_studentprofile(id)</td>
+<td>Khóa ngoại liên kết sinh viên nộp đơn</td>
+</tr>
+<tr>
+<td><code>cover_letter</code></td>
+<td>LONGTEXT</td>
+<td>Nullable</td>
+<td>Thư giới thiệu ứng tuyển của sinh viên</td>
+</tr>
+<tr>
+<td><code>cv_snapshot</code></td>
+<td>VARCHAR(100)</td>
+<td>Not Null</td>
+<td>Bản lưu đường dẫn tệp CV tại thời điểm nộp</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(20)</td>
+<td>Default 'pending'</td>
+<td>Trạng thái: pending, shortlisted, accepted...</td>
+</tr>
+<tr>
+<td><code>applied_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm nộp đơn</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm cập nhật trạng thái đơn gần nhất</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-applications_applicationstatuslog">- Bảng: APPLICATIONS_APPLICATIONSTATUSLOG</h4>
+<p><em>Bảng 3.9: Cấu trúc bảng APPLICATIONS_APPLICATIONSTATUSLOG</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Khóa chính lịch sử thay đổi trạng thái</td>
+</tr>
+<tr>
+<td><code>application_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; applications_application(id)</td>
+<td>Khóa ngoại liên kết đơn ứng tuyển</td>
+</tr>
+<tr>
+<td><code>changed_by_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; accounts_user(id), Nullable</td>
+<td>Người thực hiện chuyển đổi trạng thái</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(20)</td>
+<td>Not Null</td>
+<td>Trạng thái mới được thiết lập</td>
+</tr>
+<tr>
+<td><code>note</code></td>
+<td>VARCHAR(255)</td>
+<td>Nullable</td>
+<td>Ghi chú lý do thay đổi trạng thái</td>
+</tr>
+<tr>
+<td><code>changed_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm thực hiện thay đổi</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-catalog_skill">- Bảng: CATALOG_SKILL</h4>
+<p><em>Bảng 3.10: Cấu trúc bảng CATALOG_SKILL</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã kỹ năng định danh</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Tên kỹ năng chuyên môn hoặc kỹ năng mềm</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>VARCHAR(255)</td>
+<td>Unique, Not Null</td>
+<td>Đường dẫn định danh kỹ năng</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-catalog_studentskill">- Bảng: CATALOG_STUDENTSKILL</h4>
+<p><em>Bảng 3.11: Cấu trúc bảng CATALOG_STUDENTSKILL</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Khóa chính kỹ năng sinh viên</td>
+</tr>
+<tr>
+<td><code>student_profile_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; profiles_studentprofile(id)</td>
+<td>Khóa ngoại liên kết sinh viên sở hữu</td>
+</tr>
+<tr>
+<td><code>skill_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; catalog_skill(id)</td>
+<td>Khóa ngoại liên kết kỹ năng trong danh mục</td>
+</tr>
+<tr>
+<td><code>level</code></td>
+<td>VARCHAR(20)</td>
+<td>Default 'intermediate'</td>
+<td>Trình độ: beginner, intermediate, advanced</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-catalog_location">- Bảng: CATALOG_LOCATION</h4>
+<p><em>Bảng 3.12: Cấu trúc bảng CATALOG_LOCATION</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã địa điểm khu vực</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Tên tỉnh / Thành phố (Hà Nội, TP.HCM...)</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>VARCHAR(255)</td>
+<td>Unique, Not Null</td>
+<td>Đường dẫn định danh địa điểm</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-catalog_jobcategory">- Bảng: CATALOG_JOBCATEGORY</h4>
+<p><em>Bảng 3.13: Cấu trúc bảng CATALOG_JOBCATEGORY</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã danh mục nghề nghiệp</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Tên vị trí (Backend, Frontend, AI/Data...)</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>VARCHAR(255)</td>
+<td>Unique, Not Null</td>
+<td>Đường dẫn định danh danh mục</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-catalog_industry">- Bảng: CATALOG_INDUSTRY</h4>
+<p><em>Bảng 3.14: Cấu trúc bảng CATALOG_INDUSTRY</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã ngành công nghiệp</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Tên lĩnh vực hoạt động công ty</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>VARCHAR(255)</td>
+<td>Unique, Not Null</td>
+<td>Đường dẫn định danh ngành</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-notifications_notification">- Bảng: NOTIFICATIONS_NOTIFICATION</h4>
+<p><em>Bảng 3.15: Cấu trúc bảng NOTIFICATIONS_NOTIFICATION</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã thông báo định danh</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; accounts_user(id)</td>
+<td>Khóa ngoại người dùng nhận thông báo</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>VARCHAR(30)</td>
+<td>Not Null</td>
+<td>Loại thông báo: application, message, system</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Tiêu đề thông báo ngắn</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>LONGTEXT</td>
+<td>Not Null</td>
+<td>Nội dung chi tiết của thông báo</td>
+</tr>
+<tr>
+<td><code>related_object_type</code></td>
+<td>VARCHAR(50)</td>
+<td>Nullable</td>
+<td>Loại đối tượng liên quan (job, application)</td>
+</tr>
+<tr>
+<td><code>related_object_id</code></td>
+<td>INT</td>
+<td>Nullable</td>
+<td>ID của đối tượng liên quan</td>
+</tr>
+<tr>
+<td><code>is_read</code></td>
+<td>TINYINT(1)</td>
+<td>Default 0</td>
+<td>Cờ trạng thái đã đọc thông báo</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm phát sinh thông báo</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-bang-moderation_report">- Bảng: MODERATION_REPORT</h4>
+<p><em>Bảng 3.16: Cấu trúc bảng MODERATION_REPORT</em></p>
+<table>
+<thead>
+<tr>
+<th>Tên thuộc tính</th>
+<th>Kiểu dữ liệu</th>
+<th>Ràng buộc</th>
+<th>Giải thích</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT</td>
+<td>PK, Auto Increment</td>
+<td>Mã báo cáo vi phạm</td>
+</tr>
+<tr>
+<td><code>reporter_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; accounts_user(id), Nullable</td>
+<td>Người gửi báo cáo vi phạm</td>
+</tr>
+<tr>
+<td><code>target_type</code></td>
+<td>VARCHAR(20)</td>
+<td>Not Null</td>
+<td>Đối tượng bị báo cáo (job, user)</td>
+</tr>
+<tr>
+<td><code>target_id</code></td>
+<td>INT</td>
+<td>Not Null</td>
+<td>ID đối tượng bị báo cáo</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td>VARCHAR(255)</td>
+<td>Not Null</td>
+<td>Lý do báo cáo vi phạm ngắn gọn</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>LONGTEXT</td>
+<td>Nullable</td>
+<td>Mô tả chi tiết hành vi vi phạm</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(20)</td>
+<td>Default 'pending'</td>
+<td>Trạng thái: pending, resolved, rejected</td>
+</tr>
+<tr>
+<td><code>resolved_by_id</code></td>
+<td>BIGINT</td>
+<td>FK -&gt; accounts_user(id), Nullable</td>
+<td>Quản trị viên xử lý báo cáo</td>
+</tr>
+<tr>
+<td><code>resolved_at</code></td>
+<td>DATETIME(6)</td>
+<td>Nullable</td>
+<td>Thời điểm xử lý báo cáo</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME(6)</td>
+<td>Not Null</td>
+<td>Thời điểm tạo báo cáo</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="iv-thiet-ke-giao-dien">IV. Thiết kế giao diện</h2>
+<p>Hệ thống thiết kế theo phong cách giao diện hiện đại, tối ưu trải nghiệm người dùng với các giao diện chính:<br />
+1. <strong>Giao diện 1: Trang chủ và Bộ lọc tìm kiếm:</strong> Thanh tìm kiếm từ khóa kết hợp bộ lọc đa tiêu chí (địa điểm, chuyên ngành, loại hình, mức lương).<br />
+2. <strong>Giao diện 2: Chi tiết tin tuyển dụng &amp; Nộp đơn:</strong> Hiển thị nổi bật yêu cầu, quyền lợi, tỷ lệ phù hợp kèm nút nộp đơn tức thì.<br />
+3. <strong>Giao diện 3: Trình tạo CV (CV Studio):</strong> Chia đôi màn hình (Split-view) giữa Form nhập liệu bên trái và Tờ giấy CV hiển thị trực quan bên phải.<br />
+4. <strong>Giao diện 4: Modal Quét phân tích CV thông minh:</strong> Kéo thả file CV, hiển thị thanh tiến trình quét, bóc tách kỹ năng dạng tag và liệt kê các việc làm tương thích nhất kèm lý do phù hợp.<br />
+5. <strong>Giao diện 5: Bảng điều khiển Sinh viên &amp; Việc làm phù hợp:</strong> Thống kê việc làm đã lưu, đơn đã nộp và danh sách gợi ý việc làm sắp xếp theo % phù hợp.<br />
+6. <strong>Giao diện 6: Quản lý tuyển dụng của Doanh nghiệp:</strong> Danh sách tin tuyển dụng, danh sách hồ sơ ứng viên theo từng tin kèm thao tác duyệt/từ chối.<br />
+7. <strong>Giao diện 7: Khung Chat Messenger:</strong> Widget nổi ở góc dưới bên phải hoặc trang toàn màn hình cho phép ứng viên và doanh nghiệp trao đổi trực tiếp.<br />
+8. <strong>Giao diện 8: Quản trị viên hệ thống (Admin Portal):</strong> Quản trị phê duyệt tin tuyển dụng, người dùng và danh mục.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Thiết kế khung nhìn Wireframe / Mockup các trang chính vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Thiết kế khung nhìn Wireframe / Mockup các trang chính vào đây">
+</div>
+
+<p><em>Hình 3.7: Thiết kế khung nhìn Wireframe / Mockup các trang chính</em></p>
+<hr />
+<h2 id="v-thiet-ke-xu-ly">V. Thiết kế xử lý</h2>
+<h3 id="1-thiet-ke-xu-ly-thuat-toan-phan-tich-va-boc-tach-du-lieu-tu-cv">1. Thiết kế xử lý thuật toán phân tích và bóc tách dữ liệu từ CV</h3>
+<p>Module <code>cv_scanner.py</code> thực hiện xử lý tuần tự qua các giai đoạn:<br />
+1. <strong>Phát hiện định dạng:</strong><br />
+   - Nếu là <code>.pdf</code>: Khởi tạo luồng giải mã <code>pdfminer.high_level.extract_text_to_fp</code>.<br />
+   - Nếu là <code>.docx</code>: Dùng <code>python-docx</code> duyệt qua <code>Document.paragraphs</code> và <code>Document.tables</code>.<br />
+2. <strong>Chuẩn hóa chuỗi văn bản:</strong> Loại bỏ ký tự điều khiển, chuẩn hóa khoảng trắng và chuyển đổi Unicode về dạng chuẩn NFC.<br />
+3. <strong>Trích xuất thông tin liên hệ và địa danh:</strong><br />
+   - Dò biểu thức chính quy Email và Số điện thoại di động Việt Nam.<br />
+   - Tra cứu danh sách thực thể địa phương (City Aliases) để chuẩn hóa tên tỉnh thành.<br />
+4. <strong>Trích xuất kỹ năng (<code>extract_skills</code>):</strong><br />
+   - Hợp nhất từ điển <code>KNOWN_SKILLS</code> và dữ liệu động <code>Skill.objects.all()</code>.<br />
+   - Sắp xếp từ khóa theo độ dài giảm dần để match các từ ghép công nghệ trước (<code>RESTful API</code> trước <code>API</code>).<br />
+   - Áp dụng kỹ thuật biên từ ngữ cảnh Unicode: <code>(?&lt;!\w)keyword(?!\w)</code> đảm bảo không bị nhận diện nhầm từ các ký tự tiếng Việt có dấu.</p>
+<h3 id="2-thiet-ke-thuat-toan-so-khop-va-tinh-iem-o-phu-hop-viec-lam-scoring-model">2. Thiết kế thuật toán so khớp và tính điểm độ phù hợp việc làm (Scoring Model)</h3>
+<p>Điểm số tương thích được xác định dựa trên tổng hợp 3 thành phần có trọng số:<br />
+$$\text{Total Score} = \text{Score}<em Major="Major">{Skill} + \text{Score}</em>$$} + \text{Score}_{Location</p>
+<p>Trong đó:<br />
+- <strong>Thành phần 1: Điểm Kỹ năng (Trọng số 60%):</strong><br />
+  - Hệ thống tự động tổng hợp tập kỹ năng của Job: $S_{job} = \text{Skills}<em Extracted="Extracted">{M2M} \cup \text{Skills}</em>(Title + Requirements + Description)$.<br />
+  - So sánh với tập kỹ năng sinh viên sở hữu $S_{student}$:<br />
+    $$\text{Score}<em student="student">{Skill} = \left( \frac{|S</em> \right) \times 60\%$$} \cap S_{job}|}{|S_{job}|<br />
+- <strong>Thành phần 2: Điểm Chuyên ngành (Trọng số 25%):</strong><br />
+  - So khớp từ khóa chuyên ngành trong hồ sơ sinh viên với Tiêu đề, Danh mục công việc và Mô tả tin tuyển dụng. Nếu xuất hiện từ khóa khớp: $\text{Score}<em Location="Location">{Major} = 25\%$.<br />
+- <strong>Thành phần 3: Điểm Địa điểm (Trọng số 15%):</strong><br />
+  - So khớp tỉnh/thành phố giữa nơi ở sinh viên và địa chỉ doanh nghiệp/job. Nếu trùng khớp cùng địa bàn: $\text{Score}</em> = 15\%$.<br />
+- <strong>Chuẩn hóa:</strong> Tổng điểm được làm tròn về tỷ lệ phần trăm tự nhiên từ <strong>15% đến 99%</strong>.</p>
+<h3 id="3-thiet-ke-luong-chuyen-trang-thai-on-ung-tuyen-application-state-machine">3. Thiết kế luồng chuyển trạng thái đơn ứng tuyển (Application State Machine)</h3>
+<ul>
+<li>Trạng thái ban đầu: <code>pending</code> (Chờ xử lý).</li>
+<li>Doanh nghiệp duyệt hồ sơ: Chuyển sang <code>shortlisted</code> (Đã xem xét) hoặc <code>interview_invited</code> (Mời phỏng vấn).</li>
+<li>Kết quả cuối cùng: Chuyển sang <code>accepted</code> (Trúng tuyển) hoặc <code>rejected</code> (Từ chối).</li>
+<li>Sinh viên có thể chủ động chuyển sang <code>cancelled</code> (Hủy ứng tuyển) khi đơn đang ở trạng thái <code>pending</code>.</li>
+<li>Mọi biến động trạng thái đều tự động ghi log vào bảng <code>applications_applicationstatuslog</code> và kích hoạt thông báo chuông.</li>
+</ul>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="chuong-iv-phat-trien-thuc-thi">CHƯƠNG IV. PHÁT TRIỂN / THỰC THI</h1>
+<p>Dưới đây là các màn hình chức năng chính của hệ thống InternHub đã được phát triển và chạy thử nghiệm thực tế:</p>
+<h2 id="i-man-hinh-trang-chu-va-tim-kiem-viec-lam-thuc-tap">I. Màn hình Trang chủ và Tìm kiếm việc làm thực tập</h2>
+<p>Màn hình cung cấp thanh tìm kiếm toàn diện kết hợp bộ lọc nhiều tiêu chí: ngành nghề, địa điểm, hình thức làm việc, khoảng lương. Các tin tuyển dụng được hiển thị trực quan dưới dạng thẻ (JobCard) kèm thông tin mức lương, hạn nộp và logo doanh nghiệp.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Màn hình Trang chủ và Tìm kiếm việc làm thực tập vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Màn hình Trang chủ và Tìm kiếm việc làm thực tập vào đây">
+</div>
+
+<p><em>Hình 4.1: Màn hình Trang chủ và Tìm kiếm việc làm thực tập</em></p>
+<hr />
+<h2 id="ii-man-hinh-chi-tiet-tin-tuyen-dung-nop-on-ung-tuyen">II. Màn hình Chi tiết tin tuyển dụng &amp; Nộp đơn ứng tuyển</h2>
+<p>Hiển thị toàn bộ thông tin chi tiết về doanh nghiệp, quyền lợi thực tập sinh, yêu cầu kỹ năng và hạn chót nộp đơn. Sinh viên có thể nộp CV trực tiếp kèm lời nhắn ứng tuyển chỉ với một vài thao tác đơn giản.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Màn hình Chi tiết tin tuyển dụng & Nộp đơn ứng tuyển vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Màn hình Chi tiết tin tuyển dụng & Nộp đơn ứng tuyển vào đây">
+</div>
+
+<p><em>Hình 4.2: Màn hình Chi tiết tin tuyển dụng &amp; Nộp đơn ứng tuyển</em></p>
+<hr />
+<h2 id="iii-man-hinh-cv-studio-modal-quet-phan-tich-cv-thong-minh">III. Màn hình CV Studio &amp; Modal Quét phân tích CV thông minh</h2>
+<p>Màn hình cho phép sinh viên tự soạn CV chuẩn mẫu trực tuyến hoặc tải tệp CV sẵn có lên hệ thống. Modal Quét CV tự động trích xuất các kỹ năng công nghệ, địa chỉ, số điện thoại và tính toán điểm phù hợp (%) với các vị trí tuyển dụng đang mở.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Màn hình Trình dựng CV cá nhân (CV Studio - Builder) vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Màn hình Trình dựng CV cá nhân (CV Studio - Builder) vào đây">
+</div>
+
+<p><em>Hình 4.3: Màn hình Trình dựng CV cá nhân (CV Studio - Builder)</em></p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Màn hình Modal Quét phân tích CV và Bóc tách kỹ năng tự động vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Màn hình Modal Quét phân tích CV và Bóc tách kỹ năng tự động vào đây">
+</div>
+
+<p><em>Hình 4.4: Màn hình Modal Quét phân tích CV và Bóc tách kỹ năng tự động</em></p>
+<hr />
+<h2 id="iv-man-hinh-bang-ieu-khien-sinh-vien-student-dashboard-viec-lam-phu-hop">IV. Màn hình Bảng điều khiển Sinh viên (Student Dashboard &amp; Việc làm phù hợp)</h2>
+<p>Khu vực trung tâm dành cho sinh viên theo dõi:<br />
+- Số lượng tin đã lưu, đơn ứng tuyển đã nộp, việc làm phù hợp.<br />
+- Tab <strong>"Việc làm phù hợp"</strong> hiển thị danh sách các công việc được thuật toán gợi ý sắp xếp theo điểm số % giảm dần kèm theo tag các kỹ năng trùng khớp (<code>✓ Java</code>, <code>✓ Python</code>...) và lý do gợi ý cụ thể.<br />
+- Tab <strong>"Đã ứng tuyển"</strong> theo dõi tiến độ duyệt hồ sơ và xem lại file CV đã nộp.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Màn hình Bảng điều khiển Sinh viên - Danh sách Việc làm phù hợp theo % vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Màn hình Bảng điều khiển Sinh viên - Danh sách Việc làm phù hợp theo % vào đây">
+</div>
+
+<p><em>Hình 4.5: Màn hình Bảng điều khiển Sinh viên - Danh sách Việc làm phù hợp theo %</em></p>
+<hr />
+<h2 id="v-man-hinh-quan-ly-tin-tuyen-dung-ho-so-ung-vien-employer-portal">V. Màn hình Quản lý tin tuyển dụng &amp; Hồ sơ ứng viên (Employer Portal)</h2>
+<p>Dành cho nhà tuyển dụng để đăng tin mới, chỉnh sửa tin và quản lý danh sách ứng viên nộp hồ sơ. Nhà tuyển dụng có thể xem CV, xem thư giới thiệu và cập nhật trạng thái đơn (Phỏng vấn, Trúng tuyển, Từ chối).</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Màn hình Quản lý hồ sơ ứng viên và Duyệt/Từ chối của Doanh nghiệp vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Màn hình Quản lý hồ sơ ứng viên và Duyệt/Từ chối của Doanh nghiệp vào đây">
+</div>
+
+<p><em>Hình 4.6: Màn hình Quản lý hồ sơ ứng viên và Duyệt/Từ chối của Doanh nghiệp</em></p>
+<hr />
+<h2 id="vi-man-hinh-nhan-tin-messenger-truc-tiep-giua-sinh-vien-va-nha-tuyen-dung">VI. Màn hình Nhắn tin Messenger trực tiếp giữa Sinh viên và Nhà tuyển dụng</h2>
+<p>Hệ thống tin nhắn tức thì tích hợp ngay trên nền tảng, tạo ra kênh kết nối khép kín và an toàn giúp doanh nghiệp trao đổi nhanh về lịch phỏng vấn và yêu cầu công việc mà không cần sử dụng các ứng dụng thứ ba.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Màn hình Khung Chat Messenger trao đổi trực tiếp giữa Sinh viên và Doanh nghiệp vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Màn hình Khung Chat Messenger trao đổi trực tiếp giữa Sinh viên và Doanh nghiệp vào đây">
+</div>
+
+<p><em>Hình 4.7: Màn hình Khung Chat Messenger trao đổi trực tiếp giữa Sinh viên và Doanh nghiệp</em></p>
+<hr />
+<h2 id="vii-man-hinh-quan-tri-vien-admin-management-portal">VII. Màn hình Quản trị viên (Admin Management Portal)</h2>
+<p>Màn hình quản trị nội bộ dành cho Admin để kiểm duyệt các tin tuyển dụng mới đăng, quản trị người dùng, cập nhật danh mục hệ thống và xử lý báo cáo vi phạm.</p>
+<div class="image-placeholder-box" onclick="this.querySelector('input[type=file]').click()">
+    <div class="placeholder-icon">📷</div>
+    <div class="placeholder-title">Đưa ảnh Màn hình Bảng điều khiển Quản trị viên (Admin Dashboard & Moderation) vào đây</div>
+    <div class="placeholder-hint">Bấm hoặc kéo thả ảnh vào đây để hiển thị trực tiếp</div>
+    <input type="file" accept="image/*" style="display:none" onchange="previewImage(this, event)">
+    <img class="preview-img" style="display:none" alt="Đưa ảnh Màn hình Bảng điều khiển Quản trị viên (Admin Dashboard & Moderation) vào đây">
+</div>
+
+<p><em>Hình 4.8: Màn hình Bảng điều khiển Quản trị viên (Admin Dashboard &amp; Moderation)</em></p>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="chuong-v-trien-khai">CHƯƠNG V. TRIỂN KHAI</h1>
+<h2 id="i-cai-at">I. Cài đặt</h2>
+<h3 id="danh-sach-tinh-trang-cai-at-cac-chuc-nang-kem-muc-o-hoan-thanh">Danh sách tình trạng cài đặt các chức năng (kèm mức độ hoàn thành)</h3>
+<p>Toàn bộ quá trình cài đặt và phát triển chức năng được quản lý theo 8 Sprint trên hệ thống Jira của dự án:</p>
+<p><em>Bảng 5.1: Danh sách tình trạng cài đặt các chức năng và mức độ hoàn thành</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">STT</th>
+<th>Chức năng</th>
+<th style="text-align: center;">Mức độ hoàn thành</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td>Khảo sát nền tảng tương tự (TopCV, Ybox) &amp; Thiết kế ERD CSDL 16 bảng</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 1 (<code>IHB-1</code>, <code>IHB-2</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td>Xác định đối tượng sử dụng và đặc tả chức năng nghiệp vụ</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 1 (<code>IHB-3</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3</strong></td>
+<td>Thiết kế Wireframe, Mockup UI/UX &amp; Khởi tạo dự án React Vite</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 2 (<code>IHB-4</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td>Cấu hình Django 6.1, kết nối MySQL 8.4, khởi tạo 16 Models CSDL</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 2 (<code>IHB-5</code>, <code>IHB-6</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5</strong></td>
+<td>Xây dựng API và giao diện Đăng ký, Đăng nhập, JWT Token Rotation</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 3 (<code>IHB-7</code>, <code>IHB-8</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>6</strong></td>
+<td>Kiểm thử chức năng xác thực tài khoản và phân quyền người dùng</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 3 (<code>IHB-9</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>7</strong></td>
+<td>Xây dựng CRUD API và giao diện Tin tuyển dụng, Tìm kiếm &amp; Bộ lọc</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 4 (<code>IHB-10</code>, <code>IHB-11</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td>Kiểm thử chức năng tìm kiếm từ khóa, phân trang và bộ lọc tin tuyển dụng</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 4 (<code>IHB-12</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>9</strong></td>
+<td>Xây dựng API và giao diện Nộp đơn ứng tuyển, Quản lý trạng thái tuyển dụng</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 5 (<code>IHB-13</code>, <code>IHB-14</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>10</strong></td>
+<td>Kiểm thử ràng buộc Unique nộp đơn và luồng cập nhật trạng thái hồ sơ</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 5 (<code>IHB-15</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>11</strong></td>
+<td>Xây dựng module quét CV (PDF, DOCX) và thuật toán gợi ý việc làm theo %</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 6 (<code>IHB-16</code>, <code>IHB-17</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>12</strong></td>
+<td>Kiểm thử độ chính xác thuật toán trích xuất kỹ năng và gợi ý việc làm</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 6 (<code>IHB-18</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>13</strong></td>
+<td>Xây dựng giao diện Chat Messenger trực tiếp và hệ thống Thông báo chuông</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 7 (<code>IHB-19</code>, <code>IHB-20</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>14</strong></td>
+<td>Kiểm thử tích hợp toàn diện hệ thống Frontend - Backend (E2E Testing)</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 7 (<code>IHB-21</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>15</strong></td>
+<td>Tinh chỉnh UI/UX, hỗ trợ kịch bản demo và chạy thử nghiệm cục bộ</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 8 (<code>IHB-22</code>, <code>IHB-23</code>)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td>Tổng hợp báo cáo đồ án QLPM hoàn chỉnh và slide thuyết trình</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td>Hoàn thành trong Sprint 8 (<code>IHB-24</code>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ii-thu-nghiem">II. Thử nghiệm</h2>
+<p>Hệ thống đã chuẩn bị sẵn bộ dữ liệu mẫu và các tài khoản thử nghiệm dành riêng cho việc đánh giá và chấm điểm đồ án:</p>
+<p><em>Bảng 5.2: Bảng thông tin tài khoản thử nghiệm hệ thống</em></p>
+<h3 id="1-tai-khoan-dung-e-test-cac-chuc-nang-cua-sinh-vien">1. Tài khoản dùng để test các chức năng của Sinh viên</h3>
+<ul>
+<li><strong>Tài khoản:</strong> <code>tranhungthinh025@gmail.com</code></li>
+<li><strong>Mật khẩu:</strong> <code>Admin@123456</code></li>
+<li><strong>Kịch bản kiểm thử:</strong></li>
+<li>Đăng nhập hệ thống $\rightarrow$ Chuyển đúng vào Bảng điều khiển Sinh viên.</li>
+<li>Vào mục <strong>Tạo và quản lý CV (CV Studio)</strong> $\rightarrow$ Tải file CV lên (PDF/DOCX) $\rightarrow$ Popup tự động phân tích kỹ năng, địa chỉ và gợi ý việc làm.</li>
+<li>Bấm <strong>"Lưu vào hồ sơ"</strong> $\rightarrow$ Hệ thống cập nhật kỹ năng vào hồ sơ.</li>
+<li>Vào tab <strong>"Việc làm phù hợp"</strong> $\rightarrow$ Quan sát điểm số % độ phù hợp (75% - 85%) kèm tag các kỹ năng trùng khớp (<code>✓ Java</code>, <code>✓ Python</code>...).</li>
+<li>Vào xem chi tiết tin tuyển dụng $\rightarrow$ Bấm nộp hồ sơ kèm thư giới thiệu.</li>
+<li>Nhắn tin qua widget Chat Messenger nổi ở góc phải với Nhà tuyển dụng.</li>
+</ul>
+<h3 id="2-tai-khoan-dung-e-test-cac-chuc-nang-cua-doanh-nghiep-nha-tuyen-dung">2. Tài khoản dùng để test các chức năng của Doanh nghiệp (Nhà tuyển dụng)</h3>
+<ul>
+<li><strong>Tài khoản:</strong> <code>employer@qlpm.local</code></li>
+<li><strong>Mật khẩu:</strong> <code>Employer@123456</code></li>
+<li><strong>Tên doanh nghiệp đại diện:</strong> Demo Tech Co.</li>
+<li><strong>Kịch bản kiểm thử:</strong></li>
+<li>Đăng nhập $\rightarrow$ Chuyển đúng vào Bảng điều khiển Doanh nghiệp.</li>
+<li>Xem danh sách các tin tuyển dụng đang đăng $\rightarrow$ Tạo tin tuyển dụng thực tập mới.</li>
+<li>Mở danh sách ứng viên nộp vào tin tuyển dụng $\rightarrow$ Xem CV và thư ứng tuyển của sinh viên.</li>
+<li>Bấm đổi trạng thái ứng viên (Mời phỏng vấn / Trúng tuyển) $\rightarrow$ Kiểm tra thông báo được gửi đến sinh viên.</li>
+<li>Mở khung chat trao đổi trực tiếp với sinh viên nộp đơn.</li>
+</ul>
+<h3 id="3-tai-khoan-dung-e-test-cac-chuc-nang-cua-quan-tri-vien">3. Tài khoản dùng để test các chức năng của Quản trị viên</h3>
+<ul>
+<li><strong>Tài khoản:</strong> <code>admin@qlpm.local</code></li>
+<li><strong>Mật khẩu:</strong> <code>Admin@123456</code></li>
+<li><strong>Kịch bản kiểm thử:</strong></li>
+<li>Đăng nhập vào trang quản trị <code>/admin/dashboard</code>.</li>
+<li>Kiểm tra và phê duyệt các tin tuyển dụng ở trạng thái chờ duyệt.</li>
+<li>Quản trị danh mục hệ thống: thêm bớt Kỹ năng, Ngành nghề, Địa điểm làm việc.</li>
+<li>Xem và xử lý các báo cáo vi phạm từ người dùng.</li>
+</ul>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="chuong-vi-ket-luan">CHƯƠNG VI. KẾT LUẬN</h1>
+<h2 id="i-ket-qua-a-thuc-hien">I. Kết quả đã thực hiện</h2>
+<p>Trải qua 8 tuần thực hiện đồ án môn học <em>Quản lý dự án phần mềm</em>, nhóm sinh viên đã đạt được các kết quả nổi bật:<br />
+1. <strong>Xây dựng hoàn chỉnh một ứng dụng Web tuyển dụng thực tập toàn diện (InternHub)</strong> với đầy đủ các nghiệp vụ thực tế, giao diện hiện đại, chuyên nghiệp và thân thiện với người dùng.<br />
+2. <strong>Triển khai thành công thuật toán bóc tách CV và gợi ý việc làm thông minh:</strong><br />
+   - Đọc và phân tích chính xác các định dạng file CV phổ biến (.PDF, .DOCX) hoàn toàn offline mà không phụ thuộc vào API bên thứ ba.<br />
+   - Bóc tách tự động Kỹ năng, Số điện thoại, Email và Địa chỉ ứng viên.<br />
+   - Thuật toán so khớp đa tiêu chí (Kỹ năng, Ngành học, Khu vực) đưa ra điểm số tương thích theo % chuẩn xác, trực quan hóa rõ ràng lý do phù hợp và kỹ năng còn thiếu.<br />
+3. <strong>Bộ tính năng tương tác khép kín:</strong> Trình tạo CV cá nhân (CV Studio), Nộp hồ sơ chống trùng lặp, Khung Chat Messenger tức thì theo từng đơn ứng tuyển và hệ thống thông báo chuông thời gian thực.<br />
+4. <strong>Áp dụng xuất sắc quy trình Quản lý dự án Agile/Scrum:</strong> Quản lý backlog và các Sprint trên Jira minh bạch, phân công vai trò nhiệm vụ rõ ràng và kiểm thử tích hợp bài bản.</p>
+<h2 id="ii-uu-khuyet-iem">II. Ưu khuyết điểm</h2>
+<h3 id="1-uu-iem">1. Ưu điểm</h3>
+<ul>
+<li><strong>Kiến trúc hiện đại, khả năng mở rộng cao:</strong> Phân tách rõ ràng giữa Django REST Framework và React SPA, dễ dàng mở rộng sang ứng dụng di động (React Native/Flutter) trong tương lai.</li>
+<li><strong>Tính năng quét CV và gợi ý vượt trội:</strong> Giải quyết đúng "nỗi đau" của sinh viên thực tập khi tìm việc, mang lại giá trị thực tiễn cao so với các website tuyển dụng thông thường.</li>
+<li><strong>Tốc độ xử lý nhanh, bảo mật tốt:</strong> Xác thực phân quyền chặt chẽ với JWT token rotation, cơ sở dữ liệu được thiết kế chuẩn hóa và tối ưu truy vấn.</li>
+</ul>
+<h3 id="2-khuyet-iem">2. Khuyết điểm</h3>
+<ul>
+<li>Module quét CV hiện tại áp dụng phương pháp Rule-based và Regex đối sánh từ khóa; với các mẫu CV có cấu trúc thiết kế quá phức tạp hoặc dạng ảnh quét (scanned image) cần tích hợp thêm mô hình OCR (Optical Character Recognition).</li>
+<li>Hệ thống thông báo và chat hiện đang hoạt động theo cơ chế polling định kỳ ngắn; chưa ứng dụng giao thức WebSocket hoàn toàn.</li>
+</ul>
+<h2 id="iii-huong-mo-rong-trong-tuong-lai">III. Hướng mở rộng trong tương lai</h2>
+<ol>
+<li><strong>Nâng cấp thuật toán gợi ý bằng AI / Machine Learning:</strong> Ứng dụng mô hình xử lý ngôn ngữ tự nhiên (NLP) như TF-IDF, Word2Vec hoặc BERT kết hợp Cosine Similarity để so khớp ngữ nghĩa sâu hơn giữa CV và Job Description.</li>
+<li><strong>Tích hợp phỏng vấn trực tuyến (Video Call):</strong> Tích hợp WebRTC cho phép nhà tuyển dụng và sinh viên phỏng vấn trực tuyến trực tiếp ngay trên website.</li>
+<li><strong>Đa kênh thông báo:</strong> Mở rộng tích hợp gửi thông báo kết quả phỏng vấn qua Email tự động (SMTP) và Zalo ZNS.</li>
+</ol>
+<hr />
+<div class="page-break"></div>
+
+<h1 id="tai-lieu-tham-khao">TÀI LIỆU THAM KHẢO</h1>
+<ol>
+<li><strong>Ken Schwaber &amp; Jeff Sutherland</strong> (2020), <em>The Scrum Guide: The Definitive Guide to Scrum: The Rules of the Game</em>.</li>
+<li><strong>Django Software Foundation</strong> (2026), <em>Django Documentation - The Web framework for perfectionists with deadlines</em>, phiên bản 6.x, tài liệu trực tuyến: https://docs.djangoproject.com/</li>
+<li><strong>Tom Christie &amp; DRF Team</strong> (2026), <em>Django REST Framework Documentation</em>, tài liệu trực tuyến: https://www.django-rest-framework.org/</li>
+<li><strong>Meta Open Source</strong> (2026), <em>React Documentation - A JavaScript library for building user interfaces</em>, phiên bản React 19, tài liệu trực tuyến: https://react.dev/</li>
+<li><strong>Yusuke Shinyama</strong> (2024), <em>PDFMiner.six: Python PDF parser and analyzer</em>, GitHub Documentation: https://github.com/pdfminer/pdfminer.six</li>
+<li><strong>Steve Canny</strong> (2024), <em>python-docx Documentation: Creating and modifying docx files in Python</em>, tài liệu trực tuyến: https://python-docx.readthedocs.io/</li>
+<li><strong>Oracle Corporation</strong> (2024), <em>MySQL 8.4 Reference Manual</em>, tài liệu trực tuyến: https://dev.mysql.com/doc/refman/8.4/en/</li>
+<li><strong>TopCV &amp; Ybox Vietnam</strong> (2025 - 2026), <em>Khảo sát trải nghiệm tìm kiếm việc làm và tuyển dụng thực tập sinh tại Việt Nam</em>.</li>
+</ol>
+    </div>
+
+    <script>
+        // Preview image upon file selection
+        function previewImage(input, event) {
+            event.stopPropagation();
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                const container = input.parentElement;
+                const img = container.querySelector('.preview-img');
+                const title = container.querySelector('.placeholder-title');
+                const hint = container.querySelector('.placeholder-hint');
+                const icon = container.querySelector('.placeholder-icon');
+
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    if (icon) icon.style.display = 'none';
+                    if (hint) hint.style.display = 'none';
+                    container.style.border = '1px solid #cbd5e1';
+                    container.style.background = '#ffffff';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Allow drag and drop on image placeholder boxes
+        document.querySelectorAll('.image-placeholder-box').forEach(box => {
+            box.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                box.style.borderColor = '#2563eb';
+                box.style.backgroundColor = '#dbeafe';
+            });
+            box.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                box.style.borderColor = '#4f46e5';
+                box.style.backgroundColor = '#f8fafc';
+            });
+            box.addEventListener('drop', (e) => {
+                e.preventDefault();
+                box.style.borderColor = '#4f46e5';
+                box.style.backgroundColor = '#f8fafc';
+                const fileInput = box.querySelector('input[type=file]');
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    fileInput.files = e.dataTransfer.files;
+                    const changeEvent = new Event('change');
+                    fileInput.dispatchEvent(changeEvent);
+                }
+            });
+        });
+
+        // Fix TOC anchor links to match generated heading IDs
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a[href^="#"]').forEach(a => {
+                const rawHash = decodeURIComponent(a.getAttribute('href').substring(1)).trim();
+                if (!document.getElementById(rawHash)) {
+                    // Try to match by text similarity or normalized slug
+                    const headings = document.querySelectorAll('h1, h2, h3, h4');
+                    for (const h of headings) {
+                        const hText = h.textContent.trim().toLowerCase();
+                        const linkText = a.textContent.trim().toLowerCase();
+                        if (hText === linkText || h.id.replace(/-/g, '') === rawHash.replace(/[^a-zA-Z0-9]/g, '')) {
+                            a.setAttribute('href', '#' + h.id);
+                            break;
+                        }
+                    }
+                }
+            });
+        });
+
+        // Copy entire document content to clipboard for easy paste into Microsoft Word
+        function copyDocumentToClipboard() {
+            const content = document.getElementById('report-content');
+            const range = document.createRange();
+            range.selectNode(content);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            try {
+                document.execCommand('copy');
+                alert('Đã sao chép toàn bộ nội dung báo cáo! Bạn chỉ cần mở Microsoft Word và nhấn Ctrl + V để dán.');
+            } catch (err) {
+                alert('Không thể tự động sao chép. Bạn có thể nhấn Ctrl + A rồi Ctrl + C.');
+            }
+            window.getSelection().removeAllRanges();
+        }
+    </script>
+</body>
+</html>

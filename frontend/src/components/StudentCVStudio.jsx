@@ -67,6 +67,7 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
   const [uploadMessage, setUploadMessage] = useState("");
   const [isScanOpen, setIsScanOpen] = useState(false);
   const [scanResult, setScanResult] = useState(null);
+  const [scanError, setScanError] = useState("");
   const [scanning, setScanning] = useState(false);
   const currentFile = profile?.cv_file || "";
 
@@ -104,6 +105,21 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
     setDraft((current) => ({ ...current, [name]: value }));
   };
 
+  const handleAnalyzeExistingCv = async () => {
+    setScanResult(null);
+    setScanError("");
+    setScanning(true);
+    setIsScanOpen(true);
+    try {
+      const { data: result } = await recommendJobsFromCv();
+      setScanResult(result);
+    } catch (err) {
+      setScanError(err?.response?.data?.detail || "Không thể phân tích CV lúc này. Bạn có thể thử lại sau.");
+    } finally {
+      setScanning(false);
+    }
+  };
+
   const handleUpload = async (event) => {
     const file = event.target.files?.[0];
     event.target.value = "";
@@ -121,18 +137,22 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
       onProfileUpdate?.(data);
       setUploadMessage("CV đã được tải lên hồ sơ của bạn.");
 
-      // Auto scan CV and open recommendation modal
+      // Open recommendation modal immediately with scanning animation!
       setScanResult(null);
+      setScanError("");
       setScanning(true);
       setIsScanOpen(true);
+
       try {
         const scanFormData = new FormData();
         scanFormData.append("cv_file", file);
         const { data: result } = await recommendJobsFromCv(scanFormData);
         setScanResult(result);
-      } catch {
-        // Scan is optional — don't break upload flow on failure
-        setIsScanOpen(false);
+      } catch (err) {
+        setScanError(
+          err?.response?.data?.detail ||
+          "Không thể phân tích CV lúc này. Bạn có thể nhấn 'Thử lại' hoặc 'Quét nhanh CV hiện tại'."
+        );
       } finally {
         setScanning(false);
       }
@@ -167,8 +187,27 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
   return (
     <section className="student-cv-studio">
       <header className="student-cv-heading">
-        <div><span className="student-cv-eyebrow">CV STUDIO · SINH VIÊN</span><h2>Tạo và quản lý CV</h2><p>Dựng bản CV theo phong cách và vị trí mục tiêu, hoặc tải file CV sẵn có lên hồ sơ.</p></div>
-        <Link to="/student/profile" className="student-cv-profile-link"><i className="bi bi-person-vcard" aria-hidden="true" /> Hồ sơ cá nhân</Link>
+        <div>
+          <span className="student-cv-eyebrow">CV STUDIO · SINH VIÊN</span>
+          <h2>Tạo và quản lý CV</h2>
+          <p>Dựng bản CV theo phong cách và vị trí mục tiêu, hoặc tải file CV sẵn có lên hồ sơ.</p>
+        </div>
+        <div className="d-flex align-items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            className="student-cv-button student-cv-button--scan shadow-sm"
+            onClick={() => {
+              setScanResult(null);
+              setScanning(false);
+              setIsScanOpen(true);
+            }}
+          >
+            <i className="bi bi-stars" aria-hidden="true" /> Quét CV tìm việc
+          </button>
+          <Link to="/student/profile" className="student-cv-profile-link">
+            <i className="bi bi-person-vcard" aria-hidden="true" /> Hồ sơ cá nhân
+          </Link>
+        </div>
       </header>
 
       <div className="student-cv-mode-tabs" role="tablist" aria-label="CV cá nhân">
@@ -184,6 +223,15 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
           </div>
           <div className="student-cv-upload-actions">
             <label className="student-cv-button student-cv-button--primary"><i className={`bi ${uploading ? "bi-arrow-repeat" : "bi-upload"}`} aria-hidden="true" />{uploading ? "Đang tải..." : currentFile ? "Thay CV" : "Chọn file CV"}<input accept=".pdf,.doc,.docx" disabled={uploading} onChange={handleUpload} type="file" /></label>
+            {currentFile && (
+              <button
+                type="button"
+                className="student-cv-button student-cv-button--scan"
+                onClick={handleAnalyzeExistingCv}
+              >
+                <i className="bi bi-magic" aria-hidden="true" /> Phân tích CV này
+              </button>
+            )}
             {currentFile && <button className="student-cv-button student-cv-button--remove" disabled={uploading} onClick={removeUpload} type="button"><i className="bi bi-trash3" aria-hidden="true" /> Xóa CV</button>}
           </div>
           {uploadError && <p className="student-cv-message is-error" role="alert">{uploadError}</p>}
@@ -219,12 +267,19 @@ export default function StudentCVStudio({ profile, user, initialMode = "builder"
         </div>
       )}
 
-      {/* Auto-scan popup after CV upload */}
+      {/* Auto-scan popup after CV upload or triggered manually */}
       <CvScanModal
         isOpen={isScanOpen}
-        onClose={() => { setIsScanOpen(false); setScanResult(null); }}
+        onClose={() => {
+          setIsScanOpen(false);
+          setScanResult(null);
+          setScanError("");
+        }}
         preloadedResult={scanResult}
         preloadedScanning={scanning}
+        preloadedError={scanError}
+        hasCurrentCv={Boolean(currentFile)}
+        onSkillsSynced={onProfileUpdate}
       />
     </section>
   );
